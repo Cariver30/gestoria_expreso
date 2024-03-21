@@ -18,8 +18,7 @@ Auth::routes(['verify' => true]);
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'root'])->name('root');
 
-// customers route
-Route::get('/customers', [App\Http\Controllers\CustomerController::class, 'index'])->name('customers.list');
+Route::post('inicio', [App\Http\Controllers\Auth\LoginController::class, 'validarLogin'])->name('login.pin');
 
 //Update User Details
 Route::post('/update-profile/{id}', [App\Http\Controllers\HomeController::class, 'updateProfile'])->name('updateProfile');

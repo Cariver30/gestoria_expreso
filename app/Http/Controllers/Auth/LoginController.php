@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -36,5 +39,16 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    public function validarLogin(Request $request) {
+        $pin = $request->digit1.$request->digit2.$request->digit3.$request->digit4;
+        $user = User::select('id')->where('pin', $pin)->first();
+        if($user) {
+            Auth::loginUsingId($user->id);
+            return view('index');
+        } else {
+            return back();
+        }
     }
 }
