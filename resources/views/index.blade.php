@@ -2,7 +2,7 @@
 
 @section('title') @lang('translation.Dashboards') @endsection
 
-@section('css')
+{{--  @section('css')
     <style>
         .credentialing {
             --bg-color: #B8F9D3;
@@ -108,9 +108,9 @@
           }
     </style>
     
-@endsection
+@endsection  --}}
 @section('content')
-    <div class="body row">
+    {{--  <div class="body row">
         <div class="col-md-4">
             <a class="card credentialing" href="#">
                 <div class="overlay"></div>
@@ -216,9 +216,9 @@
             <p>Credentialing</p>
         </a>
         </div>
-    </div>
+    </div>  --}}
 
-{{--  <div class="row col-md-12">
+<div class="row col-md-12">
     <div class="col-lg-4" id="inspeccionVehiculo">
         <div class="card bg-primary text-white-50">
             <div class="card-body text-center">
@@ -350,7 +350,7 @@
                 </div>
             </div>
         </div>
-    </div>  --}}
+    </div>
 
 @endsection
 @section('script')
