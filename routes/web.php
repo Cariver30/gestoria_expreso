@@ -19,6 +19,9 @@ Auth::routes(['verify' => true]);
 Route::get('/', [App\Http\Controllers\HomeController::class, 'root'])->name('root');
 
 Route::post('inicio', [App\Http\Controllers\Auth\LoginController::class, 'validarLogin'])->name('login.pin');
+Route::get('extraer/data/pdf', [App\Http\Controllers\HomeController::class, 'getDataPdf'])->name('pdf.data');
+Route::resource('usuario', App\Http\Controllers\UserController::class);
+Route::resource('servicio', App\Http\Controllers\ServicioController::class);
 
 //Update User Details
 Route::post('/update-profile/{id}', [App\Http\Controllers\HomeController::class, 'updateProfile'])->name('updateProfile');

@@ -35,10 +35,7 @@
         </form>
 
         <div class="dropdown dropdown-mega d-none d-lg-block ms-2">
-            <button type="button" class="btn header-item waves-effect" data-bs-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
-                <span key="t-megamenu">@lang('translation.Mega_Menu')</span>
-                <i class="mdi mdi-chevron-down"></i>
-            </button>
+            
             <div class="dropdown-menu dropdown-megamenu">
                 <div class="row">
                     <div class="col-sm-8">
@@ -169,10 +166,7 @@
     <div class="d-flex">
 
         <div class="dropdown d-inline-block d-lg-none ms-2">
-            <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-search-dropdown"
-                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="mdi mdi-magnify"></i>
-            </button>
+           
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
                 aria-labelledby="page-header-search-dropdown">
 
@@ -189,25 +183,6 @@
         </div>
 
         <div class="dropdown d-inline-block">
-            <button type="button" class="btn header-item waves-effect"
-                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                @switch(Session::get('lang'))
-                    @case('ru')
-                        <img src="{{ URL::asset('build/images/flags/russia.jpg')}}" alt="Header Language" height="16">
-                    @break
-                    @case('it')
-                        <img src="{{ URL::asset('build/images/flags/italy.jpg')}}" alt="Header Language" height="16">
-                    @break
-                    @case('gr')
-                        <img src="{{ URL::asset('build/images/flags/germany.jpg')}}" alt="Header Language" height="16">
-                    @break
-                    @case('sp')
-                        <img src="{{ URL::asset('build/images/flags/spain.jpg')}}" alt="Header Language" height="16">
-                    @break
-                    @default
-                        <img src="{{ URL::asset('build/images/flags/us.jpg')}}" alt="Header Language" height="16">
-                @endswitch
-            </button>
             <div class="dropdown-menu dropdown-menu-end">
 
                 <!-- item-->
@@ -237,10 +212,7 @@
         </div>
 
         <div class="dropdown d-none d-lg-inline-block ms-1">
-            <button type="button" class="btn header-item noti-icon waves-effect"
-                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="bx bx-customize"></i>
-            </button>
+           
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                 <div class="px-lg-2">
                     <div class="row g-0">
@@ -287,17 +259,7 @@
                 </div>
             </div>
         </div>
-        <div class="dropdown d-none d-lg-inline-block ms-1">
-            <button type="button" class="btn header-item noti-icon waves-effect" data-toggle="fullscreen">
-                <i class="bx bx-fullscreen"></i>
-            </button>
-        </div>
         <div class="dropdown d-inline-block">
-            <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown"
-                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="bx bx-bell bx-tada"></i>
-                <span class="badge bg-danger rounded-pill">3</span>
-            </button>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
                 aria-labelledby="page-header-notifications-dropdown">
                 <div class="p-3">
@@ -399,11 +361,6 @@
                     @csrf
                 </form>
             </div>
-        </div>
-        <div class="dropdown d-inline-block">
-            <button type="button" class="btn header-item noti-icon right-bar-toggle waves-effect">
-                <i class="bx bx-cog bx-spin"></i>
-            </button>
         </div>
     </div>
 </div>

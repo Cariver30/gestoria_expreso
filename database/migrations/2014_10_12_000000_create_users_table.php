@@ -17,7 +17,9 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('nombre', 100);
+            $table->string('primer_apellido', 50);
+            $table->string('segundo_apellido', 50)->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->default('2024-02-28 17:04:58');
             $table->string('password');
@@ -27,16 +29,6 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
-        User::create([
-            'name' => 'Alfredo Ramirez Anastacio',
-            'dob'=>'2000-10-10',
-            'email' => 'admin@admin.com',
-            'password' => Hash::make('12345678'),
-            'pin' => 'A1B2C3',
-            'email_verified_at'=> '2022-01-02 17:04:58',
-            'avatar' => 'images/avatar-1.jpg',
-            'created_at' => now()
-        ]);
     }
 
     /**

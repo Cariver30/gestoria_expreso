@@ -1,7 +1,10 @@
 @extends('layouts.master')
 
 @section('title') @lang('translation.Dashboards') @endsection
-
+@section('css')
+    <!-- Plugins css -->
+    <link href="{{ URL::asset('build/libs/dropzone/dropzone.css') }}" rel="stylesheet" type="text/css" />
+@endsection
 {{--  @section('css')
     <style>
         .credentialing {
@@ -291,15 +294,15 @@
 </div>
 
     <div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Nuevo</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="#" autocomplete="off">
-                        @csrf
+                    {{--  <form method="POST" action="#" autocomplete="off">
+                        @csrf  --}}
                         <div class="row col-md-12">
                             <div class="col-md-12 mb-3">
                                 <label for="name" class="col-form-label"> Nombre </label>
@@ -341,12 +344,64 @@
                                 <label for="marbetesPendientes" class="col-form-label"> Masbertes Pendientes </label>
                                 <input type="text" class="form-control form-control-sm" name="marbetesPendientes" required>
                             </div>
+                            {{--  <form method="POST" action="{{ route('pdf.data') }}" autocomplete="off" enctype="multipart/form-data">
+                                @csrf
+                                <div>
+                                    <div class="dropzone">
+                                        <div class="fallback">
+                                            <input name="filepdf" type="file">
+                                        </div>
+                                        <div class="dz-message needsclick">
+                                            <div class="mb-3">
+                                                <i class="display-4 text-muted bx bxs-cloud-upload"></i>
+                                            </div>
+        
+                                            <h4> Adjunta un archivo o click para cargar el archivo</h4>
+                                        </div>
+                                    </div>
+            
+                                    <ul class="list-unstyled mb-0" id="dropzone-preview">
+                                        <li class="mt-2" id="dropzone-preview-list">
+                                            <!-- This is used as the file preview template -->
+                                            <div class="border rounded">
+                                                <div class="d-flex p-2">
+                                                    <div class="flex-shrink-0 me-3">
+                                                        <div class="avatar-sm bg-light rounded">
+                                                            <img data-dz-thumbnail class="img-fluid rounded d-block"
+                                                                src="https://img.themesbrand.com/judia/new-document.png"
+                                                                alt="Dropzone-Image">
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex-grow-1">
+                                                        <div class="pt-1">
+                                                            <h5 class="fs-md mb-1" data-dz-name>&nbsp;</h5>
+                                                            <p class="fs-sm text-muted mb-0" data-dz-size></p>
+                                                            <strong class="error text-danger" data-dz-errormessage></strong>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex-shrink-0 ms-3">
+                                                        <button data-dz-remove class="btn btn-sm btn-danger">Delete</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <div class="text-center mt-4">
+                                        <button type="submit" class="btn btn-primary waves-effect waves-light">Send Files</button>
+                                    </div>
+                                </div>
+                            </form>  --}}
+                            <form action="{{ route('pdf.data') }}" method="post" enctype="multipart/form-data" >
+                                @csrf
+                                <input type="file" name="urlpdf" >
+                                <input type="submit" value="subir">
+                            </form>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            <button type="submit" class="btn btn-primary">Guardar</button>
+                            <button type="button" class="btn btn-primary">Guardar</button>
                         </div>
-                    </form>
+                    {{--  </form>  --}}
                 </div>
             </div>
         </div>
@@ -359,4 +414,9 @@
             $('#staticBackdrop').modal('show')
         });
     </script>
+    <!-- Plugins js -->
+    <script src="{{ URL::asset('build/libs/dropzone/dropzone-min.js') }}"></script>
+
+    <!-- Form file upload init js -->
+    <script src="{{ URL::asset('build/js/pages/form-file-upload.init.js') }}"></script>
 @endsection
