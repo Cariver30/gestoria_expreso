@@ -1,21 +1,22 @@
-<div class="modal fade" id="add_servicio" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal fade" id="add_rol" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Nuevo Servicio</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Nuevo Rol</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form autocomplete="off">
+                <form method="POST" action="{{ route('roles.store') }}" autocomplete="off" id="formStoreRol">
+                    @csrf
                     <div class="row col-md-12">
                         <div class="col-md-12 mb-3">
-                            <label for="name" class="col-form-label"> Nombre del servicio </label>
-                            <input type="text" class="form-control form-control-sm" name="nombre" id="nombre" required>
+                            <label for="name" class="col-form-label"> Nombre del Rol </label>
+                            <input type="text" class="form-control form-control-sm" id="nombre" required>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-primary" id="saveServicios">Guardar</button>
+                        <button type="button" class="btn btn-primary" id="saveRol">Guardar</button>
                     </div>
                 </form>
             </div>

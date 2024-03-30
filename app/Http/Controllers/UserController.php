@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use DB;
-use Session;
 use App\Models\User;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -16,9 +16,12 @@ class UserController extends Controller
      */
     public function index()
     {
-        $usuarios = User::select('users.id', 'users.nombre','users.primer_apellido', 'users.segundo_apellido', 'users.email')->get();
+        $usuarios = User::leftJoin('roles', 'users.rol_id', 'roles.id')
+                        ->select('users.id', 'users.nombre','users.primer_apellido', 'users.segundo_apellido', 'users.email', 'users.estatus', 'users.rol_id', 'roles.nombre as rol')
+                        ->get();
 
-        return view('usuario.index', compact('usuarios'));
+        $roles = Role::select('id', 'nombre')->where('estatus_id', 1)->get();
+        return view('usuario.index', compact('usuarios', 'roles'));
     }
 
     /**
@@ -34,32 +37,13 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $input = $request->all();
-
-        $rules = [
-            'nombre' => 'required',
-            'primer_apellido' => 'required',
-            'email' => 'required',
-            //'perfil_id' => 'required'
-        ];
-
-        $messages = [
-            'nombre.required'   => 'El nombre es un campo requerido',
-            'primer_apellido.required'   => 'El primer apellido es un campo requerido',
-            'email.required'   => 'El email es un campo requerido',
-            //'perfil_id.required'   => 'El perfil es un campo requerido'
-        ];
-
-        $validator = Validator::make($input, $rules, $messages);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
+        if ($request->nombre == '' || $request->primer_apellido == '' || $request->email == '' || $request->rol_id == '') {
+            return response()->json(['code' => 400, 'msg' => 'Hay campos vacios']);
         }
 
         DB::beginTransaction();
 
         try {
-
             //Se genera PIN para el inicio de sesión, el cual tambien se envía por correo al usuario.
             $pin = $this->generarPin();
             
@@ -71,14 +55,15 @@ class UserController extends Controller
             $usuario->email_verified_at = now();
             $usuario->password = Hash::make($pin);
             $usuario->pin = Hash::make($pin);
+            $usuario->estatus = 1;
             $usuario->dob = '2024-04-01';
             $usuario->avatar = 'images/avatar-1.jpg';
+            $usuario->rol_id = $request->rol_id;
             $usuario->save();
 
             DB::commit();
 
-            Session::flash('success', 'Usuario registrado');
-            return redirect()->route('usuario.index');
+            return response()->json(['code' => 201, 'msg' => 'Usuario creado']);
 
         }catch (\PDOException $e){
             DB::rollBack();
@@ -89,9 +74,14 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $user = User::find($id);
+
+        if ($user != null) {
+            return response()->json(['code' => 200, 'data' => $user]);
+        }
+        return response()->json(['code' => 400, 'msg' => 'Usuario no encontrado']);
     }
 
     /**
@@ -105,48 +95,26 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        $input = $request->all();
-
-        $rules = [
-            'nombre' => 'required',
-            'primer_apellido' => 'required',
-            'email' => 'required',
-            //'perfil_id' => 'required'
-        ];
-
-        $messages = [
-            'nombre.required'   => 'El nombre es un campo requerido',
-            'primer_apellido.required'   => 'El primer apellido es un campo requerido',
-            'email.required'   => 'El email es un campo requerido',
-            //'perfil_id.required'   => 'El perfil es un campo requerido'
-        ];
-
-        $validator = Validator::make($input, $rules, $messages);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
+        if ($request->nombre == '' || $request->primer_apellido == '' || $request->email == '' || $request->rol_id == '') {
+            return response()->json(['code' => 400, 'msg' => 'Hay campos vacios']);
         }
 
         DB::beginTransaction();
 
         try {
-            
             $usuario = User::find($id);
             $usuario->nombre = \Helper::capitalizeFirst($request->nombre, "1");
             $usuario->primer_apellido = \Helper::capitalizeFirst($request->primer_apellido, "1");
             $usuario->segundo_apellido = (!is_null($request->segundo_apellido) ? \Helper::capitalizeFirst($request->segundo_apellido, "1") : null );
             $usuario->email = $request->email;
-            $usuario->password = ($request->pin != null) ? Hash::make($request->pin) : $usuario->pin ;
-            $usuario->pin = ($request->pin != null) ? Hash::make($request->pin) : $usuario->pin ;
-            //$usuario->perfil_id = $request->perfil_id;
+            $usuario->rol_id = $request->rol_id;
             $usuario->save();
 
             DB::commit();
 
-            Session::flash('success', 'Usuario actualizado');
-            return redirect()->route('usuario.index');
+            return response()->json(['code' => 200, 'msg' => 'Usuario actualizado']);
 
         }catch (\PDOException $e){
             DB::rollBack();
@@ -159,7 +127,20 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $usuario = User::find($id);
+
+        if ($usuario != null) {
+            if ($usuario->estatus == 1) {
+                $usuario->estatus = 0;
+                $mensaje = 'Usuario Desactivado';
+            } else {
+                $usuario->estatus = 1;
+                $mensaje = 'Usuario Activado';
+            }
+            $usuario->save();
+            return response()->json(['code' => 200, 'msg' => $mensaje]);
+        }
+        return response()->json(['code' => 400, 'msg' => 'Usuario no encontrado']);
     }
 
     function generarPin() {

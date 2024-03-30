@@ -29,6 +29,18 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ route('roles.index') }}" class="waves-effect">
+                        <i class="bx bx-user"></i>
+                        <span key="t-file-manager"> Roles </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('estatus.index') }}" class="waves-effect">
+                        <i class="bx bx-transfer-alt"></i>
+                        <span key="t-file-manager"> Cat. de Estatus </span>
+                    </a>
+                </li>
+                <li>
                     <a href="#" class="waves-effect">
                         <i class="bx bx-cog"></i>
                         <span key="t-file-manager"> Configuración </span>

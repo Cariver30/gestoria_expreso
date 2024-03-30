@@ -15,7 +15,7 @@ class ServicioController extends Controller
      */
     public function index()
     {
-        $servicios = Servicio::select('id', 'nombre', 'costo')->get();
+        $servicios = Servicio::select('id', 'nombre', 'estatus_id')->get();
         
         return view('servicio.index', compact('servicios'));
     }
@@ -33,22 +33,8 @@ class ServicioController extends Controller
      */
     public function store(Request $request)
     {
-        $input = $request->all();
-
-        $rules = [
-            'nombre' => 'required',
-            'costo' => 'required',
-        ];
-
-        $messages = [
-            'nombre.required' => 'El nombre es un campo requerido',
-            'costo.required'  => 'El costo es un campo requerido'
-        ];
-
-        $validator = Validator::make($input, $rules, $messages);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
+        if ($request->nombre == '') {
+            return response()->json(['code' => 400, 'msg' => 'El nombre es requerido']);
         }
 
         DB::beginTransaction();
@@ -57,13 +43,12 @@ class ServicioController extends Controller
             
             $servicio = new Servicio();
             $servicio->nombre = \Helper::capitalizeFirst($request->nombre, "1");
-            $servicio->costo = $request->costo;
+            $servicio->estatus_id = 1;
             $servicio->save();
 
             DB::commit();
 
-            Session::flash('success', 'Servicio registrado');
-            return redirect()->route('servicio.index');
+            return response()->json(['code' => 201, 'msg' => 'Servicio creado']);
 
         }catch (\PDOException $e){
             DB::rollBack();
@@ -76,7 +61,12 @@ class ServicioController extends Controller
      */
     public function show(Servicio $servicio)
     {
-        //
+        $servicio = Servicio::find($servicio->id);
+
+        if ($servicio != null) {
+            return response()->json(['code' => 200, 'data' => $servicio]);
+        }
+        return response()->json(['code' => 400, 'msg' => 'Servicio no encontrado']);
     }
 
     /**
@@ -90,39 +80,23 @@ class ServicioController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        $input = $request->all();
-
-        $rules = [
-            'nombre' => 'required',
-            'costo' => 'required',
-        ];
-
-        $messages = [
-            'nombre.required' => 'El nombre es un campo requerido',
-            'costo.required'  => 'El costo es un campo requerido'
-        ];
-
-        $validator = Validator::make($input, $rules, $messages);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
+        if ($request->nombre == '') {
+            return response()->json(['code' => 400, 'msg' => 'El nombre es requerido']);
         }
 
         DB::beginTransaction();
 
         try {
-            
             $servicio = Servicio::find($id);
             $servicio->nombre = \Helper::capitalizeFirst($request->nombre, "1");
-            $servicio->costo = $request->costo;
+            $servicio->estatus_id = 1;
             $servicio->save();
 
             DB::commit();
 
-            Session::flash('success', 'Servicio actualizado');
-            return redirect()->route('servicio.index');
+            return response()->json(['code' => 200, 'msg' => 'Servicio actualizado']);
 
         }catch (\PDOException $e){
             DB::rollBack();
@@ -135,6 +109,19 @@ class ServicioController extends Controller
      */
     public function destroy(Servicio $servicio)
     {
-        //
+        $servicio = Servicio::find($servicio->id);
+
+        if ($servicio != null) {
+            if ($servicio->estatus_id == 1) {
+                $servicio->estatus_id = 2;
+                $mensaje = 'Servicio deshabilitado';
+            } else {
+                $servicio->estatus_id = 1;
+                $mensaje = 'Servicio habilitado';
+            }
+            $servicio->save();
+            return response()->json(['code' => 200, 'msg' => $mensaje]);
+        }
+        return response()->json(['code' => 400, 'msg' => 'Servicio no encontrado']);
     }
 }
