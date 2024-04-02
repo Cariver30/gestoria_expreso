@@ -230,7 +230,7 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-4">
+    <div class="col-lg-4" id="ventaMarbetes">
         <div class="card bg-primary text-white-50">
             <div class="card-body text-center">
                 <i class="mdi mdi-car me-3 text-white" style="font-size: 100px;"></i>
@@ -273,7 +273,7 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-4">
+    <div class="col-lg-4" id="seguro">
         <div class="card bg-success text-white-50">
             <div class="card-body text-center">
                 <i class="mdi mdi-car me-3 text-white" style="font-size: 100px;"></i>
@@ -344,6 +344,15 @@
                                 <label for="marbetesPendientes" class="col-form-label"> Masbertes Pendientes </label>
                                 <input type="text" class="form-control form-control-sm" name="marbetesPendientes" required>
                             </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="rol_id" class="col-form-label"> Costo de Inspección </label>
+                                <select class="form-select form-select-sm" style="cursor: pointer;" id="rol_id">
+                                    <option value="" selected>Selecciona una opción</option>
+                                    @foreach ($costosInspeccion as $costo)
+                                        <option value="{{ $costo->id}}">{{ $costo->nombre}} - ${{ $costo->costo}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             {{--  <form method="POST" action="{{ route('pdf.data') }}" autocomplete="off" enctype="multipart/form-data">
                                 @csrf
                                 <div>
@@ -407,11 +416,20 @@
         </div>
     </div>
 
+    @include('principal.selectMarbete')
+    @include('principal.selectSeguro')
+
 @endsection
 @section('script')
     <script>
         $("#inspeccionVehiculo").click(function() {
             $('#staticBackdrop').modal('show')
+        });
+        $("#ventaMarbetes").click(function() {
+            $('#select_marbete').modal('show')
+        });
+        $("#seguro").click(function() {
+            $('#select_seguro').modal('show')
         });
     </script>
     <!-- Plugins js -->

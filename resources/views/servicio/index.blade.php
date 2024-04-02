@@ -31,7 +31,11 @@
                                 <button class="btn btn-soft-success editServicio" data-id="{{ $servicio->id }}"><i class="mdi mdi-pencil font-size-8 me-1"></i> Editar </a></li>
                                 <button class="btn btn-soft-danger waves-effect waves-light inActivarServicio" data-id="{{ $servicio->id }}" data-estatus="{{ $servicio->estatus_id }}"><i class="mdi mdi-trash-can-outline font-size-16 text-danger me-1"></i>@if ($servicio->estatus_id == 1) Desactivar @else Activar @endif</button>
                             </div>
-                            <button class="btn btn-soft-info waves-effect waves-light addSubServicio" data-id="{{ $servicio->id }}"><i class="mdi mdi-plus font-size-16 text-info me-1"></i>SubServicios</button>
+                            @if ($servicio->id == 1)
+                                <button class="btn btn-soft-info waves-effect waves-light addCostoInspecion" data-id="{{ $servicio->id }}"><i class="mdi mdi-plus font-size-16 text-info me-1"></i>Costos de Inspección</button>
+                            @else
+                                <button class="btn btn-soft-info waves-effect waves-light addSubServicio" data-id="{{ $servicio->id }}"><i class="mdi mdi-plus font-size-16 text-info me-1"></i>SubServicios</button>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -40,6 +44,7 @@
     </div>
     @include('servicio.add')
     @include('servicio.edit')
+    @include('servicio.addCostoInspeccion')
     @include('servicio.addSubservicio')
 @endsection
 
@@ -209,11 +214,76 @@
                 })
             });
 
-            //Mostrar modal para agergar subservicios
+            //Mostrar modal para agregar costos de inspección
+            $(document).on('click','.addCostoInspecion',function(){
+                var id = $(this).attr('data-id');
+                $('#ci_servicio_id').val(id);
+                $('#add_costo_inspeccion').modal('show');
+            });
+
+            //Guardar costos de inspección
+            $('#saveCostoInspeccion').click(function () {
+                if($('#ci_nombre').val() == ''){
+                    Swal.fire({
+                        title: 'El nombre es requerido',
+                        icon: "warning",
+                        position: 'top-center',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                if($('#ci_costo').val() == ''){
+                    Swal.fire({
+                        title: 'El costo es requerido',
+                        icon: "warning",
+                        position: 'top-center',
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                $('#add_costo_inspeccion').modal('hide');
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('servicio.store.subservicio') }}",
+                    data : { 
+                        _token: "{{ csrf_token() }}",
+                        id: $('#ci_servicio_id').val(),
+                        nombre: $('#ci_nombre').val(),
+                        costo: $('#ci_costo').val()
+                    },
+                    success: function (data) {
+                        if (data.code == 201) {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            setTimeout(function(){
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "warning",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                        }
+
+                    },
+                    error: function (data) {
+                        // console.log(data);
+                    }
+                });
+            });
+
+            //Mostrar modal para agregar subservicios
             $(document).on('click','.addSubServicio',function(){
                 var id = $(this).attr('data-id');
                 $.get('subservicios/' + id, function (data) {
-                    console.log(data);
                     $('#sub_id').val(id);
                     $('#add_sub_servicio').modal('show');
                 });
@@ -221,9 +291,9 @@
 
              //Crear subservicio
              $('#saveSubServicios').click(function () {
-                if($('#sub_nombre').val() == '' || $('#sub_costo').val() == ''){
+                if($('#sub_nombre').val() == ''){
                     Swal.fire({
-                        title: 'Hay campos vacíos',
+                        title: 'El nombre es requerido',
                         icon: "warning",
                         showConfirmButton: false,
                         timer: 2000
@@ -236,7 +306,7 @@
                     url: "{{ route('servicio.store.subservicio') }}",
                     data : { 
                         _token: "{{ csrf_token() }}",
-                        subServicio: $('#sub_id').val(),
+                        id: $('#sub_id').val(),
                         nombre: $('#sub_nombre').val(),
                         costo: $('#sub_costo').val()
                     },

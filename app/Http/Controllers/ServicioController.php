@@ -130,8 +130,8 @@ class ServicioController extends Controller
         if ($request->nombre == '') {
             return response()->json(['code' => 400, 'msg' => 'El Nombre es requerido']);
         }
-        if ($request->costo == '') {
-            return response()->json(['code' => 400, 'msg' => 'El Costo es requerido']);
+        if ($request->id == '') {
+            return response()->json(['code' => 400, 'msg' => 'Se requeire el id del servicio principal']);
         }
 
         DB::beginTransaction();
@@ -140,7 +140,7 @@ class ServicioController extends Controller
             
             $servicio = new SubServicio();
             $servicio->nombre = \Helper::capitalizeFirst($request->nombre, "1");
-            $servicio->servicio_id = $request->subServicio;
+            $servicio->servicio_id = $request->id;
             $servicio->costo = $request->costo;
             $servicio->estatus_id = 1;
             $servicio->save();
@@ -156,9 +156,7 @@ class ServicioController extends Controller
     }
 
     public function getSubServicio($id) {
-        //dd($id);
         $subservicios = SubServicio::where('servicio_id', $id)->get();
-        
         return response()->json(['code' => 200, 'data' => $subservicios]);
     }
 }
