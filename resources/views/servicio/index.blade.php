@@ -31,6 +31,7 @@
                                 <button class="btn btn-soft-success editServicio" data-id="{{ $servicio->id }}"><i class="mdi mdi-pencil font-size-8 me-1"></i> Editar </a></li>
                                 <button class="btn btn-soft-danger waves-effect waves-light inActivarServicio" data-id="{{ $servicio->id }}" data-estatus="{{ $servicio->estatus_id }}"><i class="mdi mdi-trash-can-outline font-size-16 text-danger me-1"></i>@if ($servicio->estatus_id == 1) Desactivar @else Activar @endif</button>
                             </div>
+                            <button class="btn btn-soft-info waves-effect waves-light addSubServicio" data-id="{{ $servicio->id }}"><i class="mdi mdi-plus font-size-16 text-info me-1"></i>SubServicios</button>
                         </div>
                     </div>
                 </div>
@@ -39,6 +40,7 @@
     </div>
     @include('servicio.add')
     @include('servicio.edit')
+    @include('servicio.addSubservicio')
 @endsection
 
 @section('script')
@@ -47,7 +49,7 @@
     <script>
         $(document).ready(function() {
 
-            //Crear Rol
+            //Crear servicio
             $('#saveServicios').click(function () {
                 if($('#nombre').val() == ''){
                     Swal.fire({
@@ -152,7 +154,7 @@
                 });
             });
 
-            //Ajax
+            //Cambiar estatus al servicio
             $('.inActivarServicio').click(function () {
                 var id = $(this).attr('data-id');
                 var estatus = $(this).attr('data-estatus');
@@ -205,7 +207,66 @@
                         });
                     }
                 })
-            });     
+            });
+
+            //Mostrar modal para agergar subservicios
+            $(document).on('click','.addSubServicio',function(){
+                var id = $(this).attr('data-id');
+                $.get('subservicios/' + id, function (data) {
+                    console.log(data);
+                    $('#sub_id').val(id);
+                    $('#add_sub_servicio').modal('show');
+                });
+            });
+
+             //Crear subservicio
+             $('#saveSubServicios').click(function () {
+                if($('#sub_nombre').val() == '' || $('#sub_costo').val() == ''){
+                    Swal.fire({
+                        title: 'Hay campos vacíos',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                $('#add_sub_servicio').modal('hide');
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('servicio.store.subservicio') }}",
+                    data : { 
+                        _token: "{{ csrf_token() }}",
+                        subServicio: $('#sub_id').val(),
+                        nombre: $('#sub_nombre').val(),
+                        costo: $('#sub_costo').val()
+                    },
+                    success: function (data) {
+                        if (data.code == 201) {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            setTimeout(function(){
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "warning",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                        }
+
+                    },
+                    error: function (data) {
+                        // console.log(data);
+                    }
+                });
+            });
+
         });
     </script>
 @endsection

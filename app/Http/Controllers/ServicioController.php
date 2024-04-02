@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use DB;
 use Session;
 use App\Models\Servicio;
+use App\Models\SubServicio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -123,5 +124,41 @@ class ServicioController extends Controller
             return response()->json(['code' => 200, 'msg' => $mensaje]);
         }
         return response()->json(['code' => 400, 'msg' => 'Servicio no encontrado']);
+    }
+
+    public function addSubServicio(Request $request) {
+        if ($request->nombre == '') {
+            return response()->json(['code' => 400, 'msg' => 'El Nombre es requerido']);
+        }
+        if ($request->costo == '') {
+            return response()->json(['code' => 400, 'msg' => 'El Costo es requerido']);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            
+            $servicio = new SubServicio();
+            $servicio->nombre = \Helper::capitalizeFirst($request->nombre, "1");
+            $servicio->servicio_id = $request->subServicio;
+            $servicio->costo = $request->costo;
+            $servicio->estatus_id = 1;
+            $servicio->save();
+
+            DB::commit();
+
+            return response()->json(['code' => 201, 'msg' => 'Sub Servicio creado']);
+
+        }catch (\PDOException $e){
+            DB::rollBack();
+            return back()->withErrors(['Error' => substr($e->getMessage(), 0, 150)]);
+        }
+    }
+
+    public function getSubServicio($id) {
+        //dd($id);
+        $subservicios = SubServicio::where('servicio_id', $id)->get();
+        
+        return response()->json(['code' => 200, 'data' => $subservicios]);
     }
 }
