@@ -24,11 +24,14 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->default('2024-02-28 17:04:58');
             $table->string('password');
             $table->string('pin')->unique();
-            $table->integer('estatus');
+            $table->unsignedBigInteger("estatus_id")->nullable();
+            $table->foreign("estatus_id")->references("id")->on("estatus")->onDelete('cascade');
             $table->date('dob');
             $table->text('avatar');
             $table->unsignedBigInteger("rol_id");
             $table->foreign("rol_id")->references("id")->on("roles")->onDelete('cascade');
+            $table->unsignedBigInteger("sede_id")->nullable();
+            $table->foreign("sede_id")->references("id")->on("sedes")->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();
         });

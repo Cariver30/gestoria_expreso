@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-    Usuarios
+    Entidades
 @endsection
 
 @section('css')
@@ -12,13 +12,13 @@
     <div class="row col-sm-12">
         <div class="col-sm-12">
             <div class="text-sm-end">
-                <button type="button" data-bs-toggle="modal" data-bs-target="#add_usuario"
+                <button type="button" data-bs-toggle="modal" data-bs-target="#add_entidad"
                     class="btn btn-success btn-rounded waves-effect waves-light mb-2"><i
                         class="mdi mdi-plus me-1"></i> Agregar</button>
             </div>
         </div>
         <div class="row col-md-12">
-            @foreach ($usuarios as $usuario)
+            @foreach ($sedes as $sede)
                 <div class="col-xl-3 col-md-6">
                     <div class="card">
                         <div class="card-body text-center">
@@ -26,17 +26,16 @@
                                 <a href="javascript:void(0)"><i class="uil uil-heart-alt fs-18"></i></a>
                             </div>
                             <img src="{{ URL::asset('build/images/companies/adobe.svg') }}" alt="" height="50" class="mb-3">
-                            <h5 class="fs-17 mb-2"><a href="job-details" class="text-dark">{{ $usuario->nombre }} {{ $usuario->primer_apellido }} {{ $usuario->segundo_apellido }}</a></h5>
-                            <small>{{ $usuario->rol }}</small>
+                            <h5 class="fs-17 mb-2"><a href="job-details" class="text-dark">{{ $sede->nombre }}</a></h5>
+                            <small>{{ $sede->rol }}</small>
                             <div class="mt-4">
-                                <button class="btn btn-soft-success editUsuario" data-id="{{ $usuario->id }}"><i class="mdi mdi-pencil font-size-8 me-1"></i> Editar </button></li>
+                                <button class="btn btn-soft-success editEntidad" data-id="{{ $sede->id }}"><i class="mdi mdi-pencil font-size-8 me-1"></i> Editar </button></li>
                                 
-                                @if ($usuario->estatus == 1)
-                                    <button class="btn btn-soft-danger inActivarUsuario" data-id="{{ $usuario->id }}" data-estatus="1"><i class="mdi mdi-account-convert font-size-16 text-danger me-1"></i>Inactivar</button>   
+                                @if ($sede->estatus_id == 1)
+                                    <button class="btn btn-soft-danger inActivarsede" data-id="{{ $sede->id }}" data-estatus="1"><i class="mdi mdi-account-convert font-size-16 text-danger me-1"></i>Deshabilitar</button>   
                                 @else
-                                    <button class="btn btn-soft-warning inActivarUsuario" data-id="{{ $usuario->id }}" data-estatus="0"><i class="mdi mdi-account-convert font-size-16 text-warning me-1"></i>Activar</button>
+                                    <button class="btn btn-soft-warning inActivarsede" data-id="{{ $sede->id }}" data-estatus="2"><i class="mdi mdi-account-convert font-size-16 text-warning me-1"></i>Activar</button>
                                 @endif
-                                <button class="btn btn-soft-info" data-id="{{ $usuario->id }}"><i class="mdi mdi-cached font-size-16 text-info me-1"></i>Resetear PIN</button>
                             </div>
                         </div>
                     </div>
@@ -44,8 +43,8 @@
             @endforeach
         </div>
     </div>
-    @include('usuario.add')
-    @include('usuario.edit')
+    @include('sede.add')
+    @include('sede.edit')
 @endsection
 
 @section('script')
@@ -54,13 +53,11 @@
     <script>
         $(document).ready(function() {
 
-            //Crear usuarios
-            $('#saveUsuario').click(function () {
-                var id = $(this).attr('data-id');
-                var metodo = $(this).attr('data-metodo');
-                if($('#nombre').val() == '' || $('#primer_apellido').val() == '' || $('#email').val() == '' || $('#rol_id').val() == '' || $('#entidad_id').val() == ''){
+            //Crear entidad
+            $('#saveEntidad').click(function () {
+                if($('#nombre').val() == ''){
                     Swal.fire({
-                        title: 'Hay campos vacios',
+                        title: 'El nombre de la entidad es requerido',
                         icon: "warning",
                         showConfirmButton: false,
                         timer: 2000
@@ -69,19 +66,14 @@
                 }
                 $.ajax({
                     type : 'POST',
-                    url :"{{ route('usuario.store') }}",
+                    url :"{{ route('sedes.store') }}",
                     data : { 
                         _token: "{{ csrf_token() }}",
-                        nombre: $('#nombre').val(),
-                        primer_apellido: $('#primer_apellido').val(),
-                        segundo_apellido: $('#segundo_apellido').val(),
-                        email: $('#email').val(),
-                        rol_id: $('#rol_id').val(),
-                        entidad_id: $('#entidad_id').val()
+                        nombre: $('#nombre').val()
                     },
                     success: function (data) {
                         if (data.code == 201) {
-                            console.log('f');
+                            $('#add_entidad').modal('hide');
                             Swal.fire({
                                 title: data.msg,
                                 icon: "success",
@@ -92,7 +84,6 @@
                                 window.location.reload();
                             }, 1000);
                         } else {
-                            console.log('fasas');
                             Swal.fire({
                                 title: data.msg,
                                 icon: "warning",
@@ -103,32 +94,27 @@
 
                     },
                     error: function (data) {
-                        console.log('aaaa');
+                        // console.log(data);
                     }
                 });
             });
 
             //Mostrar modal para actualizar estatus
-            $(document).on('click','.editUsuario',function(){
+            $(document).on('click','.editEntidad',function(){
                 var id = $(this).attr('data-id');
-                $.get('usuario/' + id, function (data) {
+                $.get('sedes/' + id, function (data) {
                     $('#up_id').val(data.data.id);
                     $('#up_nombre').val(data.data.nombre);
-                    $('#up_primer_apellido').val(data.data.primer_apellido);
-                    $('#up_segundo_apellido').val(data.data.segundo_apellido);
-                    $('#up_email').val(data.data.email);
-                    $('#up_rol_id option[value="'+data.data.rol_id+'"]').attr("selected", "selected");
-                    $('#up_entidad_id option[value="'+data.data.sede_id+'"]').attr("selected", "selected");
-                    $('#update_usuario').modal('show');
+                    $('#update_entidad').modal('show');
                 })
             });
 
-            //Actualizar usuario
-            $('#updateUsuario').click(function () {
+            //Actualizar entidad
+            $('#updateSede').click(function () {
                 var id = $('#up_id').val();
-                if($('#up_nombre').val() == '' || $('#up_primer_apellido').val() == '' || $('#up_email').val() == '' || $('#up_rol_id').val() == ''){
+                if($('#up_nombre').val() == ''){
                     Swal.fire({
-                        title: 'Hay campos vacíos',
+                        title: 'El nombre de la entidad es requerido',
                         icon: "warning",
                         position: 'top-center',
                         showConfirmButton: false,
@@ -136,16 +122,13 @@
                     });
                     return false;
                 }
-                $('#update_usuario').modal('hide');
+                $('#update_entidad').modal('hide');
                 $.ajax({
                     type: 'PATCH',
-                    url: 'usuario/'+id,
+                    url: 'sedes/'+id,
                     data : { 
                         _token: "{{ csrf_token() }}",
-                        nombre: $('#up_nombre').val(),
-                        primer_apellido: $('#up_primer_apellido').val(),
-                        email: $('#up_email').val(),
-                        rol_id: $('#up_rol_id').val()
+                        nombre: $('#up_nombre').val()
                     },
                     success: function (data) {
                         if (data.code == 200) {
@@ -175,7 +158,7 @@
             });
 
             //Inhabilitar
-            $('.inActivarUsuario').click(function () {
+            $('.inActivarsede').click(function () {
                 var id = $(this).attr('data-id');
                 var estatus = $(this).attr('data-estatus');
                 var estado = '';
@@ -185,7 +168,7 @@
                     estado = 'activar';
                 }
                 Swal.fire({
-                    title: '¿Seguro de '+estado+' a este usuario?',
+                    title: '¿Seguro de '+estado+' a esta entidad?',
                     showCancelButton: true,
                     confirmButtonText: 'Aceptar',
                     showLoaderOnConfirm: true,
@@ -194,9 +177,7 @@
                     preConfirm: function () {
                         return new Promise(function (resolve, reject) {
                             setTimeout(function () {
-                            
-                                    resolve()
-                                
+                                resolve()
                             }, 2000)
                         })
                     },
@@ -205,7 +186,7 @@
                     if (result.isConfirmed) {
                         $.ajax({
                             type: 'delete',
-                            url: 'usuario/'+id,
+                            url: 'sedes/'+id,
                             data : { 
                                 _token: "{{ csrf_token() }}" 
                             },
@@ -214,7 +195,6 @@
                                     Swal.fire({
                                         title: data.msg,
                                         icon: "success",
-                                        position: 'top-center',
                                         showConfirmButton: false,
                                         timer: 2000
                                     });

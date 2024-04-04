@@ -26,10 +26,19 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="rol_id" class="col-form-label"> Rol </label>
-                            <select class="form-select form-select-sm" style="cursor: pointer;" id="rol_id">
+                            <select class="form-select form-select-sm" style="cursor: pointer;" id="rol_id" required>
                                 <option value="" selected>Selecciona una opción</option>
                                 @foreach ($roles as $rol)
                                     <option value="{{ $rol->id }}">{{ $rol->nombre }}</option>    
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="entidad_id" class="col-form-label"> Entidad </label>
+                            <select class="form-select form-select-sm" style="cursor: pointer;" id="entidad_id" required>
+                                <option value="" selected>Selecciona una opción</option>
+                                @foreach ($entidades as $entidad)
+                                    <option value="{{ $entidad->id }}">{{ $entidad->nombre }}</option>    
                                 @endforeach
                             </select>
                         </div>

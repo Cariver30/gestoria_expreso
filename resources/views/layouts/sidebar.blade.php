@@ -41,12 +41,18 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ route('sedes.index') }}" class="waves-effect">
+                        <i class="bx bx-home"></i>
+                        <span key="t-file-manager"> Entidades </span>
+                    </a>
+                </li>
+                <li>
                     <a href="#" class="waves-effect">
                         <i class="bx bx-cog"></i>
                         <span key="t-file-manager"> Configuración </span>
                     </a>
                 </li>
-                <div style="display: initial">
+                <div style="display: none">
                     <li>
                         <a href="javascript: void(0);" class="has-arrow waves-effect">
                             <i class="bx bx-home-circle"></i>

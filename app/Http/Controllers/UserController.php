@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use DB;
 use App\Models\User;
 use App\Models\Role;
+use App\Models\Sede;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -17,11 +18,13 @@ class UserController extends Controller
     public function index()
     {
         $usuarios = User::leftJoin('roles', 'users.rol_id', 'roles.id')
-                        ->select('users.id', 'users.nombre','users.primer_apellido', 'users.segundo_apellido', 'users.email', 'users.estatus', 'users.rol_id', 'roles.nombre as rol')
+                        ->select('users.id', 'users.nombre','users.primer_apellido', 'users.segundo_apellido', 'users.email', 'users.estatus_id', 'users.rol_id', 'roles.nombre as rol')
                         ->get();
 
         $roles = Role::select('id', 'nombre')->where('estatus_id', 1)->get();
-        return view('usuario.index', compact('usuarios', 'roles'));
+        $entidades = Sede::select('id', 'nombre')->where('estatus_id', 1)->get();
+        
+        return view('usuario.index', compact('usuarios', 'roles', 'entidades'));
     }
 
     /**
@@ -37,7 +40,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->nombre == '' || $request->primer_apellido == '' || $request->email == '' || $request->rol_id == '') {
+        if ($request->nombre == '' || $request->primer_apellido == '' || $request->email == '' || $request->rol_id == '' || $request->entidad_id == '') {
             return response()->json(['code' => 400, 'msg' => 'Hay campos vacios']);
         }
 
@@ -55,10 +58,11 @@ class UserController extends Controller
             $usuario->email_verified_at = now();
             $usuario->password = Hash::make($pin);
             $usuario->pin = Hash::make($pin);
-            $usuario->estatus = 1;
+            $usuario->estatus_id = 1;
             $usuario->dob = '2024-04-01';
             $usuario->avatar = 'images/avatar-1.jpg';
             $usuario->rol_id = $request->rol_id;
+            $usuario->sede_id = $request->entidad_id;
             $usuario->save();
 
             DB::commit();
@@ -77,7 +81,6 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::find($id);
-
         if ($user != null) {
             return response()->json(['code' => 200, 'data' => $user]);
         }
@@ -110,6 +113,7 @@ class UserController extends Controller
             $usuario->segundo_apellido = (!is_null($request->segundo_apellido) ? \Helper::capitalizeFirst($request->segundo_apellido, "1") : null );
             $usuario->email = $request->email;
             $usuario->rol_id = $request->rol_id;
+            $usuario->sede_id = $request->entidad_id;
             $usuario->save();
 
             DB::commit();
@@ -130,11 +134,11 @@ class UserController extends Controller
         $usuario = User::find($id);
 
         if ($usuario != null) {
-            if ($usuario->estatus == 1) {
-                $usuario->estatus = 0;
+            if ($usuario->estatus_id == 1) {
+                $usuario->estatus_id = 1;
                 $mensaje = 'Usuario Desactivado';
             } else {
-                $usuario->estatus = 1;
+                $usuario->estatus_id = 2;
                 $mensaje = 'Usuario Activado';
             }
             $usuario->save();

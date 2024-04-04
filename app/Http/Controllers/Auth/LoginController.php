@@ -42,11 +42,14 @@ class LoginController extends Controller
     }
 
     public function validarLogin(Request $request) {
+        $costosInspeccion = SubServicio::where('servicio_id', 1)->get();
+        $marbetes = SubServicio::where('servicio_id', 2)->get();
+        $seguros = SubServicio::where('servicio_id', 7)->get();
         $pin = $request->digit1.$request->digit2.$request->digit3.$request->digit4;
         $user = User::select('id')->where('pin', $pin)->first();
         if($user) {
             Auth::loginUsingId($user->id);
-            return view('index');
+            return view('index', compact('costosInspeccion', 'marbetes', 'seguros'));
         } else {
             return back();
         }
