@@ -31,10 +31,10 @@
                             <div class="mt-4">
                                 <button class="btn btn-soft-success editUsuario" data-id="{{ $usuario->id }}"><i class="mdi mdi-pencil font-size-8 me-1"></i> Editar </button></li>
                                 
-                                @if ($usuario->estatus == 1)
-                                    <button class="btn btn-soft-danger inActivarUsuario" data-id="{{ $usuario->id }}" data-estatus="1"><i class="mdi mdi-account-convert font-size-16 text-danger me-1"></i>Inactivar</button>   
+                                @if ($usuario->estatus_id == 1)
+                                    <button class="btn btn-soft-danger inActivarUsuario" data-id="{{ $usuario->id }}" data-estatus="1"><i class="mdi mdi-account-convert font-size-16 text-danger me-1"></i>Suspender</button>   
                                 @else
-                                    <button class="btn btn-soft-warning inActivarUsuario" data-id="{{ $usuario->id }}" data-estatus="0"><i class="mdi mdi-account-convert font-size-16 text-warning me-1"></i>Activar</button>
+                                    <button class="btn btn-soft-warning inActivarUsuario" data-id="{{ $usuario->id }}" data-estatus="2"><i class="mdi mdi-account-convert font-size-16 text-warning me-1"></i>Activar</button>
                                 @endif
                                 <button class="btn btn-soft-info" data-id="{{ $usuario->id }}"><i class="mdi mdi-cached font-size-16 text-info me-1"></i>Resetear PIN</button>
                             </div>
@@ -126,7 +126,7 @@
             //Actualizar usuario
             $('#updateUsuario').click(function () {
                 var id = $('#up_id').val();
-                if($('#up_nombre').val() == '' || $('#up_primer_apellido').val() == '' || $('#up_email').val() == '' || $('#up_rol_id').val() == ''){
+                if($('#up_nombre').val() == '' || $('#up_primer_apellido').val() == '' || $('#up_email').val() == '' || $('#up_rol_id').val() == '' || $('#up_entidad_id').val() == ''){
                     Swal.fire({
                         title: 'Hay campos vacíos',
                         icon: "warning",
@@ -144,8 +144,10 @@
                         _token: "{{ csrf_token() }}",
                         nombre: $('#up_nombre').val(),
                         primer_apellido: $('#up_primer_apellido').val(),
+                        segundo_apellido: $('#up_segundo_apellido').val(),
                         email: $('#up_email').val(),
-                        rol_id: $('#up_rol_id').val()
+                        rol_id: $('#up_rol_id').val(),
+                        entidad_id: $('#up_entidad_id').val()
                     },
                     success: function (data) {
                         if (data.code == 200) {
@@ -180,12 +182,12 @@
                 var estatus = $(this).attr('data-estatus');
                 var estado = '';
                 if(estatus == 1){
-                    estado = 'desactivar';
+                    estado = 'suspender';
                 } else {
-                    estado = 'activar';
+                    estado = 'habilitar';
                 }
                 Swal.fire({
-                    title: '¿Seguro de '+estado+' a este usuario?',
+                    title: '¿Desea '+estado+' a este usuario?',
                     showCancelButton: true,
                     confirmButtonText: 'Aceptar',
                     showLoaderOnConfirm: true,

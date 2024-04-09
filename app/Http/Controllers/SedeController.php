@@ -34,12 +34,16 @@ class SedeController extends Controller
         if ($request->nombre == '') {
             return response()->json(['code' => 400, 'msg' => 'El nombre es requerido']);
         }
+        if ($request->acceso_panel == '') {
+            return response()->json(['code' => 400, 'msg' => 'Debe seleccionar al menos un acceso']);
+        }
 
         DB::beginTransaction();
 
         try {
             $entidad = new Sede();
             $entidad->nombre = \Helper::capitalizeFirst($request->nombre, "1");
+            $entidad->acceso_panel = $request->acceso_panel;
             $entidad->estatus_id = 1;
             $entidad->save();
 
@@ -82,12 +86,16 @@ class SedeController extends Controller
         if ($request->nombre == '') {
             return response()->json(['code' => 400, 'msg' => 'El nombre es requerido']);
         }
+        if ($request->acceso_panel == '') {
+            return response()->json(['code' => 400, 'msg' => 'Debe seleccionar al menos un acceso']);
+        }
 
         DB::beginTransaction();
 
         try {
             $entidad = Sede::find($sede->id);
             $entidad->nombre = \Helper::capitalizeFirst($request->nombre, "1");
+            $entidad->acceso_panel = $request->acceso_panel;
             $entidad->save();
 
             DB::commit();

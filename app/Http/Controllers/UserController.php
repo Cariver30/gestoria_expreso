@@ -100,6 +100,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         if ($request->nombre == '' || $request->primer_apellido == '' || $request->email == '' || $request->rol_id == '') {
             return response()->json(['code' => 400, 'msg' => 'Hay campos vacios']);
         }
@@ -135,13 +136,14 @@ class UserController extends Controller
 
         if ($usuario != null) {
             if ($usuario->estatus_id == 1) {
-                $usuario->estatus_id = 1;
-                $mensaje = 'Usuario Desactivado';
-            } else {
                 $usuario->estatus_id = 2;
-                $mensaje = 'Usuario Activado';
+                $mensaje = 'Usuario suspendido';
+            } else {
+                $usuario->estatus_id = 1;
+                $mensaje = 'Usuario activado';
             }
             $usuario->save();
+            // dd($mensaje);
             return response()->json(['code' => 200, 'msg' => $mensaje]);
         }
         return response()->json(['code' => 400, 'msg' => 'Usuario no encontrado']);

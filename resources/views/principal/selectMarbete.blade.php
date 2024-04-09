@@ -7,11 +7,11 @@
             </div>
             <div class="modal-body">
                 <div class="col-md-12 mb-3">
-                    <label for="marbete_id" class="col-form-label"> Costo de Inspección </label>
+                    <label for="marbete_id" class="col-form-label"> Marbetes </label>
                     <select class="form-select form-select-sm" style="cursor: pointer;" id="marbete_id">
                         <option value="" selected>Selecciona una opción</option>
-                        @foreach ($costosInspeccion as $costo)
-                            <option value="{{ $costo->id}}">{{ $costo->nombre}} - ${{ $costo->costo}}</option>
+                        @foreach ($marbetes as $marbete)
+                            <option value="{{ $marbete->id}}">{{ $marbete->nombre}} - ${{ $marbete->costo}}</option>
                         @endforeach
                     </select>
                 </div>

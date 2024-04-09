@@ -64,12 +64,22 @@
                     });
                     return false;
                 }
+                if($('#acceso_panel').val() == ''){
+                    Swal.fire({
+                        title: 'Debe seleccionar por lo menos un acceso',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
                 $.ajax({
                     type : 'POST',
                     url :"{{ route('sedes.store') }}",
                     data : { 
                         _token: "{{ csrf_token() }}",
-                        nombre: $('#nombre').val()
+                        nombre: $('#nombre').val(),
+                        acceso_panel: $('#acceso_panel').val()
                     },
                     success: function (data) {
                         if (data.code == 201) {
@@ -105,6 +115,7 @@
                 $.get('sedes/' + id, function (data) {
                     $('#up_id').val(data.data.id);
                     $('#up_nombre').val(data.data.nombre);
+                    $('#up_acceso_panel option[value="'+data.data.acceso_panel+'"]').attr("selected", "selected");
                     $('#update_entidad').modal('show');
                 })
             });
@@ -122,13 +133,23 @@
                     });
                     return false;
                 }
+                if($('#up_acceso_panel').val() == ''){
+                    Swal.fire({
+                        title: 'Debe seleccionar por lo menos un acceso',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
                 $('#update_entidad').modal('hide');
                 $.ajax({
                     type: 'PATCH',
                     url: 'sedes/'+id,
                     data : { 
                         _token: "{{ csrf_token() }}",
-                        nombre: $('#up_nombre').val()
+                        nombre: $('#up_nombre').val(),
+                        acceso_panel: $('#up_acceso_panel').val()
                     },
                     success: function (data) {
                         if (data.code == 200) {

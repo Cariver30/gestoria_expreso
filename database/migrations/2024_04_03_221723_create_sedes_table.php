@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('sedes', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
+            $table->integer('acceso_panel'); //0=Inspección, 1=Gestoría, 2= ambos
             $table->unsignedBigInteger("estatus_id")->nullable();
             $table->foreign("estatus_id")->references("id")->on("estatus")->onDelete('cascade');
             $table->timestamps();
