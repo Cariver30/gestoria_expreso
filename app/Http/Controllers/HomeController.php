@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\SubServicio;
 use Spatie\PdfToText\Pdf;
 use setasign\Fpdi\Fpdi;
 use setasign\Fpdi\PdfParser\StreamReader;
@@ -41,11 +40,7 @@ class HomeController extends Controller
 
     public function root()
     {
-        $costosInspeccion = SubServicio::where('servicio_id', 1)->get();
-        $marbetes = SubServicio::where('servicio_id', 2)->get();
-        $seguros = SubServicio::where('servicio_id', 7)->get();
-
-        return view('index', compact('costosInspeccion', 'marbetes', 'seguros'));
+        return view('principal.home');
     }
 
     /*Language Translation*/

@@ -159,4 +159,15 @@ class ServicioController extends Controller
         $subservicios = SubServicio::where('servicio_id', $id)->get();
         return response()->json(['code' => 200, 'data' => $subservicios]);
     }
+
+    public function getViewInspeccion() {
+        $costosInspeccion = SubServicio::where('servicio_id', 1)->get();
+        $marbetes = SubServicio::where('servicio_id', 2)->get();
+        $seguros = SubServicio::where('servicio_id', 7)->get();
+        return view('modulo.inspeccion.index', compact('costosInspeccion', 'marbetes', 'seguros'));
+    }
+
+    public function getViewGestoria() {
+        return view('modulo.gestoria.index');
+    }
 }

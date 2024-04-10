@@ -3,7 +3,7 @@
         <div class="d-flex">
             <!-- LOGO -->
             <div class="navbar-brand-box">
-                <a href="index" class="logo logo-dark">
+                <a href="" class="logo logo-dark">
                     <span class="logo-sm">
                         <img src="{{ URL::asset ('build/images/logo.svg') }}" alt="" height="22">
                     </span>
@@ -12,7 +12,7 @@
                     </span>
                 </a>
 
-                <a href="index" class="logo logo-light">
+                <a href="" class="logo logo-light">
                     <span class="logo-sm">
                         <img src="{{ URL::asset ('build/images/logo-light.svg') }}" alt="" height="22">
                     </span>
@@ -174,37 +174,6 @@
                     </form>
                 </div>
             </div>
-
-            <div class="dropdown d-inline-block">
-                
-                <div class="dropdown-menu dropdown-menu-end">
-
-                    <!-- item-->
-                    <a href="{{ url('index/en') }}" class="dropdown-item notify-item language" data-lang="eng">
-                        <img src="{{ URL::asset ('build/images/flags/us.jpg') }}" alt="user-image" class="me-1" height="12"> <span class="align-middle">English</span>
-                    </a>
-                    <!-- item-->
-                    <a href="{{ url('index/es') }}" class="dropdown-item notify-item language" data-lang="sp">
-                        <img src="{{ URL::asset ('build/images/flags/spain.jpg') }}" alt="user-image" class="me-1" height="12"> <span class="align-middle">Spanish</span>
-                    </a>
-
-                    <!-- item-->
-                    <a href="{{ url('index/de') }}" class="dropdown-item notify-item language" data-lang="gr">
-                        <img src="{{ URL::asset ('build/images/flags/germany.jpg') }}" alt="user-image" class="me-1" height="12"> <span class="align-middle">German</span>
-                    </a>
-
-                    <!-- item-->
-                    <a href="{{ url('index/it') }}" class="dropdown-item notify-item language" data-lang="it">
-                        <img src="{{ URL::asset ('build/images/flags/italy.jpg') }}" alt="user-image" class="me-1" height="12"> <span class="align-middle">Italian</span>
-                    </a>
-
-                    <!-- item-->
-                    <a href="{{ url('index/ru') }}" class="dropdown-item notify-item language" data-lang="ru">
-                        <img src="{{ URL::asset ('build/images/flags/russia.jpg') }}" alt="user-image" class="me-1" height="12"> <span class="align-middle">Russian</span>
-                    </a>
-                </div>
-            </div>
-
             <div class="dropdown d-none d-lg-inline-block ml-1">
                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                     <div class="px-lg-2">
@@ -369,7 +338,7 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="topnav-dashboard">
 
-                            <a href="index" class="dropdown-item" key="t-default">@lang('translation.Default')</a>
+                            <a href="" class="dropdown-item" key="t-default">@lang('translation.Default')</a>
                             <a href="dashboard-saas" class="dropdown-item" key="t-saas">@lang('translation.Saas')</a>
                             <a href="dashboard-crypto" class="dropdown-item" key="t-crypto">@lang('translation.Crypto')</a>
                             <a href="dashboard-blog" class="dropdown-item" key="t-blog">@lang('translation.Blog')</a>

@@ -50,7 +50,7 @@ class LoginController extends Controller
         $user = User::select('id')->where('pin', $pin)->first();
         if($user) {
             Auth::loginUsingId($user->id);
-            return view('index', compact('costosInspeccion', 'marbetes', 'seguros'));
+            return view('principal.home', compact('costosInspeccion', 'marbetes', 'seguros'));
         } else {
             return back();
         }

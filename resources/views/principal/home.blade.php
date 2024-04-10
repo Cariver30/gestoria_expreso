@@ -220,10 +220,10 @@
         </a>
         </div>
     </div>  --}}
-<div class="row col-md-12">
-    <a href="http://www.google.com" class="col-md-6">
-        <div class="row col-md-12">
-            <div class="col-lg-4" id="mod_inspeccion">
+<div class="row col-md-12" style="text-align: center;">
+    <a href="{{ route('modulo.inspeccion') }}" class="col-md-6">
+        <div>
+            <div class="col-lg-6" id="mod_inspeccion">
                 <div class="card bg-primary text-white-50">
                     <div class="card-body text-center">
                         <i class="mdi mdi-car me-3 text-white" style="font-size: 100px;"></i>
@@ -233,172 +233,17 @@
             </div>
         </div>
     </a>
-    <a href="http://www.google.com" class="col-md-6">
-        <div class="row col-md-12">
-            <div class="col-lg-4" id="mod_gestoria">
+    <a href="{{ route('modulo.gestoria') }}" class="col-md-6">
+        <div>
+            <div class="col-lg-6" id="mod_gestoria">
                 <div class="card bg-primary text-white-50">
                     <div class="card-body text-center">
                         <i class="mdi mdi-car me-3 text-white" style="font-size: 100px;"></i>
-                        <h1 class="mt-0 mb-4 text-white"> Inspección </h1>
+                        <h1 class="mt-0 mb-4 text-white"> Gestoría </h1>
                     </div>
                 </div>
             </div>
         </div>
     </a>
 </div>
-
-
-    <div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Nuevo</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    {{--  <form method="POST" action="#" autocomplete="off">
-                        @csrf  --}}
-                        <div class="row col-md-12">
-                            <div class="col-md-12 mb-3">
-                                <label for="name" class="col-form-label"> Nombre </label>
-                                <input type="text" class="form-control form-control-sm" name="nombre" required>
-                            </div>
-                            <div class="col-md-12 mb-3">
-                                <label for="compania" class="col-form-label"> Compañia </label>
-                                <input type="text" class="form-control form-control-sm" name="compania" required>
-                            </div>
-                            <div class="col-md-12 mb-3">
-                                <label for="telefono" class="col-form-label"> Teléfono </label>
-                                <input type="text" class="form-control form-control-sm" name="telefono">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="vehiculo" class="col-form-label"> Vehículo </label>
-                                <input type="text" class="form-control form-control-sm" name="vehiculo" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="marca" class="col-form-label"> Marca </label>
-                                <input type="text" class="form-control form-control-sm" name="marca" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="anio" class="col-form-label"> Año </label>
-                                <input type="text" class="form-control form-control-sm" name="anio" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="cuatroDigitos" class="col-form-label"> últimos 4 dígitos de SS </label>
-                                <input type="text" class="form-control form-control-sm" name="cuatroDigitos" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="email" class="col-form-label"> Email </label>
-                                <input type="email" class="form-control form-control-sm" name="email" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="vencimiento" class="col-form-label"> Mes de Vencimiento </label>
-                                <input type="text" class="form-control form-control-sm" name="vencimiento" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="marbetesPendientes" class="col-form-label"> Masbertes Pendientes </label>
-                                <input type="text" class="form-control form-control-sm" name="marbetesPendientes" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="rol_id" class="col-form-label"> Costo de Inspección </label>
-                                <select class="form-select form-select-sm" style="cursor: pointer;" id="rol_id">
-                                    <option value="" selected>Selecciona una opción</option>
-                                    @foreach ($costosInspeccion as $costo)
-                                        <option value="{{ $costo->id}}">{{ $costo->nombre}} - ${{ $costo->costo}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            {{--  <form method="POST" action="{{ route('pdf.data') }}" autocomplete="off" enctype="multipart/form-data">
-                                @csrf
-                                <div>
-                                    <div class="dropzone">
-                                        <div class="fallback">
-                                            <input name="filepdf" type="file">
-                                        </div>
-                                        <div class="dz-message needsclick">
-                                            <div class="mb-3">
-                                                <i class="display-4 text-muted bx bxs-cloud-upload"></i>
-                                            </div>
-        
-                                            <h4> Adjunta un archivo o click para cargar el archivo</h4>
-                                        </div>
-                                    </div>
-            
-                                    <ul class="list-unstyled mb-0" id="dropzone-preview">
-                                        <li class="mt-2" id="dropzone-preview-list">
-                                            <!-- This is used as the file preview template -->
-                                            <div class="border rounded">
-                                                <div class="d-flex p-2">
-                                                    <div class="flex-shrink-0 me-3">
-                                                        <div class="avatar-sm bg-light rounded">
-                                                            <img data-dz-thumbnail class="img-fluid rounded d-block"
-                                                                src="https://img.themesbrand.com/judia/new-document.png"
-                                                                alt="Dropzone-Image">
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex-grow-1">
-                                                        <div class="pt-1">
-                                                            <h5 class="fs-md mb-1" data-dz-name>&nbsp;</h5>
-                                                            <p class="fs-sm text-muted mb-0" data-dz-size></p>
-                                                            <strong class="error text-danger" data-dz-errormessage></strong>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex-shrink-0 ms-3">
-                                                        <button data-dz-remove class="btn btn-sm btn-danger">Delete</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                    <div class="text-center mt-4">
-                                        <button type="submit" class="btn btn-primary waves-effect waves-light">Send Files</button>
-                                    </div>
-                                </div>
-                            </form>  --}}
-                            <form action="{{ route('pdf.data') }}" method="post" enctype="multipart/form-data" >
-                                @csrf
-                                <input type="file" name="urlpdf" >
-                                <input type="submit" value="subir">
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            <button type="button" class="btn btn-primary">Guardar</button>
-                        </div>
-                    {{--  </form>  --}}
-                </div>
-            </div>
-        </div>
-    </div>
-
-    @include('principal.selectMarbete')
-    @include('principal.selectSeguro')
-
-@endsection
-@section('script')
-    <script>
-        $("#inspeccionVehiculo").click(function() {
-            $('#staticBackdrop').modal('show')
-        });
-        $("#ventaMarbetes").click(function() {
-            $('#select_marbete').modal('show')
-        });
-        $("#seguro").click(function() {
-            $('#select_seguro').modal('show')
-        });
-        
-        $("#seguro_id").on("change", function() {
-            var seguro_id = $(this).val();
-            if(seguro_id == 1){
-                document.getElementById("opcion_vaucher").style.display = "initial";
-            }else{
-                document.getElementById("opcion_vaucher").style.display = "none";
-           }
-        });
-    </script>
-    <!-- Plugins js -->
-    <script src="{{ URL::asset('build/libs/dropzone/dropzone-min.js') }}"></script>
-
-    <!-- Form file upload init js -->
-    <script src="{{ URL::asset('build/js/pages/form-file-upload.init.js') }}"></script>
 @endsection

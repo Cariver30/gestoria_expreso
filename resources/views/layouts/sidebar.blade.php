@@ -46,20 +46,21 @@
                         <span key="t-file-manager"> Entidades </span>
                     </a>
                 </li>
+                <div style="display: none">
                 <li>
                     <a href="#" class="waves-effect">
                         <i class="bx bx-cog"></i>
                         <span key="t-file-manager"> Configuración </span>
                     </a>
                 </li>
-                <div style="display: none">
+                
                     <li>
                         <a href="javascript: void(0);" class="has-arrow waves-effect">
                             <i class="bx bx-home-circle"></i>
                             <span key="t-dashboards">@lang('translation.Dashboards')</span>
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
-                            <li><a href="index" key="t-default">@lang('translation.Default')</a></li>
+                            <li><a href="" key="t-default">@lang('translation.Default')</a></li>
                             <li><a href="dashboard-saas" key="t-saas">@lang('translation.Saas')</a></li>
                             <li><a href="dashboard-crypto" key="t-crypto">@lang('translation.Crypto')</a></li>
                             <li><a href="dashboard-blog" key="t-blog">@lang('translation.Blog')</a></li>

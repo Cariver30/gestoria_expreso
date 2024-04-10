@@ -7,17 +7,17 @@
             </div>
             <div class="modal-body row col-md-12">
                 <div class="col-md-8 mb-3">
-                    <label for="marbete_id" class="col-form-label"> Seguros disponibles </label>
-                    <select class="form-select form-select-sm" style="cursor: pointer;" id="marbete_id">
+                    <label for="seguro_id" class="col-form-label"> Seguros disponibles </label>
+                    <select class="form-select form-select-sm" style="cursor: pointer;" id="seguro_id">
                         <option value="" selected>Selecciona una opción</option>
                         @foreach ($seguros as $seguro)
-                            <option value="{{ $seguro->id}}">{{ $seguro->nombre}} - ${{ $seguro->costo}}</option>
+                            <option value="{{ $seguro->id}}">{{ $seguro->nombre}}</option>
                         @endforeach
                     </select>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <label for="name" class="col-form-label"> Número de voucher </label>
-                    <input type="text" class="form-control form-control-sm" id="nombre" required>
+                <div class="col-md-4 mb-3" id="opcion_vaucher" style="display: none">
+                    <label for="num_vaucher" class="col-form-label"> Número de voucher </label>
+                    <input type="text" class="form-control form-control-sm" id="num_vaucher">
                     <small> Sí es seguro privado</small>
                 </div>
                 <div class="modal-footer">
