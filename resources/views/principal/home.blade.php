@@ -220,30 +220,34 @@
         </a>
         </div>
     </div>  --}}
-<div class="row col-md-12" style="text-align: center;">
-    <a href="{{ route('modulo.inspeccion') }}" class="col-md-6">
-        <div>
-            <div class="col-lg-6" id="mod_inspeccion">
-                <div class="card bg-primary text-white-50">
-                    <div class="card-body text-center">
-                        <i class="mdi mdi-car me-3 text-white" style="font-size: 100px;"></i>
-                        <h1 class="mt-0 mb-4 text-white"> Inspección </h1>
+    <div class="row col-md-12" style="text-align: center;">
+    @if (Auth::user()->sede_id == 0 || Auth::user()->rol_id == 1)
+        <a href="{{ route('modulo.inspeccion') }}" class="col-md-6">
+            <div>
+                <div class="col-lg-6" id="mod_inspeccion">
+                    <div class="card bg-primary text-white-50">
+                        <div class="card-body text-center">
+                            <i class="mdi mdi-car me-3 text-white" style="font-size: 100px;"></i>
+                            <h1 class="mt-0 mb-4 text-white"> Inspección </h1>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </a>
-    <a href="{{ route('modulo.gestoria') }}" class="col-md-6">
-        <div>
-            <div class="col-lg-6" id="mod_gestoria">
-                <div class="card bg-primary text-white-50">
-                    <div class="card-body text-center">
-                        <i class="mdi mdi-car me-3 text-white" style="font-size: 100px;"></i>
-                        <h1 class="mt-0 mb-4 text-white"> Gestoría </h1>
+        </a>
+    @endif
+    @if (Auth::user()->sede_id == 1 || Auth::user()->rol_id == 1)
+        <a href="{{ route('modulo.gestoria') }}" class="col-md-6">
+            <div>
+                <div class="col-lg-6" id="mod_gestoria">
+                    <div class="card bg-primary text-white-50">
+                        <div class="card-body text-center">
+                            <i class="mdi mdi-car me-3 text-white" style="font-size: 100px;"></i>
+                            <h1 class="mt-0 mb-4 text-white"> Gestoría </h1>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </a>
+        </a>
+    @endif
 </div>
 @endsection

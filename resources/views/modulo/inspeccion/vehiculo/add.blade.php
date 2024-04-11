@@ -1,5 +1,5 @@
 <div class="modal fade" id="add_vehiculo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel"> Agregar Vehículo </h5>
@@ -48,13 +48,23 @@
                         
                         <div class="col-md-3 mb-3">
                             <label for="vencimiento" class="col-form-label"> Mes de Vencimiento </label>
-                            <input type="number" class="form-control form-control-sm" name="vencimiento" required>
+                            <select class="form-select form-select-sm" style="cursor: pointer;" id="rol_id">
+                                <option value="" selected>Selecciona un mes</option>
+                                <option value="1">Enero</option>
+                                <option value="2">Febrero</option>
+                                <option value="3">Marzo</option>
+                                <option value="4">Abril</option>
+                                <option value="5">Mayo</option>
+                                <option value="6">Junio</option>
+                                <option value="7">Julio</option>
+                                <option value="8">Agosto</option>
+                                <option value="9">Septiembre</option>
+                                <option value="10">Octubre</option>
+                                <option value="11">Noviembre</option>
+                                <option value="12">Diciembre</option>
+                            </select>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <label for="marbetesPendientes" class="col-form-label"> Masbertes Pendientes </label>
-                            <input type="text" class="form-control form-control-sm" name="marbetesPendientes" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
                             <label for="rol_id" class="col-form-label"> Costo de Inspección </label>
                             <select class="form-select form-select-sm" style="cursor: pointer;" id="rol_id" @if(count($costosInspeccion) == 0)) disabled @endif>
                                 <option value="" selected>Selecciona una opción</option>

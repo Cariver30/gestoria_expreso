@@ -6,7 +6,9 @@ use DB;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Sede;
+use App\Mail\UserPin;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -50,22 +52,25 @@ class UserController extends Controller
             //Se genera PIN para el inicio de sesión, el cual tambien se envía por correo al usuario.
             $pin = $this->generarPin();
             
-            $usuario = new User();
-            $usuario->nombre = \Helper::capitalizeFirst($request->nombre, "1");
-            $usuario->primer_apellido = \Helper::capitalizeFirst($request->primer_apellido, "1");
-            $usuario->segundo_apellido = (!is_null($request->segundo_apellido) ? \Helper::capitalizeFirst($request->segundo_apellido, "1") : null );
-            $usuario->email = $request->email;
-            $usuario->email_verified_at = now();
-            $usuario->password = Hash::make($pin);
-            $usuario->pin = Hash::make($pin);
-            $usuario->estatus_id = 1;
-            $usuario->dob = '2024-04-01';
-            $usuario->avatar = 'images/avatar-1.jpg';
-            $usuario->rol_id = $request->rol_id;
-            $usuario->sede_id = $request->entidad_id;
-            $usuario->save();
+            $user = new User();
+            $user->nombre = \Helper::capitalizeFirst($request->nombre, "1");
+            $user->primer_apellido = \Helper::capitalizeFirst($request->primer_apellido, "1");
+            $user->segundo_apellido = (!is_null($request->segundo_apellido) ? \Helper::capitalizeFirst($request->segundo_apellido, "1") : null );
+            $user->email = $request->email;
+            $user->email_verified_at = now();
+            $user->password = Hash::make($pin);
+            $user->pin = $pin;
+            $user->estatus_id = 1;
+            $user->dob = '2024-04-01';
+            $user->avatar = 'images/avatar-1.jpg';
+            $user->rol_id = $request->rol_id;
+            $user->sede_id = $request->entidad_id;
+            $user->save();
 
             DB::commit();
+
+            // Mail::to($user->email)->send(new UserPin($user, $pin));
+            Mail::to('xbox.07@hotmail.com')->send(new UserPin($user, $pin));
 
             return response()->json(['code' => 201, 'msg' => 'Usuario creado']);
 

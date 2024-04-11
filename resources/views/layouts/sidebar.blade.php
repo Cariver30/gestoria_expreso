@@ -1,8 +1,6 @@
 <!-- ========== Left Sidebar Start ========== -->
 <div class="vertical-menu">
-
     <div data-simplebar class="h-100">
-
         <!--- Sidemenu -->
         <div id="sidebar-menu">
             <!-- Left Menu Start -->
@@ -13,39 +11,39 @@
                         <span key="t-file-manager"> Panel de Control </span>
                     </a>
                 </li>
-
-                <li class="menu-title" key="t-menu"> Administración </li>
-
-                <li>
-                    <a href="{{ route('usuario.index') }}" class="waves-effect">
-                        <i class="bx bx-user"></i>
-                        <span key="t-file-manager"> Usuarios </span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('servicio.index') }}" class="waves-effect">
-                        <i class="bx bx-user"></i>
-                        <span key="t-file-manager"> Servicios </span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('roles.index') }}" class="waves-effect">
-                        <i class="bx bx-user"></i>
-                        <span key="t-file-manager"> Roles </span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('estatus.index') }}" class="waves-effect">
-                        <i class="bx bx-transfer-alt"></i>
-                        <span key="t-file-manager"> Cat. de Estatus </span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('sedes.index') }}" class="waves-effect">
-                        <i class="bx bx-home"></i>
-                        <span key="t-file-manager"> Entidades </span>
-                    </a>
-                </li>
+                @if (Auth::user()->rol_id == 1)
+                    <li class="menu-title" key="t-menu"> Administración </li>
+                    <li>
+                        <a href="{{ route('usuario.index') }}" class="waves-effect">
+                            <i class="bx bx-user"></i>
+                            <span key="t-file-manager"> Usuarios </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('servicio.index') }}" class="waves-effect">
+                            <i class="bx bx-user"></i>
+                            <span key="t-file-manager"> Servicios </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('roles.index') }}" class="waves-effect">
+                            <i class="bx bx-user"></i>
+                            <span key="t-file-manager"> Roles </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('estatus.index') }}" class="waves-effect">
+                            <i class="bx bx-transfer-alt"></i>
+                            <span key="t-file-manager"> Cat. de Estatus </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('sedes.index') }}" class="waves-effect">
+                            <i class="bx bx-home"></i>
+                            <span key="t-file-manager"> Entidades </span>
+                        </a>
+                    </li>
+                @endif
                 <div style="display: none">
                 <li>
                     <a href="#" class="waves-effect">
