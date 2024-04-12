@@ -58,7 +58,7 @@
             $('#saveUsuario').click(function () {
                 var id = $(this).attr('data-id');
                 var metodo = $(this).attr('data-metodo');
-                if($('#nombre').val() == '' || $('#primer_apellido').val() == '' || $('#email').val() == '' || $('#rol_id').val() == '' || $('#entidad_id').val() == ''){
+                if($('#nombre').val() == '' || $('#primer_apellido').val() == '' || $('#email').val() == '' || $('#rol_id').val() == '' || $('#entidad_id').val() == '' || $('#pin').val() == ''){
                     Swal.fire({
                         title: 'Hay campos vacios',
                         icon: "warning",
@@ -77,7 +77,8 @@
                         segundo_apellido: $('#segundo_apellido').val(),
                         email: $('#email').val(),
                         rol_id: $('#rol_id').val(),
-                        entidad_id: $('#entidad_id').val()
+                        entidad_id: $('#entidad_id').val(),
+                        pin: $('#pin').val(),
                     },
                     success: function (data) {
                         if (data.code == 201) {
@@ -114,6 +115,7 @@
                 $.get('usuario/' + id, function (data) {
                     $('#up_id').val(data.data.id);
                     $('#up_nombre').val(data.data.nombre);
+                    $('#up_pin').val(data.data.pin);
                     $('#up_primer_apellido').val(data.data.primer_apellido);
                     $('#up_segundo_apellido').val(data.data.segundo_apellido);
                     $('#up_email').val(data.data.email);
@@ -126,7 +128,7 @@
             //Actualizar usuario
             $('#updateUsuario').click(function () {
                 var id = $('#up_id').val();
-                if($('#up_nombre').val() == '' || $('#up_primer_apellido').val() == '' || $('#up_email').val() == '' || $('#up_rol_id').val() == '' || $('#up_entidad_id').val() == ''){
+                if($('#up_nombre').val() == '' || $('#up_primer_apellido').val() == '' || $('#up_email').val() == '' || $('#up_rol_id').val() == '' || $('#up_entidad_id').val() == '' || $('#up_pin').val() == ''){
                     Swal.fire({
                         title: 'Hay campos vacíos',
                         icon: "warning",
@@ -147,7 +149,9 @@
                         segundo_apellido: $('#up_segundo_apellido').val(),
                         email: $('#up_email').val(),
                         rol_id: $('#up_rol_id').val(),
-                        entidad_id: $('#up_entidad_id').val()
+                        entidad_id: $('#up_entidad_id').val(),
+                        pin: $('#up_pin').val(),
+
                     },
                     success: function (data) {
                         if (data.code == 200) {

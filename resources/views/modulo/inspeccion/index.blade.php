@@ -15,6 +15,7 @@
             <a type="button" href="{{ url()->previous() }}" class="btn btn-success btn-rounded waves-effect waves-light mb-2"><i class="mdi mdi-back me-1"></i> Volver </a>
         </div>
     </div>
+    <input type="hidden" name="cliente_id" id="cliente_id">
     <div class="col-lg-3" id="inspeccionVehiculo">
         <div class="card bg-success text-white-50">
             <div class="card-body text-center">
@@ -119,9 +120,9 @@
                                 showConfirmButton: false,
                                 timer: 2000
                             });
-                            setTimeout(function(){
-                                window.location.reload();
-                            }, 1000);
+                            $(".formVehiculo input").val("");
+                            $('#mes_vencimiento').prop('selectedIndex',0);
+                            $('#cliente_id').val(data.id);
                         } else {
                             Swal.fire({
                                 title: data.msg,

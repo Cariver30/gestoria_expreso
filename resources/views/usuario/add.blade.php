@@ -42,6 +42,10 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="pin" class="col-form-label"> PIN </label>
+                            <input type="text" class="form-control form-control-sm" id="pin" maxlength="4">
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

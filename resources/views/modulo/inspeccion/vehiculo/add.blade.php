@@ -6,7 +6,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="row col-md-12">
+                <div class="row col-md-12 formVehiculo">
                     <div class="col-md-6 mb-3">
                         <label for="nombre" class="col-form-label"> Nombre completo</label>
                         <input type="text" class="form-control form-control-sm" name="nombre" id="nombre" required>

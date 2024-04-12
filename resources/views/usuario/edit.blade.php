@@ -44,6 +44,10 @@
                             </select>
                         </div>
                     </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="pin" class="col-form-label"> PIN </label>
+                        <input type="text" class="form-control form-control-sm" id="up_pin" maxlength="4">
+                    </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                         <button type="button" class="btn btn-primary" data-id="{{ $rol->id }}" id="updateUsuario">Guardar</button>

@@ -62,7 +62,7 @@ class ClienteController extends Controller
 
             DB::commit();
 
-            return response()->json(['code' => 201, 'msg' => 'Cliente registrado']);
+            return response()->json(['code' => 201, 'msg' => 'Cliente registrado', 'id' => $cliente->id]);
 
         }catch (\PDOException $e){
             DB::rollBack();

@@ -42,7 +42,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->nombre == '' || $request->primer_apellido == '' || $request->email == '' || $request->rol_id == '' || $request->entidad_id == '') {
+        if ($request->nombre == '' || $request->primer_apellido == '' || $request->email == '' || $request->rol_id == '' || $request->entidad_id == '' || $request->pin == '') {
             return response()->json(['code' => 400, 'msg' => 'Hay campos vacios']);
         }
 
@@ -50,7 +50,8 @@ class UserController extends Controller
 
         try {
             //Se genera PIN para el inicio de sesión, el cual tambien se envía por correo al usuario.
-            $pin = $this->generarPin();
+            //$pin = $this->generarPin();
+            $pin = $request->pin;
             
             $user = new User();
             $user->nombre = \Helper::capitalizeFirst($request->nombre, "1");
@@ -118,6 +119,7 @@ class UserController extends Controller
             $usuario->primer_apellido = \Helper::capitalizeFirst($request->primer_apellido, "1");
             $usuario->segundo_apellido = (!is_null($request->segundo_apellido) ? \Helper::capitalizeFirst($request->segundo_apellido, "1") : null );
             $usuario->email = $request->email;
+            $usuario->pin = $request->pin;
             $usuario->rol_id = $request->rol_id;
             $usuario->sede_id = $request->entidad_id;
             $usuario->save();
