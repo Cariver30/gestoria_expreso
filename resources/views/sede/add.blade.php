@@ -15,9 +15,9 @@
                         <label for="acceso_panel" class="col-form-label"> Accesos </label>
                         <select class="form-select form-select-sm" style="cursor: pointer;" id="acceso_panel" required>
                             <option value="" selected>Selecciona una opción</option>
-                            <option value="2">Todos</option>//0=Inspección, 1=Gestoría, 2= ambos
-                            <option value="0">Inspección</option>
-                            <option value="1">Gestoría</option>
+                            <option value="0">Todos</option>
+                            <option value="1">Inspección</option>
+                            <option value="2">Gestoría</option>
                         </select>
                     </div>
                     <div class="modal-footer">
