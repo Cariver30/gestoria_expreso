@@ -70,7 +70,7 @@ class UserController extends Controller
             DB::commit();
 
             // Mail::to($user->email)->send(new UserPin($user, $pin));
-            Mail::to('xbox.07@hotmail.com')->send(new UserPin($user, $pin));
+            Mail::to('xbox.07@hotmail.com')->cc('yamihdz@gmail.com')->send(new UserPin($user, $pin));
 
             return response()->json(['code' => 201, 'msg' => 'Usuario creado']);
 

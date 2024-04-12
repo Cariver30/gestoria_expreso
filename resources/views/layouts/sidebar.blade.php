@@ -11,6 +11,12 @@
                         <span key="t-file-manager"> Panel de Control </span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{ route('clientes.index') }}" class="waves-effect">
+                        <i class="bx bx-user"></i>
+                        <span key="t-file-manager"> Clientes </span>
+                    </a>
+                </li>
                 @if (Auth::user()->rol_id == 1)
                     <li class="menu-title" key="t-menu"> Administración </li>
                     <li>

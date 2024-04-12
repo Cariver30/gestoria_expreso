@@ -29,6 +29,7 @@ Route::resource('servicio', App\Http\Controllers\ServicioController::class);
 Route::resource('roles', App\Http\Controllers\RoleController::class);
 Route::resource('estatus', App\Http\Controllers\EstatusController::class);
 Route::resource('sedes', App\Http\Controllers\SedeController::class);
+Route::resource('clientes', App\Http\Controllers\ClienteController::class);
 
 //Update User Details
 Route::post('/update-profile/{id}', [App\Http\Controllers\HomeController::class, 'updateProfile'])->name('updateProfile');

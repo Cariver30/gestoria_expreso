@@ -81,6 +81,68 @@
                     document.getElementById("opcion_vaucher").style.display = "none";
                }
             });
+
+             //Crear vehículo
+            $('#saveVehiculo').click(function () {
+                if($('#nombre').val() == '' || $('#email').val() == '' || $('#telefono').val() == '' || $('#compania').val() == '' || $('#vehiculo').val() == '' || $('#tablilla').val() == '' || $('#marca').val() == '' || $('#anio').val() == '' || $('#cuatroDigitos').val() == '' || $('#mes_vencimiento').val() == '' || $('#costo_inspeccion').val() == ''){
+                    Swal.fire({
+                        title: 'Hay campos vacios',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                $.ajax({
+                    type : 'POST',
+                    url :"{{ route('clientes.store') }}",
+                    data : { 
+                        _token: "{{ csrf_token() }}",
+                        nombre: $('#nombre').val(),
+                        email: $('#email').val(),
+                        telefono: $('#telefono').val(),
+                        compania: $('#compania').val(),
+                        vehiculo: $('#vehiculo').val(),
+                        tablilla: $('#tablilla').val(),
+                        marca: $('#marca').val(),
+                        anio: $('#anio').val(),
+                        cuatroDigitos: $('#cuatroDigitos').val(),
+                        mes_vencimiento: $('#mes_vencimiento').val(),
+                        costo_inspeccion: $('#costo_inspeccion_id').val()
+                    },
+                    success: function (data) {
+                        if (data.code == 201) {
+                            $('#add_vehiculo').modal('hide');
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            setTimeout(function(){
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "warning",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                        }
+
+                    },
+                    error: function (data) {
+                        // console.log(data);
+                    }
+                });
+            });
+
+            $('.btnCostoInspeccion').click(function () {
+                var id = $(this).attr('data-id');
+                $('#costo_inspeccion_id').val(id);
+            });
+
         });
     </script>
 @endsection
