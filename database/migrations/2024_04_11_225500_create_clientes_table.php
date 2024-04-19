@@ -16,6 +16,11 @@ return new class extends Migration
             $table->string('nombre');
             $table->string('email');
             $table->string('telefono');
+            $table->string('seguro_social');
+            $table->unsignedBigInteger("usuario_id")->nullable();
+            $table->foreign("usuario_id")->references("id")->on("users");
+            $table->unsignedBigInteger("estatus_id")->nullable();
+            $table->foreign("estatus_id")->references("id")->on("estatus")->onDelete('cascade');
             $table->timestamps();
         });
     }

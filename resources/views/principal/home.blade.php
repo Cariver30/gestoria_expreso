@@ -221,7 +221,7 @@
         </div>
     </div>  --}}
     <div class="row col-md-12" style="text-align: center;">
-    {{--  0=Inspección, 1=Gestoría, 2= ambos  --}}
+    {{--  1=Inspección, 2=Gestoría, 0= ambos  --}}
     @if (Auth::user()->sede_id == 0 || Auth::user()->sede_id == 1 || Auth::user()->rol_id == 1)
         <a href="{{ route('modulo.inspeccion') }}" class="col-md-6">
             <div>

@@ -24,6 +24,7 @@ Route::get('subservicios/{id}', [App\Http\Controllers\ServicioController::class,
 Route::post('servicio/subservicio', [App\Http\Controllers\ServicioController::class, 'addSubServicio'])->name('servicio.store.subservicio');
 Route::get('seccion', [App\Http\Controllers\ServicioController::class, 'getViewInspeccion'])->name('modulo.inspeccion');
 Route::get('gestoria', [App\Http\Controllers\ServicioController::class, 'getViewGestoria'])->name('modulo.gestoria');
+Route::post('clientes/marbete', [App\Http\Controllers\ClienteController::class, 'vehiculoMarbete'])->name('vehiculo.marbete');
 Route::resource('usuario', App\Http\Controllers\UserController::class);
 Route::resource('servicio', App\Http\Controllers\ServicioController::class);
 Route::resource('roles', App\Http\Controllers\RoleController::class);

@@ -14,7 +14,11 @@ class EstatusTableSeeder extends Seeder
     {
         \DB::table('estatus')->insert([
             ['nombre' => "Activo"],
-            ['nombre' => "Inactivo"]
+            ['nombre' => "Inactivo"],
+            ['nombre' => "En curso"],
+            ['nombre' => "Finalizado"],
+            ['nombre' => "Pendiente"],
+            ['nombre' => "Cancelado"]
         ]);
     }
 }

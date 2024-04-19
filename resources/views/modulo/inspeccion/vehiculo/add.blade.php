@@ -19,6 +19,10 @@
                         <label for="telefono" class="col-form-label"> Teléfono </label>
                         <input type="number" class="form-control form-control-sm" name="telefono" id="telefono">
                     </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="seguro_social" class="col-form-label"> Últimos 4 dígitos de SS </label>
+                        <input type="text" class="form-control form-control-sm" name="seguro_social" id="seguro_social" required>
+                    </div>
                     <div class="col-md-6 mb-3">
                         <label for="compania" class="col-form-label"> Compañia </label>
                         <input type="text" class="form-control form-control-sm" name="compania" id="compania" required>
@@ -39,11 +43,6 @@
                         <label for="anio" class="col-form-label"> Año </label>
                         <input type="text" class="form-control form-control-sm" name="anio" id="anio" required>
                     </div>
-                    <div class="col-md-3 mb-3">
-                        <label for="cuatroDigitos" class="col-form-label"> Últimos 4 dígitos de SS </label>
-                        <input type="text" class="form-control form-control-sm" name="cuatroDigitos" id="cuatroDigitos" required>
-                    </div>
-                    
                     <div class="col-md-3 mb-3">
                         <label for="mes_vencimiento" class="col-form-label"> Mes de Vencimiento </label>
                         <select class="form-select form-select-sm" style="cursor: pointer;" id="mes_vencimiento" name="mes_vencimiento">
@@ -74,6 +73,7 @@
                     </div>  --}}
                     <div class="row col-md-12 mb-3">
                         <label for="costo_inspeccion" class="col-form-label"> Costo de Inspección </label>
+                        @if (count($costosInspeccion) == 0) <small class="text-danger">Debe registrar por lo menos un costo de inspección</small> @endif
                         @foreach ($costosInspeccion as $costo)
                             <button type="button" class="btn btn-soft-success col-md-2 waves-effect waves-light btnCostoInspeccion" style="margin: 1px;" data-id="{{ $costo->id}}">{{ $costo->nombre}} - ${{ $costo->costo}} </button>
                         @endforeach
@@ -81,7 +81,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="saveVehiculo">Guardar</button>
+                    <button type="button" class="btn btn-primary" id="saveVehiculo" @if (count($costosInspeccion) == 0) disabled @endif >Guardar</button>
                 </div>
             </div>
         </div>

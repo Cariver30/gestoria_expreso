@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use DB;
 use Session;
 use App\Models\Servicio;
+use App\Models\Cliente;
+use App\Models\ClienteVehiculo;
 use App\Models\SubServicio;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class ServicioController extends Controller
@@ -164,7 +167,23 @@ class ServicioController extends Controller
         $costosInspeccion = SubServicio::where('servicio_id', 1)->get();
         $marbetes = SubServicio::where('servicio_id', 2)->get();
         $seguros = SubServicio::where('servicio_id', 7)->get();
+        
+        // $cliente_pendientes = Cliente::select('id')->where('usuario_id', Auth::user()->id)->where('estatus_id', 5)->get();
+        // if (count($cliente_pendientes) != 0) {
+        //     foreach ($cliente_pendientes as $cliente) {
+        //         $pendiente = ClienteVehiculo::where('cliente_id', $cliente->id)->where('estatus_id', 3)->first();
+        //         if ($pendiente != null) {
+        //             $en_curso = 1;       
+        //         } else {
+        //             $en_curso = 0;
+        //         }
+        //     }
+        // } else {
+        //     $en_curso = 0;
+        // }
+        
         return view('modulo.inspeccion.index', compact('costosInspeccion', 'marbetes', 'seguros'));
+        // return view('modulo.inspeccion.index', compact('costosInspeccion', 'marbetes', 'seguros', 'en_curso'));
     }
 
     public function getViewGestoria() {

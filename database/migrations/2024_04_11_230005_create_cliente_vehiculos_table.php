@@ -18,8 +18,11 @@ return new class extends Migration
             $table->string('tablilla');
             $table->string('marca');
             $table->string('anio');
-            $table->string('digitos_ss');
-            $table->integer('mes_vencimiento');
+            $table->string('motivo')->nullable();
+            $table->unsignedBigInteger("estatus_id")->nullable();
+            $table->foreign("estatus_id")->references("id")->on("estatus")->onDelete('cascade');
+            $table->unsignedBigInteger("mes_vencimiento_id")->nullable();
+            $table->foreign("mes_vencimiento_id")->references("id")->on("mes")->onDelete('cascade');
             $table->unsignedBigInteger("costo_inspeccion_id")->nullable();
             $table->foreign("costo_inspeccion_id")->references("id")->on("sub_servicios")->onDelete('cascade');
             $table->unsignedBigInteger("cliente_id")->nullable();

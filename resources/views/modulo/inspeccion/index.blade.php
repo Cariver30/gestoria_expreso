@@ -15,7 +15,6 @@
             <a type="button" href="{{ url()->previous() }}" class="btn btn-success btn-rounded waves-effect waves-light mb-2"><i class="mdi mdi-back me-1"></i> Volver </a>
         </div>
     </div>
-    <input type="hidden" name="cliente_id" id="cliente_id">
     <div class="col-lg-3" id="inspeccionVehiculo">
         <div class="card bg-success text-white-50">
             <div class="card-body text-center">
@@ -51,9 +50,9 @@
     </div>
 </div>
 @include('modulo.inspeccion.vehiculo.add')
-@include('modulo.inspeccion.extras.index')
 @include('modulo.inspeccion.marbete.add')
 @include('modulo.inspeccion.seguro.add')
+@include('modulo.inspeccion.extras.index')
 @endsection
 
 @section('script')
@@ -61,11 +60,21 @@
     <script src="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.js') }}"></script>
     <script>
         $(document).ready(function() {
+
+            if({{$en_curso}} == 1){
+                Swal.fire({
+                    title: 'Registro pendiente',
+                    icon: "warning",
+                    showConfirmButton: false
+                });
+                document.getElementById("inspeccionVehiculo").removeAttribute("id");
+            }
+
+
+
+            //Sección para mostrar modales
             $("#inspeccionVehiculo").click(function() {
                 $('#add_vehiculo').modal('show')
-            });
-            $("#extras").click(function() {
-                $('#servicios_extras').modal('show')
             });
             $("#ventaMarbetes").click(function() {
                 $('#select_marbete').modal('show')
@@ -73,7 +82,11 @@
             $("#seguro").click(function() {
                 $('#select_seguro').modal('show')
             });
+            $("#extras").click(function() {
+                $('#servicios_extras').modal('show')
+            });
             
+            //Se detecta el change para habilitar el input de núm de vaucher cuando es seguro privado
             $("#seguro_id").on("change", function() {
                 var seguro_id = $(this).val();
                 if(seguro_id == 1){
@@ -83,9 +96,9 @@
                }
             });
 
-             //Crear vehículo
+             //Crear Cliente- vehículo
             $('#saveVehiculo').click(function () {
-                if($('#nombre').val() == '' || $('#email').val() == '' || $('#telefono').val() == '' || $('#compania').val() == '' || $('#vehiculo').val() == '' || $('#tablilla').val() == '' || $('#marca').val() == '' || $('#anio').val() == '' || $('#cuatroDigitos').val() == '' || $('#mes_vencimiento').val() == '' || $('#costo_inspeccion').val() == ''){
+                if($('#nombre').val() == '' || $('#email').val() == '' || $('#telefono').val() == '' || $('#compania').val() == '' || $('#vehiculo').val() == '' || $('#tablilla').val() == '' || $('#marca').val() == '' || $('#anio').val() == '' || $('#seguro_social').val() == '' || $('#mes_vencimiento').val() == '' || $('#costo_inspeccion').val() == ''){
                     Swal.fire({
                         title: 'Hay campos vacios',
                         icon: "warning",
@@ -107,7 +120,7 @@
                         tablilla: $('#tablilla').val(),
                         marca: $('#marca').val(),
                         anio: $('#anio').val(),
-                        cuatroDigitos: $('#cuatroDigitos').val(),
+                        seguro_social: $('#seguro_social').val(),
                         mes_vencimiento: $('#mes_vencimiento').val(),
                         costo_inspeccion: $('#costo_inspeccion_id').val()
                     },
@@ -120,9 +133,68 @@
                                 showConfirmButton: false,
                                 timer: 2000
                             });
-                            $(".formVehiculo input").val("");
-                            $('#mes_vencimiento').prop('selectedIndex',0);
-                            $('#cliente_id').val(data.id);
+                            setTimeout(function(){
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "warning",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                        }
+
+                    },
+                    error: function (data) {
+                    }
+                });
+            });
+
+
+
+
+
+
+
+
+
+            $('.btnCostoInspeccion').click(function () {
+                var id = $(this).attr('data-id');
+                $('#costo_inspeccion_id').val(id);
+            });
+
+            $('.btnInspeccionMarbete').click(function () {
+                var id = $(this).attr('data-id');
+                $('#marbete_id').val(id);
+            });
+
+            $('#saveInspeccionMarbete').click(function () {
+                if($('#marbete_id').val() == ''){
+                    Swal.fire({
+                        title: 'Debe seleccionar un marbete',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                $.ajax({
+                    type : 'POST',
+                    url :"{{ route('vehiculo.marbete') }}",
+                    data : { 
+                        _token: "{{ csrf_token() }}",
+                        marbete_id: $('#marbete_id').val()
+                    },
+                    success: function (data) {
+                        if (data.code == 201) {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            $('#select_marbete').modal('hide')
                         } else {
                             Swal.fire({
                                 title: data.msg,
@@ -138,12 +210,6 @@
                     }
                 });
             });
-
-            $('.btnCostoInspeccion').click(function () {
-                var id = $(this).attr('data-id');
-                $('#costo_inspeccion_id').val(id);
-            });
-
         });
     </script>
 @endsection

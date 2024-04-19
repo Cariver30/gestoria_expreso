@@ -19,7 +19,8 @@ class DatabaseSeeder extends Seeder
             RolTableSeeder::class,
             UsuarioTableSeeder::class,
             ServicioTableSeeder::class,
-            SeguroTableSeeder::class
+            SeguroTableSeeder::class,
+            MesTableSeeder::class
         ]);
     }
 }
