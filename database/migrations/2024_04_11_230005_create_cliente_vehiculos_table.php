@@ -15,10 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('compania');
             $table->string('vehiculo');
-            $table->string('tablilla');
-            $table->string('marca');
-            $table->string('anio');
+            $table->string('tablilla', 50);
+            $table->string('marca', 100);
+            $table->string('anio', 6);
             $table->string('motivo')->nullable();
+            $table->integer('costo_inspeccion_admin')->nullable();
             $table->unsignedBigInteger("estatus_id")->nullable();
             $table->foreign("estatus_id")->references("id")->on("estatus")->onDelete('cascade');
             $table->unsignedBigInteger("mes_vencimiento_id")->nullable();

@@ -116,7 +116,7 @@
 
              //Crear Cliente- vehículo
             $('#saveVehiculo').click(function () {
-                if($('#nombre').val() == '' || $('#email').val() == '' || $('#telefono').val() == '' || $('#compania').val() == '' || $('#vehiculo').val() == '' || $('#tablilla').val() == '' || $('#marca').val() == '' || $('#anio').val() == '' || $('#seguro_social').val() == '' || $('#mes_vencimiento').val() == '' || $('#costo_inspeccion').val() == '' || $('#identificacion').val() == ''){
+                if($('#nombre').val() == '' || $('#email').val() == '' || $('#telefono').val() == '' || $('#compania').val() == '' || $('#vehiculo').val() == '' || $('#tablilla').val() == '' || $('#marca').val() == '' || $('#anio').val() == '' || $('#seguro_social').val() == '' || $('#mes_vencimiento').val() == '' || $('#identificacion').val() == ''){
                     Swal.fire({
                         title: 'Hay campos vacíos',
                         icon: "warning",
@@ -125,58 +125,70 @@
                     });
                     return false;
                 }
-                $.ajax({
-                    type : 'POST',
-                    url :"{{ route('clientes.store') }}",
-                    data : { 
-                        _token: "{{ csrf_token() }}",
-                        nombre: $('#nombre').val(),
-                        email: $('#email').val(),
-                        telefono: $('#telefono').val(),
-                        compania: $('#compania').val(),
-                        vehiculo: $('#vehiculo').val(),
-                        tablilla: $('#tablilla').val(),
-                        marca: $('#marca').val(),
-                        anio: $('#anio').val(),
-                        seguro_social: $('#seguro_social').val(),
-                        mes_vencimiento: $('#mes_vencimiento').val(),
-                        costo_inspeccion: $('#costo_inspeccion_id').val(),
-                        identificacion: $('#identificacion').val()
-                    },
-                    success: function (data) {
-                        if (data.code == 201) {
-                            $('#add_vehiculo').modal('hide');
-                            Swal.fire({
-                                title: data.msg,
-                                icon: "success",
-                                showConfirmButton: false,
-                                timer: 2000
-                            });
-                            setTimeout(function(){
-                                window.location.reload();
-                            }, 1000);
+                if($('#costo_inspeccion_id').val() == 0){
+                    Swal.fire({
+                        title: '¿El administrador ingresará el costo de inspección?',
+                        //text: "You won't be able to revert this!",
+                        icon: 'info',
+                        showCancelButton: true,
+                        confirmButtonText: 'Aceptar!',
+                        cancelButtonText: 'Cancelar!',
+                        confirmButtonClass: 'btn btn-success mt-2',
+                        cancelButtonClass: 'btn btn-danger ms-2 mt-2',
+                        buttonsStyling: false,
+                    }).then(function (result) {
+                        if (result.value) {
+                            $.ajax({
+                                type : 'POST',
+                                url :"{{ route('clientes.store') }}",
+                                data : { 
+                                    _token: "{{ csrf_token() }}",
+                                    nombre: $('#nombre').val(),
+                                    email: $('#email').val(),
+                                    telefono: $('#telefono').val(),
+                                    compania: $('#compania').val(),
+                                    vehiculo: $('#vehiculo').val(),
+                                    tablilla: $('#tablilla').val(),
+                                    marca: $('#marca').val(),
+                                    anio: $('#anio').val(),
+                                    seguro_social: $('#seguro_social').val(),
+                                    mes_vencimiento: $('#mes_vencimiento').val(),
+                                    costo_inspeccion: $('#costo_inspeccion_id').val(),
+                                    identificacion: $('#identificacion').val(),
+                                    costo_inspeccion_admin: $('#costo_admin').val()
+                                },
+                                success: function (data) {
+                                    if (data.code == 201) {
+                                        $('#add_vehiculo').modal('hide');
+                                        Swal.fire({
+                                            title: data.msg,
+                                            icon: "success",
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        });
+                                        setTimeout(function(){
+                                            window.location.reload();
+                                        }, 1000);
+                                    } else {
+                                        Swal.fire({
+                                            title: data.msg,
+                                            icon: "warning",
+                                            showConfirmButton: false,
+                                            {{--  timer: 2000  --}}
+                                        });
+                                    }
+            
+                                },
+                                error: function (data) {
+                                }
+                            });    
                         } else {
-                            Swal.fire({
-                                title: data.msg,
-                                icon: "warning",
-                                showConfirmButton: false,
-                                timer: 2000
-                            });
+                            // Read more about handling dismissals
+                            result.dismiss === Swal.DismissReason.cancel
                         }
-
-                    },
-                    error: function (data) {
-                    }
-                });
+                    });
+                }
             });
-
-
-
-
-
-
-
-
 
             $('.btnCostoInspeccion').click(function () {
                 var id = $(this).attr('data-id');
@@ -188,46 +200,103 @@
                 $('#marbete_id').val(id);
             });
 
+            $('.costoServicioObligatorio').click(function () {
+                $('#marbete_five_id').val(1);
+                $('.cardMain').removeClass("border border-success").addClass("bg-success");
+                $('.text-success').removeClass("border border-success").addClass("text-white");
+            });
+
             $('#saveInspeccionMarbete').click(function () {
-                if($('#marbete_id').val() == ''){
+                if($('#marbete_five_id').val() == 0){
                     Swal.fire({
-                        title: 'Debe seleccionar un marbete',
+                        title: '¡Debe seleccionar el costo de servicio!',
                         icon: "warning",
                         showConfirmButton: false,
                         timer: 2000
                     });
                     return false;
                 }
-                $.ajax({
-                    type : 'POST',
-                    url :"{{ route('vehiculo.marbete') }}",
-                    data : { 
-                        _token: "{{ csrf_token() }}",
-                        marbete_id: $('#marbete_id').val()
-                    },
-                    success: function (data) {
-                        if (data.code == 201) {
-                            Swal.fire({
-                                title: data.msg,
-                                icon: "success",
-                                showConfirmButton: false,
-                                timer: 2000
-                            });
-                            $('#select_marbete').modal('hide')
+                if($('#marbete_id').val() == ''){
+                    Swal.fire({
+                        title: '¿El administrador ingresará el costo de marbete?',
+                        icon: 'info',
+                        showCancelButton: true,
+                        confirmButtonText: 'Aceptar!',
+                        cancelButtonText: 'Cancelar!',
+                        confirmButtonClass: 'btn btn-success mt-2',
+                        cancelButtonClass: 'btn btn-danger ms-2 mt-2',
+                        buttonsStyling: false,
+                    }).then(function (result) {
+                        if (result.value) {
+                            $.ajax({
+                                type : 'POST',
+                                url :"{{ route('vehiculo.marbete') }}",
+                                data : { 
+                                    _token: "{{ csrf_token() }}",
+                                    marbete_id: $('#marbete_id').val(),
+                                    costo_marbeta_admin: $('#costo_marbeta_admin').val()
+                                },
+                                success: function (data) {
+                                    if (data.code == 201) {
+                                        Swal.fire({
+                                            title: data.msg,
+                                            icon: "success",
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        });
+                                        $('#select_marbete').modal('hide')
+                                    } else {
+                                        Swal.fire({
+                                            title: data.msg,
+                                            icon: "warning",
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        });
+                                    }
+            
+                                },
+                                error: function (data) {
+                                    // console.log(data);
+                                }
+                            });      
                         } else {
-                            Swal.fire({
-                                title: data.msg,
-                                icon: "warning",
-                                showConfirmButton: false,
-                                timer: 2000
-                            });
+                            // Read more about handling dismissals
+                            result.dismiss === Swal.DismissReason.cancel
                         }
-
-                    },
-                    error: function (data) {
-                        // console.log(data);
-                    }
-                });
+                    });   
+                } else {
+                    $.ajax({
+                        type : 'POST',
+                        url :"{{ route('vehiculo.marbete') }}",
+                        data : { 
+                            _token: "{{ csrf_token() }}",
+                            marbete_id: $('#marbete_id').val(),
+                            costo_marbeta_admin: $('#costo_marbeta_admin').val()
+                        },
+                        success: function (data) {
+                            if (data.code == 201) {
+                                Swal.fire({
+                                    title: data.msg,
+                                    icon: "success",
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                });
+                                $('#select_marbete').modal('hide')
+                            } else {
+                                Swal.fire({
+                                    title: data.msg,
+                                    icon: "warning",
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                });
+                            }
+    
+                        },
+                        error: function (data) {
+                            // console.log(data);
+                        }
+                    }); 
+                }
             });
         });
     </script>
