@@ -23,6 +23,7 @@ Route::get('extraer/data/pdf', [App\Http\Controllers\HomeController::class, 'get
 Route::get('subservicios/{id}', [App\Http\Controllers\ServicioController::class, 'getSubServicio']);
 Route::post('servicio/subservicio', [App\Http\Controllers\ServicioController::class, 'addSubServicio'])->name('servicio.store.subservicio');
 Route::get('seccion', [App\Http\Controllers\ServicioController::class, 'getViewInspeccion'])->name('modulo.inspeccion');
+Route::get('consulta/tablilla/{tablilla}', [App\Http\Controllers\ServicioController::class, 'getTablilla'])->name('consulta.tablilla');
 Route::get('gestoria', [App\Http\Controllers\ServicioController::class, 'getViewGestoria'])->name('modulo.gestoria');
 Route::post('clientes/marbete', [App\Http\Controllers\ClienteController::class, 'vehiculoMarbete'])->name('vehiculo.marbete');
 Route::resource('usuario', App\Http\Controllers\UserController::class);

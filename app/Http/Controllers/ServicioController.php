@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use DB;
 use Session;
+use App\Models\Mes;
 use App\Models\Servicio;
 use App\Models\Cliente;
 use App\Models\ClienteVehiculo;
@@ -167,6 +168,7 @@ class ServicioController extends Controller
         $costosInspeccion = SubServicio::where('servicio_id', 1)->get();
         $marbetes = SubServicio::where('servicio_id', 2)->get();
         $seguros = SubServicio::where('servicio_id', 7)->get();
+        $meses = Mes::all();
         
         // $cliente_pendientes = Cliente::select('id')->where('usuario_id', Auth::user()->id)->where('estatus_id', 5)->get();
         // if (count($cliente_pendientes) != 0) {
@@ -182,11 +184,20 @@ class ServicioController extends Controller
         //     $en_curso = 0;
         // }
         
-        return view('modulo.inspeccion.index', compact('costosInspeccion', 'marbetes', 'seguros'));
+        return view('modulo.inspeccion.index', compact('costosInspeccion', 'marbetes', 'seguros', 'meses'));
         // return view('modulo.inspeccion.index', compact('costosInspeccion', 'marbetes', 'seguros', 'en_curso'));
     }
 
     public function getViewGestoria() {
         return view('modulo.gestoria.index');
+    }
+
+    public function getTablilla($tablilla) {
+        $tablilla = ClienteVehiculo::where('tablilla', $tablilla)->first();
+        if ($tablilla != null) {
+            return response()->json(['code' => 200, 'msg' => '¡La tablilla ingresada ya existe!']);
+        } else {
+            return response()->json(['code' => 001]);
+        }
     }
 }

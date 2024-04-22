@@ -61,14 +61,14 @@
     <script>
         $(document).ready(function() {
 
-            if({{$en_curso}} == 1){
+            {{--  if({{$en_curso}} == 1){
                 Swal.fire({
                     title: 'Registro pendiente',
                     icon: "warning",
                     showConfirmButton: false
                 });
                 document.getElementById("inspeccionVehiculo").removeAttribute("id");
-            }
+            }  --}}
 
 
 
@@ -85,6 +85,24 @@
             $("#extras").click(function() {
                 $('#servicios_extras').modal('show')
             });
+
+            //Validación de tablilla existente
+            var elementTablilla = document.getElementById('tablilla');
+            elementTablilla.addEventListener("change", function (evt) {
+                var tablilla = $('#tablilla').val();
+                $.get('consulta/tablilla/' + tablilla, function (data) {
+                    console.log(data.code);
+                    if(data.code == 200){
+                        Swal.fire({
+                            title: data.msg,
+                            icon: "warning",
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                        $('#tablilla').val('');
+                    }
+                });
+            }, false);
             
             //Se detecta el change para habilitar el input de núm de vaucher cuando es seguro privado
             $("#seguro_id").on("change", function() {
@@ -98,9 +116,9 @@
 
              //Crear Cliente- vehículo
             $('#saveVehiculo').click(function () {
-                if($('#nombre').val() == '' || $('#email').val() == '' || $('#telefono').val() == '' || $('#compania').val() == '' || $('#vehiculo').val() == '' || $('#tablilla').val() == '' || $('#marca').val() == '' || $('#anio').val() == '' || $('#seguro_social').val() == '' || $('#mes_vencimiento').val() == '' || $('#costo_inspeccion').val() == ''){
+                if($('#nombre').val() == '' || $('#email').val() == '' || $('#telefono').val() == '' || $('#compania').val() == '' || $('#vehiculo').val() == '' || $('#tablilla').val() == '' || $('#marca').val() == '' || $('#anio').val() == '' || $('#seguro_social').val() == '' || $('#mes_vencimiento').val() == '' || $('#costo_inspeccion').val() == '' || $('#identificacion').val() == ''){
                     Swal.fire({
-                        title: 'Hay campos vacios',
+                        title: 'Hay campos vacíos',
                         icon: "warning",
                         showConfirmButton: false,
                         timer: 2000
@@ -122,7 +140,8 @@
                         anio: $('#anio').val(),
                         seguro_social: $('#seguro_social').val(),
                         mes_vencimiento: $('#mes_vencimiento').val(),
-                        costo_inspeccion: $('#costo_inspeccion_id').val()
+                        costo_inspeccion: $('#costo_inspeccion_id').val(),
+                        identificacion: $('#identificacion').val()
                     },
                     success: function (data) {
                         if (data.code == 201) {

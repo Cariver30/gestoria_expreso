@@ -12,20 +12,24 @@
                         <input type="text" class="form-control form-control-sm" name="nombre" id="nombre" required>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="email" class="col-form-label"> Email </label>
+                        <label for="email" class="col-form-label"> Correo Electrónico </label>
                         <input type="email" class="form-control form-control-sm" name="email" id="email" required>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="telefono" class="col-form-label"> Teléfono </label>
-                        <input type="number" class="form-control form-control-sm" name="telefono" id="telefono">
+                        <input type="tel" class="form-control form-control-sm" name="telefono" id="telefono" maxlength="10">
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="seguro_social" class="col-form-label"> Últimos 4 dígitos de SS </label>
-                        <input type="text" class="form-control form-control-sm" name="seguro_social" id="seguro_social" required>
+                        <input type="text" class="form-control form-control-sm" name="seguro_social" id="seguro_social" maxlength="4" required>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label for="compania" class="col-form-label"> Compañia </label>
+                    <div class="col-md-3 mb-3">
+                        <label for="compania" class="col-form-label"> Compañía </label>
                         <input type="text" class="form-control form-control-sm" name="compania" id="compania" required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="identificacion" class="col-form-label"> Licencia/Identificación </label>
+                        <input type="text" class="form-control form-control-sm" name="identificacion" id="identificacion" required>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="vehiculo" class="col-form-label"> Vehículo </label>
@@ -47,18 +51,9 @@
                         <label for="mes_vencimiento" class="col-form-label"> Mes de Vencimiento </label>
                         <select class="form-select form-select-sm" style="cursor: pointer;" id="mes_vencimiento" name="mes_vencimiento">
                             <option value="" selected>Selecciona un mes</option>
-                            <option value="1">Enero</option>
-                            <option value="2">Febrero</option>
-                            <option value="3">Marzo</option>
-                            <option value="4">Abril</option>
-                            <option value="5">Mayo</option>
-                            <option value="6">Junio</option>
-                            <option value="7">Julio</option>
-                            <option value="8">Agosto</option>
-                            <option value="9">Septiembre</option>
-                            <option value="10">Octubre</option>
-                            <option value="11">Noviembre</option>
-                            <option value="12">Diciembre</option>
+                            @foreach ($meses as $mes)
+                                <option value="{{$mes->id}}">{{ $mes->nombre }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <input type="hidden" name="costo_inspeccion_id" id="costo_inspeccion_id">

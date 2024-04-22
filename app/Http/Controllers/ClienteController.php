@@ -34,8 +34,8 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->nombre == '' || $request->email == '' || $request->telefono == '' || $request->compania == '' || $request->vehiculo == '' || $request->tablilla == '' || $request->marca == '' || $request->anio == '' || $request->seguro_social == '' || $request->mes_vencimiento == '' || $request->costo_inspeccion == '') {
-            return response()->json(['code' => 400, 'msg' => 'Hay campos vacios']);
+        if ($request->nombre == '' || $request->email == '' || $request->telefono == '' || $request->compania == '' || $request->vehiculo == '' || $request->tablilla == '' || $request->marca == '' || $request->anio == '' || $request->seguro_social == '' || $request->mes_vencimiento == '' || $request->costo_inspeccion == '' || $request->identificacion == '') {
+            return response()->json(['code' => 400, 'msg' => 'Hay campos vacíos']);
         }
 
         DB::beginTransaction();
@@ -47,6 +47,7 @@ class ClienteController extends Controller
             $cliente->email = $request->email;
             $cliente->telefono = $request->telefono;
             $cliente->seguro_social = $request->seguro_social;
+            $cliente->identificacion = $request->identificacion;
             $cliente->usuario_id = Auth::user()->id;
             $cliente->estatus_id = 5;
             $cliente->save();
