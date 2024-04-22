@@ -244,7 +244,10 @@
                                             showConfirmButton: false,
                                             timer: 2000
                                         });
-                                        $('#select_marbete').modal('hide')
+                                        $('#select_marbete').modal('hide');
+                                        setTimeout(function(){
+                                            window.location.reload();
+                                        }, 1000);
                                     } else {
                                         Swal.fire({
                                             title: data.msg,
@@ -281,7 +284,10 @@
                                     showConfirmButton: false,
                                     timer: 2000
                                 });
-                                $('#select_marbete').modal('hide')
+                                $('#select_marbete').modal('hide');
+                                setTimeout(function(){
+                                    window.location.reload();
+                                }, 1000);
                             } else {
                                 Swal.fire({
                                     title: data.msg,

@@ -51,7 +51,7 @@ class ClienteController extends Controller
             $cliente->identificacion = $request->identificacion;
             $cliente->img_licencia = 'path/img_licencia';
             $cliente->usuario_id = Auth::user()->id;
-            $cliente->estatus_id = 5;
+            $cliente->estatus_id = 3;
             $cliente->save();
 
             //Se crea el vehículo
