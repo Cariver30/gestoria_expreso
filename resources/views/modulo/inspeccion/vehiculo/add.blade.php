@@ -72,7 +72,7 @@
                         @foreach ($costosInspeccion as $costo)
                             <button type="button" class="btn btn-soft-success col-md-3 waves-effect waves-light btnCostoInspeccion" style="margin: 1px;" data-id="{{ $costo->id}}">{{ $costo->nombre}} - ${{ $costo->costo}} </button>
                         @endforeach
-                        @if (Auth::user()->rol_id == 1)
+                        @if (Auth::user()->rol_id == 1 || Auth::user()->rol_id == 2)
                             <div class="col-md-2">
                                 <label for="costo_admin" class="col-form-label"> Costo </label>
                                 <input type="number" class="form-control form-control-sm" name="costo_admin" id="costo_admin" >

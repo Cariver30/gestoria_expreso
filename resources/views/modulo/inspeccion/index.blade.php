@@ -187,6 +187,51 @@
                             result.dismiss === Swal.DismissReason.cancel
                         }
                     });
+                } else {
+                    $.ajax({
+                        type : 'POST',
+                        url :"{{ route('clientes.store') }}",
+                        data : { 
+                            _token: "{{ csrf_token() }}",
+                            nombre: $('#nombre').val(),
+                            email: $('#email').val(),
+                            telefono: $('#telefono').val(),
+                            compania: $('#compania').val(),
+                            vehiculo: $('#vehiculo').val(),
+                            tablilla: $('#tablilla').val(),
+                            marca: $('#marca').val(),
+                            anio: $('#anio').val(),
+                            seguro_social: $('#seguro_social').val(),
+                            mes_vencimiento: $('#mes_vencimiento').val(),
+                            costo_inspeccion: $('#costo_inspeccion_id').val(),
+                            identificacion: $('#identificacion').val(),
+                            costo_inspeccion_admin: $('#costo_admin').val()
+                        },
+                        success: function (data) {
+                            if (data.code == 201) {
+                                $('#add_vehiculo').modal('hide');
+                                Swal.fire({
+                                    title: data.msg,
+                                    icon: "success",
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                });
+                                setTimeout(function(){
+                                    window.location.reload();
+                                }, 1000);
+                            } else {
+                                Swal.fire({
+                                    title: data.msg,
+                                    icon: "warning",
+                                    showConfirmButton: false,
+                                    {{--  timer: 2000  --}}
+                                });
+                            }
+    
+                        },
+                        error: function (data) {
+                        }
+                    });
                 }
             });
 
