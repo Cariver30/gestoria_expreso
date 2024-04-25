@@ -23,7 +23,7 @@
                 </div>
                 @if (Auth::user()->rol_id == 1 || Auth::user()->rol_id == 2)
                     <div class="col-md-2">
-                        <label for="costo_marbeta_admin" class="col-form-label"> Costo Marbete</label>
+                        <label for="costo_marbeta_admin" class="col-form-label"> Customizado </label>
                         <input type="number" class="form-control form-control-sm" name="costo_marbeta_admin" id="costo_marbeta_admin">
                     </div>
                 @endif

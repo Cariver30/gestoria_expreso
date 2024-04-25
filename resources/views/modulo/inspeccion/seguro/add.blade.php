@@ -1,4 +1,4 @@
-<div class="modal fade" id="select_seguro" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal fade" id="modal_inspeccion_seguro" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -6,23 +6,20 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body row col-md-12">
-                <div class="col-md-8 mb-3">
-                    <label for="seguro_id" class="col-form-label"> Seguros disponibles </label>
-                    <select class="form-select form-select-sm" style="cursor: pointer;" id="seguro_id">
-                        <option value="" selected>Selecciona una opción</option>
-                        @foreach ($seguros as $seguro)
-                            <option value="{{ $seguro->id}}">{{ $seguro->nombre}}</option>
-                        @endforeach
-                    </select>
+                <input type="hidden" name="seguro_id" id="seguro_id">
+                <div class="row col-md-12 mb-3">
+                    @foreach ($seguros as $seguro)
+                        <button type="button" class="btn btn-soft-success col-md-3 waves-effect waves-light btnInspeccionSeguro" style="margin: 1px;" data-id="{{ $seguro->id}}">{{ $seguro->nombre}} </button>
+                    @endforeach
                 </div>
-                <div class="col-md-4 mb-3" id="opcion_vaucher" style="display: none">
+                {{--  <div class="col-md-4 mb-3" id="opcion_vaucher" style="display: none">
                     <label for="num_vaucher" class="col-form-label"> Número de voucher </label>
                     <input type="text" class="form-control form-control-sm" id="num_vaucher">
                     <small> Sí es seguro privado</small>
-                </div>
+                </div>  --}}
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="saveRol">Guardar</button>
+                    <button type="button" class="btn btn-primary" id="saveInspeccionSeguro">Guardar</button>
                 </div>
             </div>
         </div>

@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use DB;
 use Session;
 use App\Models\Mes;
+use App\Models\Venta;
 use App\Models\Servicio;
 use App\Models\Cliente;
-use App\Models\ClienteVehiculo;
 use App\Models\SubServicio;
 use Illuminate\Http\Request;
+use App\Models\ClienteVehiculo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -169,6 +170,28 @@ class ServicioController extends Controller
         $marbetes = SubServicio::where('servicio_id', 2)->get();
         $seguros = SubServicio::where('servicio_id', 7)->get();
         $meses = Mes::all();
+        $extras = Servicio::whereIn('id', [3,4,5,9])->get();
+        $licencias = SubServicio::where('servicio_id', 3)->get();
+        $notificaciones = SubServicio::where('servicio_id', 4)->get();
+        $costo_servicios = SubServicio::where('servicio_id', 5)->get();
+        $venta_multas = SubServicio::where('servicio_id', 6)->get();
+        // dd($venta_multas);
+
+
+        // Validar si hay un registro en curso
+        $vehiculo_id = \Helper::registroEnCurso();
+
+        // dd($vehiculo_id);
+        if ($vehiculo_id != null) {
+            // dd('sd');
+            $total_checkout = Venta::where('vehiculo_id', $vehiculo_id)->select('total')->first();
+            if (is_null($total_checkout)) {
+                $total_checkout = 0;
+            }
+        } else {
+            $total_checkout = 0;
+        }
+        // dd($total_checkout);
         
         // $cliente_pendientes = Cliente::select('id')->where('usuario_id', Auth::user()->id)->where('estatus_id', 5)->get();
         // if (count($cliente_pendientes) != 0) {
@@ -183,9 +206,7 @@ class ServicioController extends Controller
         // } else {
         //     $en_curso = 0;
         // }
-        
-        return view('modulo.inspeccion.index', compact('costosInspeccion', 'marbetes', 'seguros', 'meses'));
-        // return view('modulo.inspeccion.index', compact('costosInspeccion', 'marbetes', 'seguros', 'en_curso'));
+        return view('modulo.inspeccion.index', compact('costosInspeccion', 'marbetes', 'seguros', 'meses', 'total_checkout', 'extras', 'licencias', 'notificaciones', 'costo_servicios', 'venta_multas'));
     }
 
     public function getViewGestoria() {

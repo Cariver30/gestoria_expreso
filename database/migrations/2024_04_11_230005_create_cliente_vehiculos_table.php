@@ -19,13 +19,13 @@ return new class extends Migration
             $table->string('marca', 100);
             $table->string('anio', 6);
             $table->string('motivo')->nullable();
-            $table->integer('costo_inspeccion_admin')->nullable();
+            // $table->integer('costo_inspeccion_admin')->nullable();
             $table->unsignedBigInteger("estatus_id")->nullable();
             $table->foreign("estatus_id")->references("id")->on("estatus")->onDelete('cascade');
             $table->unsignedBigInteger("mes_vencimiento_id")->nullable();
             $table->foreign("mes_vencimiento_id")->references("id")->on("mes")->onDelete('cascade');
-            $table->unsignedBigInteger("costo_inspeccion_id")->nullable();
-            $table->foreign("costo_inspeccion_id")->references("id")->on("sub_servicios")->onDelete('cascade');
+            // $table->unsignedBigInteger("costo_inspeccion_id")->nullable();
+            // $table->foreign("costo_inspeccion_id")->references("id")->on("sub_servicios")->onDelete('cascade');
             $table->unsignedBigInteger("cliente_id")->nullable();
             $table->foreign("cliente_id")->references("id")->on("clientes")->onDelete('cascade');
             $table->timestamps();

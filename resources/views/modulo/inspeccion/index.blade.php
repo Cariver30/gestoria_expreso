@@ -6,15 +6,26 @@
 
 @section('css')
     <link href="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ URL::asset('build/libs/dropzone/dropzone.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
+    <div class="row col-sm-12 text-center" style="margin-left: 41%;">
+        <div class="col-sm-2 col-sm-2">
+            <label class="card-radio-label mb-3">
+                <input type="radio" name="suma_total" id="suma_total" class="card-radio-input" checked="">
+                <div class="card-radio">
+                    <i class="bx bx-cart font-size-24 text-primary align-middle me-2"></i><span>Total: {{$total_checkout}}</span>
+                </div>
+            </label>
+        </div>
+    </div>
 <div class="row col-md-12">
-    <div class="col-sm-12">
+    {{--  <div class="col-sm-12">
         <div class="text-sm-end">
             <a type="button" href="{{ url()->previous() }}" class="btn btn-success btn-rounded waves-effect waves-light mb-2"><i class="mdi mdi-back me-1"></i> Volver </a>
         </div>
-    </div>
+    </div>  --}}
     <div class="col-lg-3" id="inspeccionVehiculo">
         <div class="card bg-success text-white-50">
             <div class="card-body text-center">
@@ -52,12 +63,32 @@
 @include('modulo.inspeccion.vehiculo.add')
 @include('modulo.inspeccion.marbete.add')
 @include('modulo.inspeccion.seguro.add')
-@include('modulo.inspeccion.extras.index')
+@include('modulo.inspeccion.extras.add')
+@include('modulo.inspeccion.extras.licencia')
+@include('modulo.inspeccion.extras.notificacion')
+@include('modulo.inspeccion.extras.costo_servicio')
+@include('modulo.inspeccion.extras.venta_multa')
 @endsection
 
 @section('script')
     <!-- Sweet Alerts js -->
     <script src="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.js') }}"></script>
+    <script src="{{ URL::asset('build/libs/dropzone/dropzone-min.js') }}"></script>
+
+    <!-- Form file upload init js -->
+    <script src="{{ URL::asset('build/js/pages/form-file-upload.init.js') }}"></script>
+    <script type="text/javascript">
+        function validateFileType(){
+            var fileName = document.getElementById("file_licencia").value;
+            var idxDot = fileName.lastIndexOf(".") + 1;
+            var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+            if (extFile=="jpg" || extFile=="jpeg" || extFile=="png"){
+                //TO DO
+            }else{
+                alert("Only jpg/jpeg and png files are allowed!");
+            }   
+        }
+    </script>
     <script>
         $(document).ready(function() {
 
@@ -80,11 +111,33 @@
                 $('#select_marbete').modal('show')
             });
             $("#seguro").click(function() {
-                $('#select_seguro').modal('show')
+                $('#modal_inspeccion_seguro').modal('show')
             });
             $("#extras").click(function() {
                 $('#servicios_extras').modal('show')
             });
+             $("#btnInspeccionImpresionLicencia").click(function() {
+                $('#servicios_extras').modal('show')
+            });
+            $('.btnInspeccionExtras').click(function () {
+                var id = $(this).attr('data-id');
+                switch (id) {
+                    case '3':
+                        $('#extra_licencia').modal('show');
+                        break;
+                    case '4':
+                        $('#extra_notificacion').modal('show')
+                        break;
+                    case '5':
+                        $('#extra_costo_servicio').modal('show')
+                        break;
+                    case '9':
+                        $('#extra_venta_multa').modal('show')
+                        break;
+                  }
+            });
+
+            
 
             //Validación de tablilla existente
             var elementTablilla = document.getElementById('tablilla');
@@ -245,12 +298,18 @@
                 $('#marbete_id').val(id);
             });
 
+            $('.btnInspeccionSeguro').click(function () {
+                var id = $(this).attr('data-id');
+                $('#seguro_id').val(id);
+            });
+
             $('.costoServicioObligatorio').click(function () {
                 $('#marbete_five_id').val(1);
                 $('.cardMain').removeClass("border border-success").addClass("bg-success");
                 $('.text-success').removeClass("border border-success").addClass("text-white");
             });
 
+            // Botón que guarda el marbete seleccionado en el modal del módulo de Inspección
             $('#saveInspeccionMarbete').click(function () {
                 if($('#marbete_five_id').val() == 0){
                     Swal.fire({
@@ -348,6 +407,26 @@
                         }
                     }); 
                 }
+            });
+
+            // Botón que guarda el marbete seleccionado en el modal del módulo de Inspección
+            $('#saveInspeccionSeguro').click(function () {
+                if($('#seguro_id').val() == 0){
+                    Swal.fire({
+                        title: '¡Debe seleccionar un seguro!',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                Swal.fire({
+                    title: 'Seguro guardado',
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+                $('#modal_inspeccion_seguro').modal('hide');
             });
         });
     </script>
