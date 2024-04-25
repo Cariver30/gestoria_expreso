@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use DB;
+use App\Models\Venta;
 use App\Models\Cliente;
+use App\Models\SubServicio;
 use Illuminate\Http\Request;
 use App\Models\ClienteVehiculo;
 use App\Models\VehiculoMarbete;
@@ -35,6 +37,7 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
+        // dd( $request->costo_inspeccion);
         if ($request->nombre == '' || $request->email == '' || $request->telefono == '' || $request->compania == '' || $request->vehiculo == '' || $request->tablilla == '' || $request->marca == '' || $request->anio == '' || $request->seguro_social == '' || $request->mes_vencimiento == '' || $request->identificacion == '') {
             return response()->json(['code' => 400, 'msg' => 'Hay campos vacíos']);
         }
@@ -62,12 +65,27 @@ class ClienteController extends Controller
             $clienteVehiculo->marca = \Helper::capitalizeFirst($request->marca, "1");
             $clienteVehiculo->anio = $request->anio;
             $clienteVehiculo->mes_vencimiento_id = $request->mes_vencimiento;
-            $clienteVehiculo->costo_inspeccion_id = ($request->costo_inspeccion == 0) ? null : $request->costo_inspeccion ;
-            $clienteVehiculo->costo_inspeccion_admin = ($request->costo_inspeccion_admin == null) ? null : $request->costo_inspeccion_admin;
             $clienteVehiculo->cliente_id = $cliente->id;
             $clienteVehiculo->estatus_id = 3;
             $clienteVehiculo->save();
 
+            //Se crea la venta
+            $venta = new Venta();
+            $venta->costo_inspeccion_id = ($request->costo_inspeccion == 0) ? null : $request->costo_inspeccion ;
+            $venta->costo_inspeccion_admin = ($request->costo_inspeccion_admin == null) ? null : $request->costo_inspeccion_admin;
+            $venta->costo_servicio_fijo = 0;
+            //Se va calculando el total
+            if ($request->costo_inspeccion != 0) {
+                $costoInspección = SubServicio::where('id', $request->costo_inspeccion)->select('costo')->pluck('costo')->first();
+            } else {
+                $costoInspección = $request->costo_inspeccion_admin;
+            }
+
+            $total = $costoInspección + $venta->costo_servicio_fijo;
+            $venta->total = $total;
+            $venta->vehiculo_id = $clienteVehiculo->id;
+            $venta->save();
+            
             DB::commit();
 
             return response()->json(['code' => 201, 'msg' => 'Cliente registrado', 'id' => $cliente->id]);

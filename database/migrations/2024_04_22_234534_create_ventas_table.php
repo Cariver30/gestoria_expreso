@@ -20,10 +20,9 @@ return new class extends Migration
             $table->foreign("costo_marbete_id")->references("id")->on("sub_servicios")->onDelete('cascade');
             $table->integer('costo_marbete_admin')->nullable();
             $table->integer('costo_servicio_fijo')->nullable();
-
             $table->integer('total');
-            $table->date('fecha_pago');
-            $table->integer('tipo_pago');
+            $table->date('fecha_pago')->nullable();
+            $table->integer('tipo_pago')->nullable();
             $table->unsignedBigInteger("vehiculo_id")->nullable();
             $table->foreign("vehiculo_id")->references("id")->on("cliente_vehiculos")->onDelete('cascade');
             $table->timestamps();

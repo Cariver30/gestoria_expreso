@@ -184,7 +184,7 @@ class ServicioController extends Controller
         // dd($vehiculo_id);
         if ($vehiculo_id != null) {
             // dd('sd');
-            $total_checkout = Venta::where('vehiculo_id', $vehiculo_id)->select('total')->first();
+            $total_checkout = Venta::where('vehiculo_id', $vehiculo_id)->select('total')->pluck('total')->first();
             if (is_null($total_checkout)) {
                 $total_checkout = 0;
             }

@@ -178,7 +178,8 @@
                     });
                     return false;
                 }
-                if($('#costo_inspeccion_id').val() == 0){
+                var rol_id = {{ Auth::user()->rol_id }};
+                if($('#costo_inspeccion_id').val() == 0 && $('#costo_admin').val() == 0 || $('#costo_admin').val() == ''){
                     Swal.fire({
                         title: '¿El administrador ingresará el costo de inspección?',
                         //text: "You won't be able to revert this!",
