@@ -305,7 +305,7 @@
             });
 
             $('.costoServicioObligatorio').click(function () {
-                $('#marbete_five_id').val(1);
+                $('#marbete_five_id').val(5);
                 $('.cardMain').removeClass("border border-success").addClass("bg-success");
                 $('.text-success').removeClass("border border-success").addClass("text-white");
             });
@@ -321,7 +321,8 @@
                     });
                     return false;
                 }
-                if($('#marbete_id').val() == ''){
+                
+                if($('#marbete_id').val() == '' && $('#costo_marbete_admin').val() == ''){
                     Swal.fire({
                         title: '¿El administrador ingresará el costo de marbete?',
                         icon: 'info',
@@ -339,7 +340,8 @@
                                 data : { 
                                     _token: "{{ csrf_token() }}",
                                     marbete_id: $('#marbete_id').val(),
-                                    costo_marbeta_admin: $('#costo_marbeta_admin').val()
+                                    costo_marbete_admin: $('#costo_marbete_admin').val(),
+                                    marbete_five_id : $('#marbete_five_id').val()
                                 },
                                 success: function (data) {
                                     if (data.code == 201) {
@@ -379,7 +381,8 @@
                         data : { 
                             _token: "{{ csrf_token() }}",
                             marbete_id: $('#marbete_id').val(),
-                            costo_marbeta_admin: $('#costo_marbeta_admin').val()
+                            costo_marbete_admin: $('#costo_marbete_admin').val(),
+                            marbete_five_id : $('#marbete_five_id').val()
                         },
                         success: function (data) {
                             if (data.code == 201) {

@@ -20,8 +20,11 @@ class UserController extends Controller
     public function index()
     {
         $usuarios = User::leftJoin('roles', 'users.rol_id', 'roles.id')
-                        ->select('users.id', 'users.nombre','users.primer_apellido', 'users.segundo_apellido', 'users.email', 'users.estatus_id', 'users.rol_id', 'roles.nombre as rol')
-                        ->get();
+                        ->leftJoin('sedes', 'users.sede_id', 'sedes.id')
+                        ->select(
+                            'users.id', 'users.nombre','users.primer_apellido', 'users.segundo_apellido', 'users.email',
+                            'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede'
+                        )->get();
 
         $roles = Role::select('id', 'nombre')->where('estatus_id', 1)->get();
         $entidades = Sede::select('id', 'nombre')->where('estatus_id', 1)->get();
@@ -71,12 +74,13 @@ class UserController extends Controller
             DB::commit();
 
             // Mail::to($user->email)->send(new UserPin($user, $pin));
-            Mail::to('xbox.07@hotmail.com')->cc('yamihdz@gmail.com')->send(new UserPin($user, $pin));
+            //Mail::to('xbox.07@hotmail.com')->cc('yamihdz@gmail.com')->send(new UserPin($user, $pin));
 
             return response()->json(['code' => 201, 'msg' => 'Usuario creado']);
 
         }catch (\PDOException $e){
             DB::rollBack();
+            dd($e);
             return back()->withErrors(['Error' => substr($e->getMessage(), 0, 150)]);
         }
     }

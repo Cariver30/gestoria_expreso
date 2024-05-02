@@ -136,17 +136,34 @@ class ClienteController extends Controller
         try {
             $cliente_id = Cliente::where('estatus_id', 3)->where('usuario_id', Auth::user()->id)->select('id')->pluck('id')->first();
             $vehiculo_id = ClienteVehiculo::where('estatus_id', 3)->where('cliente_id', $cliente_id)->select('id')->pluck('id')->first();
+            $venta = Venta::where('vehiculo_id', $vehiculo_id)->first();
 
-            $marbeteVehiculo = VehiculoMarbete::where('vehiculo_id', $vehiculo_id)->first();
+            $venta->costo_marbete_id = ($request->marbete_id == null) ? null : $request->marbete_id;
+            $venta->costo_marbete_admin = ($request->costo_marbete_admin == null) ? null : $request->costo_marbete_admin;
+            $venta->costo_servicio_fijo = $request->marbete_five_id;
 
-            if (!$marbeteVehiculo) {
-                $marbeteVehiculo = new VehiculoMarbete();
-            } 
-            $marbeteVehiculo->vehiculo_id = $vehiculo_id;
-            $marbeteVehiculo->marbete_id = ($request->marbete_id == null) ? null : $request->marbete_id;
-            $marbeteVehiculo->marbete_admin = ($request->costo_marbeta_admin == null) ? null : $request->costo_marbeta_admin;
+            //Se suma al total
+            if ($request->marbete_id != 0) {
+                $costoMarbete = SubServicio::where('id', $request->marbete_id)->select('costo')->pluck('costo')->first();
+            } else {
+                $costoMarbete = $request->costo_marbete_admin;
+            }
+            // dd($costoMarbete);
 
-            $marbeteVehiculo->save();
+            $total = $venta->total + $costoMarbete + $request->marbete_five_id;
+            // dd($total);
+            $venta->total = $total;
+            $venta->save();
+            // $marbeteVehiculo = VehiculoMarbete::where('vehiculo_id', $vehiculo_id)->first();
+
+            // if (!$marbeteVehiculo) {
+            //     $marbeteVehiculo = new VehiculoMarbete();
+            // } 
+            // $marbeteVehiculo->vehiculo_id = $vehiculo_id;
+            // $marbeteVehiculo->marbete_id = ($request->marbete_id == null) ? null : $request->marbete_id;
+            // $marbeteVehiculo->marbete_admin = ($request->costo_marbeta_admin == null) ? null : $request->costo_marbeta_admin;
+
+            // $marbeteVehiculo->save();
             
             DB::commit();
 
@@ -154,6 +171,7 @@ class ClienteController extends Controller
 
         }catch (\PDOException $e){
             DB::rollBack();
+            dd($e);
             return response()->json(['code' => 201, 'msg' => substr($e->getMessage(), 0, 150)]);
         }
     }

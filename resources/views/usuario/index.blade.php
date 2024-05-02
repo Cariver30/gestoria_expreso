@@ -27,7 +27,8 @@
                             </div>
                             <img src="{{ URL::asset('build/images/companies/adobe.svg') }}" alt="" height="50" class="mb-3">
                             <h5 class="fs-17 mb-2"><a href="job-details" class="text-dark">{{ $usuario->nombre }} {{ $usuario->primer_apellido }} {{ $usuario->segundo_apellido }}</a></h5>
-                            <small>{{ $usuario->rol }}</small>
+                            <h3><span class="badge bg-success ms-1 align-bottom">{{ $usuario->rol }}</span></h3>
+                            <h4><span class="badge bg-info ms-1 align-bottom">{{ $usuario->sede }}</span></h4>
                             <div class="mt-4">
                                 <button class="btn btn-soft-success editUsuario" data-id="{{ $usuario->id }}"><i class="mdi mdi-pencil font-size-8 me-1"></i> Editar </button></li>
                                 
