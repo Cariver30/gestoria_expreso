@@ -30,8 +30,16 @@ class UserController extends Controller
 
         $roles = Role::select('id', 'nombre')->where('estatus_id', 1)->get();
         $entidades = Sede::select('id', 'nombre')->where('estatus_id', 1)->get();
+
+        $user = User::leftJoin('roles', 'users.rol_id', 'roles.id')
+                    ->leftJoin('sedes', 'users.sede_id', 'sedes.id')
+                    ->where('users.id', Auth::user()->id)
+                    ->select(
+                        'users.id', 'users.nombre','users.primer_apellido', 'users.segundo_apellido', 'users.email',
+                        'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede', 'sedes.acceso_panel as panel')
+                    ->first();
         
-        return view('usuario.index', compact('usuarios', 'roles', 'entidades'));
+        return view('usuario.index', compact('usuarios', 'roles', 'entidades', 'user'));
     }
 
     /**
@@ -73,7 +81,7 @@ class UserController extends Controller
             $user->pin = $pin;
             $user->estatus_id = 1;
             $user->dob = '2024-04-01';
-            $user->avatar = 'images/avatar-1.jpg';
+            $user->avatar = 'images/user-dummy-img.jpg';
             $user->rol_id = $request->rol_id;
             $user->sede_id = $request->entidad_id;
             $user->save();

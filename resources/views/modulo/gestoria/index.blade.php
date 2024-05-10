@@ -10,11 +10,11 @@
 
 @section('content')
 <div class="row col-md-12">
-    <div class="col-sm-12">
+    {{--  <div class="col-sm-12">
         <div class="text-sm-end">
             <a type="button" href="{{ url()->previous() }}" class="btn btn-success btn-rounded waves-effect waves-light mb-2"><i class="mdi mdi-back me-1"></i> Volver </a>
         </div>
-    </div>
+    </div>  --}}
     <div class="col-lg-3" id="CostoPorServicio">
         <div class="card bg-success text-white-50">
             <div class="card-body text-center">

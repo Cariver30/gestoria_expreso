@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use DB;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RoleController extends Controller
 {
@@ -15,7 +17,15 @@ class RoleController extends Controller
     {
         $roles = Role::select('id', 'nombre', 'estatus_id')->get();
 
-        return view('rol.index', compact('roles'));
+        $user = User::leftJoin('roles', 'users.rol_id', 'roles.id')
+                    ->leftJoin('sedes', 'users.sede_id', 'sedes.id')
+                    ->where('users.id', Auth::user()->id)
+                    ->select(
+                        'users.id', 'users.nombre','users.primer_apellido', 'users.segundo_apellido', 'users.email',
+                        'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede', 'sedes.acceso_panel as panel')
+                    ->first();
+
+        return view('rol.index', compact('roles', 'user'));
     }
 
     /**

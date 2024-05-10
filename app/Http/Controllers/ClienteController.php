@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use DB;
+use App\Models\User;
 use App\Models\Venta;
 use App\Models\Cliente;
 use App\Models\SubServicio;
@@ -21,7 +22,15 @@ class ClienteController extends Controller
     {
         $clientes = Cliente::all();
 
-        return view('cliente.index', compact('clientes'));
+        $user = User::leftJoin('roles', 'users.rol_id', 'roles.id')
+                    ->leftJoin('sedes', 'users.sede_id', 'sedes.id')
+                    ->where('users.id', Auth::user()->id)
+                    ->select(
+                        'users.id', 'users.nombre','users.primer_apellido', 'users.segundo_apellido', 'users.email',
+                        'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede', 'sedes.acceso_panel as panel')
+                    ->first();
+
+        return view('cliente.index', compact('clientes', 'user'));
     }
 
     /**

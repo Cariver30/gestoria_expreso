@@ -23,8 +23,16 @@ class ServicioController extends Controller
     public function index()
     {
         $servicios = Servicio::select('id', 'nombre', 'estatus_id')->get();
+
+        $user = User::leftJoin('roles', 'users.rol_id', 'roles.id')
+                    ->leftJoin('sedes', 'users.sede_id', 'sedes.id')
+                    ->where('users.id', Auth::user()->id)
+                    ->select(
+                        'users.id', 'users.nombre','users.primer_apellido', 'users.segundo_apellido', 'users.email',
+                        'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede', 'sedes.acceso_panel as panel')
+                    ->first();
         
-        return view('servicio.index', compact('servicios'));
+        return view('servicio.index', compact('servicios', 'user'));
     }
 
     /**
@@ -215,7 +223,16 @@ class ServicioController extends Controller
     }
 
     public function getViewGestoria() {
-        return view('modulo.gestoria.index');
+
+        $user = User::leftJoin('roles', 'users.rol_id', 'roles.id')
+                    ->leftJoin('sedes', 'users.sede_id', 'sedes.id')
+                    ->where('users.id', Auth::user()->id)
+                    ->select(
+                        'users.id', 'users.nombre','users.primer_apellido', 'users.segundo_apellido', 'users.email',
+                        'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede', 'sedes.acceso_panel as panel')
+                    ->first();
+
+        return view('modulo.gestoria.index', compact('user'));
     }
 
     public function getTablilla($tablilla) {

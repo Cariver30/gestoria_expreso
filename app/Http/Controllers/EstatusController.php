@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use DB;
+use App\Models\User;
 use App\Models\Estatus;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EstatusController extends Controller
 {
@@ -15,7 +17,15 @@ class EstatusController extends Controller
     {
         $estatus = Estatus::select('id', 'nombre')->get();
 
-        return view('estatus.index', compact('estatus'));
+        $user = User::leftJoin('roles', 'users.rol_id', 'roles.id')
+                    ->leftJoin('sedes', 'users.sede_id', 'sedes.id')
+                    ->where('users.id', Auth::user()->id)
+                    ->select(
+                        'users.id', 'users.nombre','users.primer_apellido', 'users.segundo_apellido', 'users.email',
+                        'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede', 'sedes.acceso_panel as panel')
+                    ->first();
+
+        return view('estatus.index', compact('estatus', 'user'));
     }
 
     /**
