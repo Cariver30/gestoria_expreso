@@ -19,16 +19,16 @@
         </div>
         <div class="row col-md-12">
             @foreach ($usuarios as $usuario)
-                <div class="col-xl-3 col-md-6">
+                <div class="col-xl-4 col-md-6">
                     <div class="card">
                         <div class="card-body text-center">
                             <div class="favorite-icon">
                                 <a href="javascript:void(0)"><i class="uil uil-heart-alt fs-18"></i></a>
                             </div>
                             <img src="{{ URL::asset('build/images/companies/adobe.svg') }}" alt="" height="50" class="mb-3">
-                            <h5 class="fs-17 mb-2"><a href="job-details" class="text-dark">{{ $usuario->nombre }} {{ $usuario->primer_apellido }} {{ $usuario->segundo_apellido }}</a></h5>
-                            <h3><span class="badge bg-success ms-1 align-bottom">{{ $usuario->rol }}</span></h3>
-                            <h4><span class="badge bg-info ms-1 align-bottom">{{ $usuario->sede }}</span></h4>
+                            <h4 class="fs-17 mb-2"><a href="job-details" class="text-dark">{{ $usuario->nombre }} {{ $usuario->primer_apellido }} {{ $usuario->segundo_apellido }}</a></h4>
+                            <h5>{{ $usuario->rol }}</h5>
+                            <h6>{{ $usuario->sede }}</h6>
                             <div class="mt-4">
                                 <button class="btn btn-soft-success editUsuario" data-id="{{ $usuario->id }}"><i class="mdi mdi-pencil font-size-8 me-1"></i> Editar </button></li>
                                 

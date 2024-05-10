@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sedes', function (Blueprint $table) {
+        Schema::create('usuario_sedes', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->integer('acceso_panel'); //1=Inspección, 2=Gestoría, 3=Todos
-            $table->unsignedBigInteger("estatus_id")->nullable();
-            $table->foreign("estatus_id")->references("id")->on("estatus")->onDelete('cascade');
+            $table->unsignedBigInteger("usuario_id")->nullable();
+            $table->foreign("usuario_id")->references("id")->on("users");
+            $table->unsignedBigInteger("sede_id");
+            $table->foreign("sede_id")->references("id")->on("sedes");
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sedes');
+        //
     }
 };

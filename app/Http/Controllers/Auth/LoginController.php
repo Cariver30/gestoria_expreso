@@ -43,16 +43,26 @@ class LoginController extends Controller
     }
 
     public function validarLogin(Request $request) {
-        $costosInspeccion = SubServicio::where('servicio_id', 1)->get();
-        $marbetes = SubServicio::where('servicio_id', 2)->get();
-        $seguros = SubServicio::where('servicio_id', 7)->get();
+        // $costosInspeccion = SubServicio::where('servicio_id', 1)->get();
+        // $marbetes = SubServicio::where('servicio_id', 2)->get();
+        // $seguros = SubServicio::where('servicio_id', 7)->get();
         $pin = $request->digit1.$request->digit2.$request->digit3.$request->digit4;
-        $user = User::select('id')->where('pin', $pin)->first();
+        $user = User::leftJoin('roles', 'users.rol_id', 'roles.id')
+                    ->leftJoin('sedes', 'users.sede_id', 'sedes.id')
+                    ->where('pin', $pin)
+                    ->select(
+                        'users.id', 'users.nombre','users.primer_apellido', 'users.segundo_apellido', 'users.email',
+                        'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede', 'sedes.acceso_panel as panel')
+                    ->first();
+
+                    // dd($user);
         if($user) {
             Auth::loginUsingId($user->id);
-            return view('principal.home', compact('costosInspeccion', 'marbetes', 'seguros'));
+            // dd($user);
+            return view('principal.home', compact('user'));
+
         } else {
-            return back();
+            return back()->with(['status' => 'PIN Inválido']);
         }
     }
 }

@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Sede;
 use App\Mail\UserPin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -47,6 +49,11 @@ class UserController extends Controller
     {
         if ($request->nombre == '' || $request->primer_apellido == '' || $request->email == '' || $request->rol_id == '' || $request->entidad_id == '' || $request->pin == '') {
             return response()->json(['code' => 400, 'msg' => 'Hay campos vacios']);
+        }
+
+        $valida_pin = User::where('pin', $request->pin)->first();
+        if ($valida_pin) {
+            return response()->json(['code' => 400, 'msg' => '¡El PIN ingresado ya existe!']);
         }
 
         DB::beginTransaction();
@@ -166,5 +173,17 @@ class UserController extends Controller
         $max = strlen($pattern)-1;
         for($i=0;$i < 4;$i++) $pin .= $pattern[mt_rand(0,$max)];
         return $pin;
+    }
+
+    function marcarInicio() {
+
+        $date = Carbon::now();
+        $date = $date->format('Y-m-d');
+
+        $user = User::find(Auth::user()->id);
+        $user->marcar_inicio = $date;
+        $user->save();
+        
+        return response()->json(['code' => 200]);
     }
 }

@@ -28,6 +28,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('gestoria', [App\Http\Controllers\ServicioController::class, 'getViewGestoria'])->name('modulo.gestoria');
     Route::post('clientes/marbete', [App\Http\Controllers\ClienteController::class, 'vehiculoMarbete'])->name('vehiculo.marbete');
     Route::post('seguro/vehiculo', [App\Http\Controllers\ClienteController::class, 'seguroVehiculo'])->name('seguro.vehiculo');
+    Route::get('marcar/bienvenida', [App\Http\Controllers\UserController::class, 'marcarInicio'])->name('marcar.inicio');
     Route::resource('usuario', App\Http\Controllers\UserController::class);
     Route::resource('servicio', App\Http\Controllers\ServicioController::class);
     Route::resource('roles', App\Http\Controllers\RoleController::class);

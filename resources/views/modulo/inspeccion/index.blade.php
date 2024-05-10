@@ -60,6 +60,14 @@
         </div>
     </div>
 </div>
+<div class="row col-sm-12 text-center" style="margin-left: 33%;">
+    <div class="col-sm-2 col-sm-2">
+        <button type="button" class="btn btn-soft-success col-md-8 waves-effect waves-light btn-lg" data-id=""> PAGAR </button>
+    </div>
+    <div class="col-sm-2 col-sm-2">
+        <button type="button" class="btn btn-soft-danger col-md-8 waves-effect waves-light btn-lg" data-id=""> FINALIZAR </button>
+    </div>
+</div>
 @include('modulo.inspeccion.vehiculo.add')
 @include('modulo.inspeccion.marbete.add')
 @include('modulo.inspeccion.seguro.add')

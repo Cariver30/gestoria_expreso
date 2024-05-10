@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use DB;
 use Session;
 use App\Models\Mes;
+use App\Models\User;
 use App\Models\Venta;
 use App\Models\Servicio;
 use App\Models\Cliente;
@@ -175,15 +176,10 @@ class ServicioController extends Controller
         $notificaciones = SubServicio::where('servicio_id', 4)->get();
         $costo_servicios = SubServicio::where('servicio_id', 5)->get();
         $venta_multas = SubServicio::where('servicio_id', 6)->get();
-        // dd($venta_multas);
-
 
         // Validar si hay un registro en curso
         $vehiculo_id = \Helper::registroEnCurso();
-
-        // dd($vehiculo_id);
         if ($vehiculo_id != null) {
-            // dd('sd');
             $total_checkout = Venta::where('vehiculo_id', $vehiculo_id)->select('total')->pluck('total')->first();
             if (is_null($total_checkout)) {
                 $total_checkout = 0;
@@ -206,7 +202,16 @@ class ServicioController extends Controller
         // } else {
         //     $en_curso = 0;
         // }
-        return view('modulo.inspeccion.index', compact('costosInspeccion', 'marbetes', 'seguros', 'meses', 'total_checkout', 'extras', 'licencias', 'notificaciones', 'costo_servicios', 'venta_multas'));
+
+        $user = User::leftJoin('roles', 'users.rol_id', 'roles.id')
+                    ->leftJoin('sedes', 'users.sede_id', 'sedes.id')
+                    ->where('users.id', Auth::user()->id)
+                    ->select(
+                        'users.id', 'users.nombre','users.primer_apellido', 'users.segundo_apellido', 'users.email',
+                        'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede', 'sedes.acceso_panel as panel')
+                    ->first();
+
+        return view('modulo.inspeccion.index', compact('costosInspeccion', 'marbetes', 'seguros', 'meses', 'total_checkout', 'extras', 'licencias', 'notificaciones', 'costo_servicios', 'venta_multas', 'user'));
     }
 
     public function getViewGestoria() {
