@@ -29,6 +29,7 @@ class UserController extends Controller
                         )->get();
 
         $roles = Role::select('id', 'nombre')->where('estatus_id', 1)->get();
+        
         $entidades = Sede::select('id', 'nombre')->where('estatus_id', 1)->get();
 
         $user = User::leftJoin('roles', 'users.rol_id', 'roles.id')
@@ -56,7 +57,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         if ($request->nombre == '' || $request->primer_apellido == '' || $request->email == '' || $request->rol_id == '' || $request->entidad_id == '' || $request->pin == '') {
-            return response()->json(['code' => 400, 'msg' => 'Hay campos vacios']);
+            return response()->json(['code' => 400, 'msg' => 'Hay campos vacíos']);
         }
 
         $valida_pin = User::where('pin', $request->pin)->first();

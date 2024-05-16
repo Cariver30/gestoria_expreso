@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-    Servicios
+    Sub Servicios
 @endsection
 
 @section('css')
@@ -9,37 +9,52 @@
 @endsection
 
 @section('content')
-    <div class="row col-sm-12">
-        <div class="col-sm-12">
-            <div class="text-sm-end mb-4">
-                <button type="button" data-bs-toggle="modal" data-bs-target="#add_servicio"
-                    class="btn btn-success btn-rounded waves-effect waves-light mb-2"><i
-                        class="mdi mdi-plus me-1"></i> Agregar</button>
+    <div class="row col-md-12">
+        <div class="row col-md-12">
+            <input type="hidden" name="servicio_id" id="servicio_id" value="{{ $id }}">
+            <h3 class="col-md-6">{{ $servicio->nombre }}</h3>
+            <div class="col-md-6 text-end">
+                <button type="button" data-bs-toggle="modal" data-bs-target="#add_sub_servicio" class="btn btn-sm btn-primary col-md-3"> Agregar </button>
             </div>
         </div>
-        <div class="row col-md-12">
-            @foreach ($servicios as $servicio)
-                <div class="col-xl-3 col-md-6">
-                    <div class="card">
-                        <div class="card-body text-center">
-                            <div class="favorite-icon">
-                                <a href="javascript:void(0)"><i class="uil uil-heart-alt fs-18"></i></a>
-                            </div>
-                            <img src="{{ URL::asset('build/images/companies/adobe.svg') }}" alt="" height="50" class="mb-3">
-                            <h5 class="fs-17 mb-2"><a href="job-details" class="text-dark">{{ $servicio->nombre }} </a></h5>
-                            <div class="mt-4">
-                                <button class="btn btn-soft-success" data-id="{{ $servicio->id }}"><i class="mdi mdi-pencil font-size-8 me-1"></i> Editar </a></li>
-                                <button class="btn btn-soft-danger waves-effect waves-light inActivarServicio" data-id="{{ $servicio->id }}" data-estatus="{{ $servicio->estatus_id }}"><i class="mdi mdi-trash-can-outline font-size-16 text-danger me-1"></i>@if ($servicio->estatus_id == 1) Desactivar @else Activar @endif</button>
-                            </div>
-                            <a href="{{ route('servicio.subservicio.edit', ['id' => $servicio->id])}}" class="btn btn-soft-info waves-effect waves-light"><i class="mdi mdi-plus font-size-16 text-info me-1"></i>@if ($servicio->id == 1) Costos de Inspección @else SubServicios @endif</a>
-                        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="">
+                    <div class="table-responsive">
+                        <table class="table project-list-table table-nowrap align-middle table-borderless">
+                            <thead>
+                                <tr class="text-center">
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Costo</th>
+                                    <th scope="col">Estatus</th>
+                                    <th scope="col">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                @if (count($subservicios) == 0)
+                                    <td colspan="4" class="text-center">SIN INFORMACIÓN </td>
+                                @else
+                                    @foreach ($subservicios as $subservicio)
+                                        <tr>
+                                            <td><p class="text-muted mb-0">{{ $subservicio->nombre }}</p></td>
+                                            <td>@if ($subservicio->costo == '') 0 @else {{ $subservicio->costo }} @endif</td>
+                                            <td>@if ($subservicio->estatus == 'Activo') <span class="badge bg-success"> @else <span class="badge bg-danger"> @endif {{ $subservicio->estatus }}</span></td>
+                                            <td>
+                                                <button class="btn btn-soft-success editSubservicio" data-id="{{ $subservicio->id }}" data-nombre="{{ $subservicio->nombre }}" data-costo="{{ $subservicio->costo }}"><i class="mdi mdi-pencil font-size-8 me-1"></i> Editar </a></li>
+                                                <button class="btn btn-soft-danger" data-id="{{ $subservicio->id }}"><i class="mdi mdi-account-convert font-size-8 text-warning me-1"></i> Deshabilitar </a></li>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-            @endforeach
+            </div>
         </div>
     </div>
-    @include('servicio.add')
-    @include('servicio.edit')
+    @include('servicio.addSubservicio')
+    @include('servicio.editSubservicio')
 @endsection
 
 @section('script')
@@ -48,25 +63,25 @@
     <script>
         $(document).ready(function() {
 
-            //Crear servicio
-            $('#saveServicios').click(function () {
-                if($('#nombre').val() == ''){
+            //Crear subservicio
+            $('#btnGuardarSubservicio').click(function () {
+                if($('#sub_nombre').val() == ''){
                     Swal.fire({
-                        title: 'El nombre del servicio es requerido',
+                        title: '¡El nombre es requerido!',
                         icon: "warning",
-                        position: 'top-center',
                         showConfirmButton: false,
                         timer: 2000
                     });
                     return false;
                 }
-                $('#add_servicio').modal('hide');
                 $.ajax({
                     type: 'POST',
-                    url: "{{ route('servicio.store') }}",
+                    url: "{{ route('servicio.store.subservicio') }}",
                     data : { 
                         _token: "{{ csrf_token() }}",
-                        nombre: $('#nombre').val()
+                        servicio_id: $('#servicio_id').val(),
+                        nombre: $('#sub_nombre').val(),
+                        costo: $('#sub_costo').val()
                     },
                     success: function (data) {
                         if (data.code == 201) {
@@ -95,26 +110,32 @@
                 });
             });
 
-            //Actualizar servicio
-            $('#updateServicio').click(function () {
-                var id = $('#up_id').val();
-                if($('#up_nombre').val() == ''){
+            //Mostrar modal para actualizar estatus
+            $(document).on('click','.editSubservicio',function(){
+                $('#sub_servicio_id').val($(this).attr('data-id'));
+                $('#up_sub_nombre').val($(this).attr('data-nombre'));
+                $('#up_sub_costo').val($(this).attr('data-costo'));
+                $('#edit_sub_servicio').modal('show');
+            });
+
+            //Actualizar subservicio
+            $('#btnUpdateSubservicio').click(function () {
+                if($('#up_sub_nombre').val() == ''){
                     Swal.fire({
-                        title: 'El nombre del servicio es requerido',
+                        title: '¡El nombre es requerido!',
                         icon: "warning",
-                        position: 'top-center',
                         showConfirmButton: false,
                         timer: 2000
                     });
                     return false;
                 }
-                $('#update_servicio').modal('hide');
                 $.ajax({
-                    type: 'PATCH',
-                    url: 'servicio/'+id,
+                    type: 'PUT',
+                    url: '/update/subservicio/'+ $('#sub_servicio_id').val(),
                     data : { 
                         _token: "{{ csrf_token() }}",
-                        nombre: $('#up_nombre').val()
+                        nombre: $('#up_sub_nombre').val(),
+                        costo: $('#up_sub_costo').val()
                     },
                     success: function (data) {
                         if (data.code == 200) {

@@ -58,10 +58,9 @@
             //Crear usuarios
             $('#saveUsuario').click(function () {
                 var id = $(this).attr('data-id');
-                var metodo = $(this).attr('data-metodo');
-                if($('#nombre').val() == '' || $('#primer_apellido').val() == '' || $('#email').val() == '' || $('#rol_id').val() == '' || $('#entidad_id').val() == '' || $('#pin').val() == ''){
+                if($('#nombre').val() == '' || $('#primer_apellido').val() == '' || $('#email').val() == '' || $('#rol_id').val() == '' || $('#select_entidad_id').val() == '' || $('#pin').val() == ''){
                     Swal.fire({
-                        title: 'Hay campos vacios',
+                        title: 'Hay campos vacíos',
                         icon: "warning",
                         showConfirmButton: false,
                         timer: 2000
@@ -78,7 +77,7 @@
                         segundo_apellido: $('#segundo_apellido').val(),
                         email: $('#email').val(),
                         rol_id: $('#rol_id').val(),
-                        entidad_id: $('#entidad_id').val(),
+                        entidad_id: $('#select_entidad_id').val(),
                         pin: $('#pin').val(),
                     },
                     success: function (data) {

@@ -307,7 +307,7 @@
         </div>
         <div class="d-inline-block mb-4 pt-4">
             <select class="form-control form-select form-select-sm" style="cursor: pointer;" id="entidad_id" required>
-                <option value="" selected>{{ $user->sede }}</option>
+                <option value="" selected></option>
             </select>
         </div>
         <div class="dropdown d-inline-block">

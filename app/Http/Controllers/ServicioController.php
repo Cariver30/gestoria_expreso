@@ -144,8 +144,8 @@ class ServicioController extends Controller
         if ($request->nombre == '') {
             return response()->json(['code' => 400, 'msg' => 'El Nombre es requerido']);
         }
-        if ($request->id == '') {
-            return response()->json(['code' => 400, 'msg' => 'Se requeire el id del servicio principal']);
+        if ($request->servicio_id == '') {
+            return response()->json(['code' => 400, 'msg' => 'Se requiere el id del servicio principal']);
         }
 
         DB::beginTransaction();
@@ -154,7 +154,7 @@ class ServicioController extends Controller
             
             $servicio = new SubServicio();
             $servicio->nombre = \Helper::capitalizeFirst($request->nombre, "1");
-            $servicio->servicio_id = $request->id;
+            $servicio->servicio_id = $request->servicio_id;
             $servicio->costo = $request->costo;
             $servicio->estatus_id = 1;
             $servicio->save();
@@ -162,6 +162,30 @@ class ServicioController extends Controller
             DB::commit();
 
             return response()->json(['code' => 201, 'msg' => 'Sub Servicio creado']);
+
+        }catch (\PDOException $e){
+            DB::rollBack();
+            return back()->withErrors(['Error' => substr($e->getMessage(), 0, 150)]);
+        }
+    }
+
+    public function updateSubServicio(Request $request, $id) {
+        if ($request->nombre == '') {
+            return response()->json(['code' => 400, 'msg' => 'El Nombre es requerido']);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            
+            $sub_servicio = SubServicio::find($id);
+            $sub_servicio->nombre = \Helper::capitalizeFirst($request->nombre, "1");
+            $sub_servicio->costo = $request->costo;
+            $sub_servicio->save();
+
+            DB::commit();
+
+            return response()->json(['code' => 200, 'msg' => 'Sub Servicio actualizado']);
 
         }catch (\PDOException $e){
             DB::rollBack();
@@ -177,9 +201,9 @@ class ServicioController extends Controller
     public function getViewInspeccion() {
         $costosInspeccion = SubServicio::where('servicio_id', 1)->get();
         $marbetes = SubServicio::where('servicio_id', 2)->get();
-        $seguros = SubServicio::where('servicio_id', 7)->get();
+        $seguros = SubServicio::where('servicio_id', 3)->get();
         $meses = Mes::all();
-        $extras = Servicio::whereIn('id', [3,4,5,9])->get();
+        $extras = Servicio::whereIn('id', [4,5,9])->get();
         $licencias = SubServicio::where('servicio_id', 3)->get();
         $notificaciones = SubServicio::where('servicio_id', 4)->get();
         $costo_servicios = SubServicio::where('servicio_id', 5)->get();
@@ -242,5 +266,16 @@ class ServicioController extends Controller
         } else {
             return response()->json(['code' => 001]);
         }
+    }
+
+    public function editSubServicio($id) {
+        $servicio = Servicio::find($id);
+
+        $subservicios = SubServicio::leftJoin('estatus', 'sub_servicios.estatus_id', 'estatus.id')
+                                    ->where('servicio_id', $id)
+                                    ->select('sub_servicios.id', 'sub_servicios.nombre', 'sub_servicios.costo', 'estatus.nombre as estatus')
+                                    ->get();
+
+        return view('servicio.subservicio', compact('subservicios', 'id', 'servicio'));
     }
 }
