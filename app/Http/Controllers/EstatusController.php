@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use DB;
 use App\Models\User;
+use App\Models\Sede;
 use App\Models\Estatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +26,9 @@ class EstatusController extends Controller
                         'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede', 'sedes.acceso_panel as panel')
                     ->first();
 
-        return view('estatus.index', compact('estatus', 'user'));
+        $entidades = Sede::where('estatus_id', 1)->select('id', 'nombre')->get();
+
+        return view('estatus.index', compact('estatus', 'user', 'entidades'));
     }
 
     /**

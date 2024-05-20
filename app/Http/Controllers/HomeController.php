@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Sede;
 use Spatie\PdfToText\Pdf;
 use setasign\Fpdi\Fpdi;
 use setasign\Fpdi\PdfParser\StreamReader;
@@ -48,7 +49,9 @@ class HomeController extends Controller
                         'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede', 'sedes.acceso_panel as panel')
                     ->first();
 
-        return view('principal.home', compact('user'));
+        $entidades = Sede::where('estatus_id', 1)->select('id', 'nombre')->get();
+
+        return view('principal.home', compact('user', 'entidades'));
     }
 
     /*Language Translation*/

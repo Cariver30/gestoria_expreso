@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use DB;
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Sede;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,7 +26,9 @@ class RoleController extends Controller
                         'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede', 'sedes.acceso_panel as panel')
                     ->first();
 
-        return view('rol.index', compact('roles', 'user'));
+        $entidades = Sede::where('estatus_id', 1)->select('id', 'nombre')->get();
+
+        return view('rol.index', compact('roles', 'user', 'entidades'));
     }
 
     /**

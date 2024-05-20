@@ -13,11 +13,11 @@
                     @foreach ($marbetes as $marbete)
                         <button type="button" class="btn btn-soft-success col-md-3 waves-effect waves-light btnInspeccionMarbete" style="margin: 1px;" data-id="{{ $marbete->id}}">{{ $marbete->nombre}} - ${{ $marbete->costo}} </button>
                     @endforeach
-                    <div class="col-md-3 costoServicioObligatorio" style="cursor: pointer;">
-                        <div class="card border border-success cardMain">
-                            <div class="card-header bg-transparent border-success">
-                                <h5 class="my-0 text-success">$5 Costo de Servicio</h5>
-                            </div>
+                </div>
+                <div class="col-md-3 mb-4 costoServicioObligatorio" style="cursor: pointer;">
+                    <div class="card border border-success cardMain">
+                        <div class="card-header bg-transparent border-success">
+                            <h5 class="my-0 text-success">$5 Costo de Servicio</h5>
                         </div>
                     </div>
                 </div>

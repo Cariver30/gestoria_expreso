@@ -6,6 +6,7 @@ use DB;
 use Session;
 use App\Models\Mes;
 use App\Models\User;
+use App\Models\Sede;
 use App\Models\Venta;
 use App\Models\Servicio;
 use App\Models\Cliente;
@@ -32,7 +33,9 @@ class ServicioController extends Controller
                         'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede', 'sedes.acceso_panel as panel')
                     ->first();
         
-        return view('servicio.index', compact('servicios', 'user'));
+        $entidades = Sede::where('estatus_id', 1)->select('id', 'nombre')->get();
+        
+        return view('servicio.index', compact('servicios', 'user', 'entidades'));
     }
 
     /**
@@ -209,8 +212,12 @@ class ServicioController extends Controller
         $costo_servicios = SubServicio::where('servicio_id', 5)->get();
         $venta_multas = SubServicio::where('servicio_id', 6)->get();
 
+        //Entidades para selector
+        $entidades = Sede::where('estatus_id', 1)->select('id', 'nombre')->get();
+
         // Validar si hay un registro en curso
         $vehiculo_id = \Helper::registroEnCurso();
+        // dd($vehiculo_id);
         if ($vehiculo_id != null) {
             $total_checkout = Venta::where('vehiculo_id', $vehiculo_id)->select('total')->pluck('total')->first();
             if (is_null($total_checkout)) {
@@ -243,7 +250,7 @@ class ServicioController extends Controller
                         'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede', 'sedes.acceso_panel as panel')
                     ->first();
 
-        return view('modulo.inspeccion.index', compact('costosInspeccion', 'marbetes', 'seguros', 'meses', 'total_checkout', 'extras', 'licencias', 'notificaciones', 'costo_servicios', 'venta_multas', 'user'));
+        return view('modulo.inspeccion.index', compact('costosInspeccion', 'marbetes', 'seguros', 'meses', 'total_checkout', 'extras', 'licencias', 'notificaciones', 'costo_servicios', 'venta_multas', 'user', 'entidades', 'vehiculo_id'));
     }
 
     public function getViewGestoria() {
@@ -276,6 +283,8 @@ class ServicioController extends Controller
                                     ->select('sub_servicios.id', 'sub_servicios.nombre', 'sub_servicios.costo', 'estatus.nombre as estatus')
                                     ->get();
 
-        return view('servicio.subservicio', compact('subservicios', 'id', 'servicio'));
+        $entidades = Sede::where('estatus_id', 1)->select('id', 'nombre')->get();
+
+        return view('servicio.subservicio', compact('subservicios', 'id', 'servicio', 'entidades'));
     }
 }

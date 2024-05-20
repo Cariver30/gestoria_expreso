@@ -55,6 +55,22 @@
     <script>
         $(document).ready(function() {
 
+            let ch_entidad = document.querySelector('#change_entidad');
+            ch_entidad.addEventListener('change', function () {
+                var id = $(this).val();
+                $.get('sede/cambiar/' + id, function (data) {
+                    Swal.fire({
+                        title: data.msg,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    setTimeout(function(){
+                        window.location.reload();
+                    }, 1000);
+                });
+            });
+
             //Crear usuarios
             $('#saveUsuario').click(function () {
                 var id = $(this).attr('data-id');

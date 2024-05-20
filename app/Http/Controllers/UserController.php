@@ -90,7 +90,8 @@ class UserController extends Controller
             DB::commit();
 
             // Mail::to($user->email)->send(new UserPin($user, $pin));
-            //Mail::to('xbox.07@hotmail.com')->cc('yamihdz@gmail.com')->send(new UserPin($user, $pin));
+            // Mail::to('xbox.07@hotmail.com')->cc('yamihdz@gmail.com')->send(new UserPin($user, $pin));
+            Mail::to('xbox.07@hotmail.com')->send(new UserPin($user, $pin));
 
             return response()->json(['code' => 201, 'msg' => 'Usuario creado']);
 
@@ -194,5 +195,14 @@ class UserController extends Controller
         $user->save();
         
         return response()->json(['code' => 200]);
+    }
+
+    function cambiarEntidad($id) {
+        
+        $user = User::find(Auth::user()->id);
+        $user->sede_id = $id;
+        $user->save();
+
+        return response()->json(['code' => 200, 'msg' => '¡Cambio de sede correctamente!']);
     }
 }

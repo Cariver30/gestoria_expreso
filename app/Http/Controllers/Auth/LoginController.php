@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
+use App\Models\Sede;
 use App\Models\SubServicio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -58,8 +59,9 @@ class LoginController extends Controller
                     // dd($user);
         if($user) {
             Auth::loginUsingId($user->id);
-            // dd($user);
-            return view('principal.home', compact('user'));
+            $entidades = Sede::where('estatus_id', 1)->select('id', 'nombre')->get();
+
+            return view('principal.home', compact('user', 'entidades'));
 
         } else {
             return back()->with(['status' => 'PIN Inválido']);

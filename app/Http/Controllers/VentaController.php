@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Venta;
+use App\Models\ClienteVehiculo;
 use Illuminate\Http\Request;
 
 class VentaController extends Controller
@@ -61,5 +62,23 @@ class VentaController extends Controller
     public function destroy(Venta $venta)
     {
         //
+    }
+
+    public function cancelarVenta(Request $request) {
+
+        $vehiculo = ClienteVehiculo::find($request->vehiculo_id);
+        if ($vehiculo) {
+            $vehiculo->estatus_id = 6;
+            $vehiculo->motivo = $request->motivo;
+            $vehiculo->save();
+
+            $cliente = Cliente::find($vehiculo->cliente_id);
+            $cliente->estatus_id = 1;
+            $cliente->save();
+
+            return response()->json(['code' => 200, 'msg' => 'Transacción cancelada!']);
+        } else {
+            return response()->json(['code' => 404, 'msg' => 'Transacción no encontrada!']);
+        }
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use DB;
 use App\Models\User;
+use App\Models\Sede;
 use App\Models\Venta;
 use App\Models\Cliente;
 use App\Models\SubServicio;
@@ -29,8 +30,10 @@ class ClienteController extends Controller
                         'users.id', 'users.nombre','users.primer_apellido', 'users.segundo_apellido', 'users.email',
                         'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede', 'sedes.acceso_panel as panel')
                     ->first();
+                    
+        $entidades = Sede::where('estatus_id', 1)->select('id', 'nombre')->get();
 
-        return view('cliente.index', compact('clientes', 'user'));
+        return view('cliente.index', compact('clientes', 'user', 'entidades'));
     }
 
     /**

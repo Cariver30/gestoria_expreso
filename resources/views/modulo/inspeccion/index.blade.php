@@ -60,14 +60,16 @@
         </div>
     </div>
 </div>
-<div class="row col-sm-12 text-center" style="margin-left: 33%;">
-    <div class="col-sm-2 col-sm-2">
-        <button type="button" class="btn btn-soft-success col-md-8 waves-effect waves-light btn-lg" data-id=""> PAGAR </button>
+@if ($total_checkout != 0)
+    <div class="row col-sm-12 text-center" style="margin-left: 33%;">
+        <div class="col-sm-2 col-sm-2">
+            <button type="button" class="btn btn-soft-success col-md-8 waves-effect waves-light btn-lg" data-id=""> PAGAR </button>
+        </div>
+        <div class="col-sm-2 col-sm-2">
+            <button type="button" class="btn btn-soft-danger col-md-8 waves-effect waves-light btn-lg finalizarProceso" data-id="{{ $vehiculo_id }}"> FINALIZAR </button>
+        </div>
     </div>
-    <div class="col-sm-2 col-sm-2">
-        <button type="button" class="btn btn-soft-danger col-md-8 waves-effect waves-light btn-lg" data-id=""> FINALIZAR </button>
-    </div>
-</div>
+@endif
 @include('modulo.inspeccion.vehiculo.add')
 @include('modulo.inspeccion.marbete.add')
 @include('modulo.inspeccion.seguro.add')
@@ -187,7 +189,7 @@
                     return false;
                 }
                 var rol_id = {{ Auth::user()->rol_id }};
-                if($('#costo_inspeccion_id').val() == 0 && $('#costo_admin').val() == 0 || $('#costo_admin').val() == ''){
+                if($('#costo_inspeccion_id').val() == 0 && $('#costo_admin').val() == ''){
                     Swal.fire({
                         title: '¿El administrador ingresará el costo de inspección?',
                         //text: "You won't be able to revert this!",
@@ -439,6 +441,60 @@
                     timer: 2000
                 });
                 $('#modal_inspeccion_seguro').modal('hide');
+            });
+
+            $('.finalizarProceso').click(function () {
+                var id = $(this).attr('data-id');
+                Swal.fire({
+                    title: "Motivo por el cual finaliza",
+                    input: "text",
+                    inputAttributes: {
+                        autocapitalize: "on"
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: "Aceptar",
+                    cancelButtonText: 'Cancelar!',
+                    showLoaderOnConfirm: true,
+                    inputValidator: function (value) {
+                        return !value && 'Debe ingresar un motivo'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type : 'POST',
+                            url :"{{ route('cancelar.venta') }}",
+                            data : { 
+                                _token: "{{ csrf_token() }}",
+                                vehiculo_id: id,
+                                motivo : result.value
+                            },
+                            success: function (data) {
+                                if (data.code == 200) {
+                                    Swal.fire({
+                                        title: data.msg,
+                                        icon: "success",
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                    setTimeout(function(){
+                                        window.location.reload();
+                                    }, 1000);
+                                } else {
+                                    Swal.fire({
+                                        title: data.msg,
+                                        icon: "warning",
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                }
+        
+                            },
+                            error: function (data) {
+                                // console.log(data);
+                            }
+                        }); 
+                    }
+                });
             });
         });
     </script>

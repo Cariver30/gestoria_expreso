@@ -26,7 +26,9 @@ class SedeController extends Controller
                         'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede', 'sedes.acceso_panel as panel')
                     ->first();
 
-        return view('sede.index', compact('sedes', 'user'));
+        $entidades = Sede::where('estatus_id', 1)->select('id', 'nombre')->get();
+
+        return view('sede.index', compact('sedes', 'user', 'entidades'));
     }
 
     /**
