@@ -21,7 +21,7 @@ class UserController extends Controller
      */
     public function index()
     {   
-        if (Auth::user()->rol_id) { // Optimizar
+        if (Auth::user()->rol_id == 2) { // Optimizar
             $usuarios = User::leftJoin('roles', 'users.rol_id', 'roles.id')
                             ->leftJoin('sedes', 'users.sede_id', 'sedes.id')
                             ->where('sede_id', Auth::user()->sede_id)
