@@ -15,20 +15,8 @@ File: project create Init Js File
     // form date picker
     var date = new Date();
     var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    $('#duedate-input').datepicker('setDate', today);
+    // $('#duedate-input').datepicker('setDate', today);
 
-    // project logo image
-    document.querySelector("#project-image-input").addEventListener("change", function () {
-        var preview = document.querySelector("#projectlogo-img");
-        var file = document.querySelector("#project-image-input").files[0];
-        var reader = new FileReader();
-        reader.addEventListener("load", function () {
-            preview.src = reader.result;
-        }, false);
-        if (file) {
-            reader.readAsDataURL(file);
-        }
-    });
 
 
     var editinputValueJson = sessionStorage.getItem('editInputValue');
@@ -40,7 +28,7 @@ File: project create Init Js File
         document.getElementById("projectname-input").value = editinputValueJson.projectTitle;
         document.getElementById("projectdesc-input").value = editinputValueJson.projectDesc;
         document.getElementById("project-status-input").value = editinputValueJson.status;
-        $('#duedate-input').datepicker('setDate', editinputValueJson.dueDate);
+        // $('#duedate-input').datepicker('setDate', editinputValueJson.dueDate);
 
         Array.from(document.querySelectorAll("#select-element .dropdown-menu ul li a")).forEach(function (subElem) {
             var nameelem = subElem.querySelector(".flex-grow-1").innerHTML;
@@ -148,14 +136,7 @@ File: project create Init Js File
             }, false);
         });
 
-        
-
-        Dropzone.autoDiscover = false;
-
-        var myDropzone = new Dropzone("div#myId", {
-            url: "https://httpbin.org/post"
-        });
-
+    // Agregar usuario
     Array.from(document.querySelectorAll("#select-element .assignto-list li a")).forEach(function (subElem) {
         subElem.addEventListener("click", function () {
             subElem.classList.toggle("active");
@@ -163,18 +144,47 @@ File: project create Init Js File
             document.getElementById("total-assignee").innerHTML = assigneeMember.length;
 
             var imgPath = subElem.querySelector(".avatar-xs img").getAttribute('src');
+            var idPath = subElem.querySelector(".avatar-xs img").getAttribute('id');
             var assigneeListdata = document.getElementById("assignee-member");
             if (subElem.classList.contains("active")) {
                 var nameelem = subElem.querySelector(".flex-grow-1").innerHTML;
                 var memberlisthtml =
-                    '<a href="javascript: void(0);" class="avatar-group-item mb-2" data-img="' + imgPath + '"  data-bs-toggle="tooltip" data-bs-placement="top" title="' + nameelem + '">\
-                <img src="'+ imgPath + '" alt="" class="rounded-circle avatar-xs" />\
-                </a>';
+                    '<a href="javascript: void(0);" class="avatar-group-item mb-2" data-img="' + idPath + '"  data-bs-toggle="tooltip" data-bs-placement="top" title="' + nameelem + '">\
+                        <img src="'+ imgPath + '" alt="" class="rounded-circle avatar-xs" />\
+                    </a>';
                 assigneeListdata.insertAdjacentHTML("beforeend", memberlisthtml);
             } else {
                 Array.from(assigneeListdata.querySelectorAll(".avatar-group-item")).forEach(function (item) {
                     var avatarImg = item.getAttribute('data-img');
-                    if (imgPath == avatarImg) {
+                    if (idPath == avatarImg) {
+                        item.remove();
+                    }
+                });
+            }
+            tooltipElm()
+        });
+    });
+
+    // Editar usuario
+    Array.from(document.querySelectorAll("#select-entidad .entidad-list li a")).forEach(function (subElem) {
+        subElem.addEventListener("click", function () {
+            subElem.classList.toggle("active");
+            var assigneeMember = document.querySelectorAll('#select-entidad .entidad-list li a.active');
+            document.getElementById("total-entidades").innerHTML = assigneeMember.length;
+            var imgPath = subElem.querySelector(".avatar-xs-up img").getAttribute('src');
+            var idPath = subElem.querySelector(".avatar-xs-up img").getAttribute('id');
+            var listEntidades = document.getElementById("usuario-entidad");
+            if (subElem.classList.contains("active")) {
+                var nameelem = subElem.querySelector(".flex-grow-2").innerHTML;
+                var memberlisthtml =
+                    '<a href="javascript: void(0);" class="avatar-group-item-up mb-2" data-img="' + idPath + '"  data-bs-toggle="tooltip" data-bs-placement="top" title="' + nameelem + '">\
+                        <img src="'+ imgPath + '" alt="" class="rounded-circle avatar-xs avatar-xs-up" />\
+                    </a>';
+                listEntidades.insertAdjacentHTML("beforeend", memberlisthtml);
+            } else {
+                Array.from(listEntidades.querySelectorAll(".avatar-group-item-up")).forEach(function (item) {
+                    var avatarImg = item.getAttribute('data-img');
+                    if (idPath == avatarImg) {
                         item.remove();
                     }
                 });

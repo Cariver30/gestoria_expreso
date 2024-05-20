@@ -66,7 +66,8 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->nombre == '' || $request->primer_apellido == '' || $request->email == '' || $request->rol_id == '' || $request->entidad_id == '' || $request->pin == '') {
+        // dd($request->all());
+        if ($request->nombre == '' || $request->primer_apellido == '' || $request->email == '' || $request->rol_id == '' || $request->pin == '') {
             return response()->json(['code' => 400, 'msg' => 'Hay campos vacíos']);
         }
 
@@ -94,8 +95,16 @@ class UserController extends Controller
             $user->dob = '2024-04-01';
             $user->avatar = 'images/user-dummy-img.jpg';
             $user->rol_id = $request->rol_id;
-            $user->sede_id = $request->entidad_id;
+            $user->sede_id = ($request->rol_id == 1) ? 1 : $request->entidades[0];
             $user->save();
+
+            $entidades = $request->entidades;
+            foreach ($entidades as $entidad) {
+                DB::table('usuario_sedes')->insert([
+                    'usuario_id' => $user->id,
+                    'sede_id' => $entidad 
+                ]);
+            }
 
             DB::commit();
 

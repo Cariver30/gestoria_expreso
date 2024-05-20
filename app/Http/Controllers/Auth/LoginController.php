@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use DB;
 use App\Models\User;
 use App\Models\Sede;
 use App\Models\SubServicio;
@@ -59,14 +60,9 @@ class LoginController extends Controller
                     // dd($user);
         if($user) {
             Auth::loginUsingId($user->id);
-            $entidades = Sede::where('estatus_id', 1)->select('id', 'nombre')->get();
-            if (Auth::user()->rol_id == 3) {
-                $valida_entidades = DB::table('usuario_sedes')->where('usuario_id', Auth::user()->id)->count();
-            } else {
-                $valida_entidades = 0;
-            }
+            $entidades = \Helper::entidadUsuario();
 
-            return view('principal.home', compact('user', 'entidades', 'valida_entidades'));
+            return view('principal.home', compact('user', 'entidades'));
 
         } else {
             return back()->with(['status' => 'PIN Inválido']);

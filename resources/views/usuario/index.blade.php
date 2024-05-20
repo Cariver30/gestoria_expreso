@@ -5,6 +5,7 @@
 @endsection
 
 @section('css')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 
@@ -50,6 +51,7 @@
 @endsection
 
 @section('script')
+    <script src="{{ URL::asset('build/js/pages/project-create.init.js') }}"></script>
     <!-- Sweet Alerts js -->
     <script src="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.js') }}"></script>
     <script>
@@ -74,7 +76,8 @@
             //Crear usuarios
             $('#saveUsuario').click(function () {
                 var id = $(this).attr('data-id');
-                if($('#nombre').val() == '' || $('#primer_apellido').val() == '' || $('#email').val() == '' || $('#rol_id').val() == '' || $('#select_entidad_id').val() == '' || $('#pin').val() == ''){
+                var rol_id = $('#rol_id').val();
+                if($('#nombre').val() == '' || $('#primer_apellido').val() == '' || $('#email').val() == '' || $('#rol_id').val() == '' || $('#pin').val() == ''){
                     Swal.fire({
                         title: 'Hay campos vacíos',
                         icon: "warning",
@@ -82,6 +85,24 @@
                         timer: 2000
                     });
                     return false;
+                }
+                if(rol_id != 1) {
+                    var entidadAsignada = []
+                    var assignedTo = document.querySelectorAll('#select-element .assignto-list li a.active');
+                    if (assignedTo.length > 0) {
+                        Array.from(assignedTo).forEach(function (ele) {
+                            var idPath = ele.querySelector(".avatar-xs img").getAttribute('id');
+                            entidadAsignada.push(idPath);
+                        });
+                    } else {
+                        Swal.fire({
+                            title: '¡Debe seleccionar al menos una entidad!',
+                            icon: "warning",
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                        return false;
+                    }
                 }
                 $.ajax({
                     type : 'POST',
@@ -93,7 +114,7 @@
                         segundo_apellido: $('#segundo_apellido').val(),
                         email: $('#email').val(),
                         rol_id: $('#rol_id').val(),
-                        entidad_id: $('#select_entidad_id').val(),
+                        entidades: entidadAsignada,
                         pin: $('#pin').val(),
                     },
                     success: function (data) {
@@ -252,7 +273,14 @@
                         });
                     }
                 })
-            });     
+            });    
+            
+            $('#cerrar_usuario').click(function () {
+                setTimeout(function(){
+                    window.location.reload();
+                }, 1000);
+            });
         });
+        
     </script>
 @endsection

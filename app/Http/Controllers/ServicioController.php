@@ -263,7 +263,9 @@ class ServicioController extends Controller
                         'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede', 'sedes.acceso_panel as panel')
                     ->first();
 
-        return view('modulo.gestoria.index', compact('user'));
+        $entidades = \Helper::entidadUsuario();
+
+        return view('modulo.gestoria.index', compact('user', 'entidades'));
     }
 
     public function getTablilla($tablilla) {

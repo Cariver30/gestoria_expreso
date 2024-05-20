@@ -29,11 +29,16 @@ class Helper {
         if (Auth::user()->rol_id == 1) {
             $entidades = Sede::where('estatus_id', 1)->select('id', 'nombre')->get();
         }else {
+            $array_entidades = [];
             $entidades = DB::table('usuario_sedes')->where('usuario_id', Auth::user()->id)->get();
-            // dd($entidades);
             if (count($entidades) == 0) {
                 $entidades = Sede::where('id', Auth::user()->sede_id)->select('id', 'nombre')->get();
             }
+            foreach ($entidades as $entidad) {
+                $enti = Sede::where('id', $entidad->id)->select('id', 'nombre')->first();
+                array_push($array_entidades, $enti);
+            }
+            $entidades = collect($array_entidades);
         }
         return $entidades;
     }
