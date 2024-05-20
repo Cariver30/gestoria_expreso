@@ -40,7 +40,7 @@ class UserController extends Controller
 
         $roles = Role::select('id', 'nombre')->where('estatus_id', 1)->get();
         
-        $entidades = Sede::select('id', 'nombre')->where('estatus_id', 1)->get();
+        $entidades = \Helper::entidadUsuario();
 
         $user = User::leftJoin('roles', 'users.rol_id', 'roles.id')
                     ->leftJoin('sedes', 'users.sede_id', 'sedes.id')

@@ -30,8 +30,8 @@ class ClienteController extends Controller
                         'users.id', 'users.nombre','users.primer_apellido', 'users.segundo_apellido', 'users.email',
                         'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede', 'sedes.acceso_panel as panel')
                     ->first();
-                    
-        $entidades = Sede::where('estatus_id', 1)->select('id', 'nombre')->get();
+        
+        $entidades = \Helper::entidadUsuario();
 
         return view('cliente.index', compact('clientes', 'user', 'entidades'));
     }

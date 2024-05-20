@@ -1,5 +1,8 @@
 <?php
     namespace App\Helpers;
+    
+    use DB;
+    use App\Models\Sede;
     use App\Models\Cliente;
     use App\Models\ClienteVehiculo;
     use Illuminate\Support\Facades\Auth;
@@ -20,5 +23,18 @@ class Helper {
         $vehiculo_id = ClienteVehiculo::where('estatus_id', 3)->where('cliente_id', $cliente_id)->select('id')->pluck('id')->first();
 
         return $vehiculo_id;
+    }
+
+    public static function entidadUsuario() {
+        if (Auth::user()->rol_id == 1) {
+            $entidades = Sede::where('estatus_id', 1)->select('id', 'nombre')->get();
+        }else {
+            $entidades = DB::table('usuario_sedes')->where('usuario_id', Auth::user()->id)->get();
+            // dd($entidades);
+            if (count($entidades) == 0) {
+                $entidades = Sede::where('id', Auth::user()->sede_id)->select('id', 'nombre')->get();
+            }
+        }
+        return $entidades;
     }
 }

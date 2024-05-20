@@ -30,7 +30,7 @@
             <div class="d-inline-block mb-4 pt-4">
                 <select class="form-control form-select form-select-sm" style="cursor: pointer;" id="change_entidad">
                     @foreach ($entidades as $entidad)
-                        <option value="{{ $entidad->id }}" @if ($entidad->id == Auth::user()->sede_id) selected @endif>{{ $entidad->nombre}}</option>
+                        <option value="{{ $entidad->id }}">{{ $entidad->nombre}}</option>
                     @endforeach
                 </select>
             </div>

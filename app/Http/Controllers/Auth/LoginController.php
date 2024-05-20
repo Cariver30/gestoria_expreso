@@ -60,8 +60,13 @@ class LoginController extends Controller
         if($user) {
             Auth::loginUsingId($user->id);
             $entidades = Sede::where('estatus_id', 1)->select('id', 'nombre')->get();
+            if (Auth::user()->rol_id == 3) {
+                $valida_entidades = DB::table('usuario_sedes')->where('usuario_id', Auth::user()->id)->count();
+            } else {
+                $valida_entidades = 0;
+            }
 
-            return view('principal.home', compact('user', 'entidades'));
+            return view('principal.home', compact('user', 'entidades', 'valida_entidades'));
 
         } else {
             return back()->with(['status' => 'PIN Inválido']);

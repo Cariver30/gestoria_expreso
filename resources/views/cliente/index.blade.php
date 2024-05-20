@@ -20,9 +20,9 @@
                         <img src="{{ URL::asset('build/images/companies/adobe.svg') }}" alt="" height="50" class="mb-3">
                         <h5 class="fs-17 mb-2"><a href="" class="text-dark">{{ $cliente->nombre }} </a></h5>
                         <div class="mt-4">
-                            <button class="btn btn-soft-success waves-effect waves-light" data-id="{{ $cliente->id }}"><i class="mdi mdi-pencil font-size-16 text-danger me-1"></i> Editar </a></li>
-                            <button class="btn btn-soft-info waves-effect waves-light" data-id="{{ $cliente->id }}"><i class="mdi mdi-trash-can-outline font-size-16 text-danger me-1"></i>Ver detalle</button>
-                            <button class="btn btn-soft-danger waves-effect waves-light" data-id="{{ $cliente->id }}"><i class="mdi mdi-trash-can-outline font-size-16 text-danger me-1"></i>Agregar servicio</button>
+                            <button class="btn btn-soft-success waves-effect waves-light" style="margin-right: 10px;" data-id="{{ $cliente->id }}"><i class="mdi mdi-pencil font-size-16 text-danger me-1"></i> Editar </a></li>
+                            <button class="btn btn-soft-info waves-effect waves-light" style="margin-right: 10px;" data-id="{{ $cliente->id }}"><i class="mdi mdi-trash-can-outline font-size-16 text-danger me-1"></i>Ver detalle</button>
+                            <button class="btn btn-soft-danger waves-effect waves-light" style="margin-right: 1px;" data-id="{{ $cliente->id }}"><i class="mdi mdi-trash-can-outline font-size-16 text-danger me-1"></i>Agregar servicio</button>
                         </div>
                     </div>
                 </div>
