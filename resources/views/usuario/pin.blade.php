@@ -101,7 +101,7 @@
                                             <td width="30" height="30" align="right">
                                                 <div class="imgpop">
                                                     <a target="_blank" href="#">
-                                                        <img src="{{ asset('images/logo_expreso.png') }}" alt="expreso" border="0" width="160" height="50" style="display:block; border:none; outline:none; text-decoration:none;">
+                                                        <img src="{{ asset('images/logo_expreso.png') }}" alt="expreso" border="0" width="100" height="50" style="display:block; border:none; outline:none; text-decoration:none;">
                                                     </a>
                                                 </div>
                                             </td>

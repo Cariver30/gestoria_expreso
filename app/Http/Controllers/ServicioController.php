@@ -207,10 +207,10 @@ class ServicioController extends Controller
         $seguros = SubServicio::where('servicio_id', 3)->get();
         $meses = Mes::all();
         $extras = Servicio::whereIn('id', [4,5,9])->get();
-        $licencias = SubServicio::where('servicio_id', 3)->get();
-        $notificaciones = SubServicio::where('servicio_id', 4)->get();
-        $costo_servicios = SubServicio::where('servicio_id', 5)->get();
-        $venta_multas = SubServicio::where('servicio_id', 6)->get();
+        $licencias = SubServicio::where('servicio_id', 4)->get();
+        $notificaciones = SubServicio::where('servicio_id', 5)->get();
+        $costo_servicios = SubServicio::where('servicio_id', 6)->get();
+        $venta_multas = SubServicio::where('servicio_id', 9)->get();
 
         //Entidades para selector
         $entidades = Sede::where('estatus_id', 1)->select('id', 'nombre')->get();
@@ -249,7 +249,7 @@ class ServicioController extends Controller
                         'users.id', 'users.nombre','users.primer_apellido', 'users.segundo_apellido', 'users.email',
                         'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede', 'sedes.acceso_panel as panel')
                     ->first();
-
+//  dd($notificaciones);
         return view('modulo.inspeccion.index', compact('costosInspeccion', 'marbetes', 'seguros', 'meses', 'total_checkout', 'extras', 'licencias', 'notificaciones', 'costo_servicios', 'venta_multas', 'user', 'entidades', 'vehiculo_id'));
     }
 

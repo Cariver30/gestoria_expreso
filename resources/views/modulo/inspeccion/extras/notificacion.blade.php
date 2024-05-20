@@ -8,8 +8,7 @@
             <div class="modal-body">
                 <div class="row col-md-12">
                     @foreach ($notificaciones as $notificacion)
-                        <button type="button" class="btn btn-soft-success col-md-3 waves-effect waves-light" style="margin: 1px;" data-id="{{ $notificacion->id}}">{{ $notificacion->nombre}} </button>
-                        <button type="button" class="btn btn-soft-success col-md-3 waves-effect waves-light" style="margin: 1px;" data-id="{{ $notificacion->id}}">{{ $notificacion->nombre}} </button>
+                        <button type="button" class="btn btn-soft-success col-md-3 waves-effect waves-light" style="margin: 1px;" data-id="{{ $notificacion->id}}">{{ $notificacion->nombre}} ${{ $notificacion->costo}} </button>
                     @endforeach
                 </div>
             </div>

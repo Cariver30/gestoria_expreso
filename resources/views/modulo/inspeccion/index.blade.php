@@ -132,13 +132,13 @@
             $('.btnInspeccionExtras').click(function () {
                 var id = $(this).attr('data-id');
                 switch (id) {
-                    case '3':
+                    case '4':
                         $('#extra_licencia').modal('show');
                         break;
-                    case '4':
+                    case '5':
                         $('#extra_notificacion').modal('show')
                         break;
-                    case '5':
+                    case '6':
                         $('#extra_costo_servicio').modal('show')
                         break;
                     case '9':
