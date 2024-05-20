@@ -17,17 +17,31 @@
                         <span key="t-file-manager"> Clientes </span>
                     </a>
                 </li>
+                @if (Auth::user()->rol_id == 2)
+                        <li>
+                            <a href="{{ route('servicio.index') }}" class="waves-effect">
+                                <i class="bx bx-clipboard"></i>
+                                <span key="t-file-manager"> Servicios </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('usuario.index') }}" class="waves-effect">
+                                <i class="bx bx-group"></i>
+                                <span key="t-file-manager"> Usuarios </span>
+                            </a>
+                        </li>
+                    @endif
                 @if (Auth::user()->rol_id == 1)
                     <li class="menu-title" key="t-menu"> Administración </li>
                     <li>
                         <a href="{{ route('usuario.index') }}" class="waves-effect">
-                            <i class="bx bx-user"></i>
+                            <i class="bx bx-group"></i>
                             <span key="t-file-manager"> Usuarios </span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('servicio.index') }}" class="waves-effect">
-                            <i class="bx bx-user"></i>
+                            <i class="bx bx-clipboard"></i>
                             <span key="t-file-manager"> Servicios </span>
                         </a>
                     </li>

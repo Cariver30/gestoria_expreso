@@ -20,13 +20,23 @@ class UserController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $usuarios = User::leftJoin('roles', 'users.rol_id', 'roles.id')
-                        ->leftJoin('sedes', 'users.sede_id', 'sedes.id')
-                        ->select(
-                            'users.id', 'users.nombre','users.primer_apellido', 'users.segundo_apellido', 'users.email',
-                            'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede'
-                        )->get();
+    {   
+        if (Auth::user()->rol_id) { // Optimizar
+            $usuarios = User::leftJoin('roles', 'users.rol_id', 'roles.id')
+                            ->leftJoin('sedes', 'users.sede_id', 'sedes.id')
+                            ->where('sede_id', Auth::user()->sede_id)
+                            ->select(
+                                'users.id', 'users.nombre','users.primer_apellido', 'users.segundo_apellido', 'users.email',
+                                'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede'
+                            )->get();
+        } else {
+            $usuarios = User::leftJoin('roles', 'users.rol_id', 'roles.id')
+                            ->leftJoin('sedes', 'users.sede_id', 'sedes.id')
+                            ->select(
+                                'users.id', 'users.nombre','users.primer_apellido', 'users.segundo_apellido', 'users.email',
+                                'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede'
+                            )->get();
+        }
 
         $roles = Role::select('id', 'nombre')->where('estatus_id', 1)->get();
         
