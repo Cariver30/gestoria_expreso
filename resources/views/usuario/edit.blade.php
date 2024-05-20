@@ -35,7 +35,7 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="pin" class="col-form-label"> PIN </label>
-                            <input type="text" class="form-control form-control-sm" id="pin" maxlength="4">
+                            <input type="text" class="form-control form-control-sm" id="up_pin" maxlength="4">
                         </div>
                         @include('layouts.edit_entidad')
                     <div class="modal-footer">
