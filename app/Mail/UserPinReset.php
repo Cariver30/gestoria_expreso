@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class UserPin extends Mailable
+class UserPinReset extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -30,7 +30,7 @@ class UserPin extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Bienvenido (a) a Expreso Gestoría',
+            subject: 'Reseteo de PIN de Acceso a Expreso Gestoría',
         );
     }
 
@@ -40,9 +40,9 @@ class UserPin extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'usuario.pin',
+            view: 'usuario.reseteo_pin',
             with: [
-                'nombre' => $this->usuario->nombre,
+                'nombre' => $this->usuario,
                 'pin' => $this->pin,
             ],
         );

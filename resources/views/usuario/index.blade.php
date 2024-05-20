@@ -38,7 +38,7 @@
                                 @else
                                     <button class="btn btn-soft-warning inActivarUsuario" data-id="{{ $usuario->id }}" data-estatus="2"><i class="mdi mdi-account-convert font-size-16 text-warning me-1"></i>Activar</button>
                                 @endif
-                                <button class="btn btn-soft-info" data-id="{{ $usuario->id }}"><i class="mdi mdi-cached font-size-16 text-info me-1"></i>Resetear PIN</button>
+                                <button class="btn btn-soft-info resetPin" data-id="{{ $usuario->id }}"><i class="mdi mdi-cached font-size-16 text-info me-1"></i>Resetear PIN</button>
                             </div>
                         </div>
                     </div>
@@ -279,6 +279,47 @@
                 setTimeout(function(){
                     window.location.reload();
                 }, 1000);
+            });
+
+            $('.resetPin').click(function () {
+                var id = $(this).attr('data-id');
+                Swal.fire({
+                    title: '¿Desea resetear el PIN?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Aceptar',
+                    showLoaderOnConfirm: true,
+                    confirmButtonColor: "#556ee6",
+                    cancelButtonColor: "#f46a6a",
+                    allowOutsideClick: false
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'get',
+                            url: 'reset/pin/'+id,
+                            data : { 
+                                _token: "{{ csrf_token() }}" 
+                            },
+                            success: function (data) {
+                                if (data.code == 200) {
+                                    Swal.fire({
+                                        title: data.msg,
+                                        icon: "success",
+                                        position: 'top-center',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                    setTimeout(function(){
+                                        window.location.reload();
+                                    }, 2000);
+                                }
+
+                            },
+                            error: function (data) {
+                                // console.log(data);
+                            }
+                        });
+                    }
+                })
             });
         });
         

@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Role;
 use App\Models\Sede;
 use App\Mail\UserPin;
+use App\Mail\UserPinReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
@@ -79,8 +80,6 @@ class UserController extends Controller
         DB::beginTransaction();
 
         try {
-            //Se genera PIN para el inicio de sesión, el cual tambien se envía por correo al usuario.
-            //$pin = $this->generarPin();
             $pin = $request->pin;
             
             $user = new User();
@@ -223,5 +222,31 @@ class UserController extends Controller
         $user->save();
 
         return response()->json(['code' => 200, 'msg' => '¡Cambio de sede correctamente!']);
+    }
+
+    function resetPin($id) {
+        // dd($id);
+        //Se genera PIN para el inicio de sesión, el cual tambien se envía por correo al usuario.
+        $flag = true;
+
+        while ($flag == true) {
+            $pin = $this->generarPin();
+            $valida_pin = User::where('pin', $pin)->first();
+            if ($valida_pin == null) {
+                $flag = false;
+            }
+        }
+
+        if ($flag == false) {
+            $user = User::find($id);
+            $user->pin = $pin;
+            $user->save();
+
+            $nombre = $user->nombre;
+
+            Mail::to('xbox.07@hotmail.com')->cc('yamihdz@gmail.com')->send(new UserPinReset($nombre, $pin));
+
+            return response()->json(['code' => 200, 'msg' => '¡PIN resetado correctamente!']);
+        }
     }
 }

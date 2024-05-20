@@ -24,6 +24,7 @@ Route::middleware(['auth'])->group(function () {
 
     //Cancelar venta de servicio a vehículo
     Route::post('cancelar/venta/vehiculo', [App\Http\Controllers\VentaController::class, 'cancelarVenta'])->name('cancelar.venta');
+    Route::get('reset/pin/{id}', [App\Http\Controllers\UserController::class, 'resetPin']);
     Route::get('sede/cambiar/{id}', [App\Http\Controllers\UserController::class, 'cambiarEntidad']);
     Route::get('subservicios/{id}', [App\Http\Controllers\ServicioController::class, 'getSubServicio']);
     Route::get('servicio/subservicio/editar/{id}', [App\Http\Controllers\ServicioController::class, 'editSubServicio'])->name('servicio.subservicio.edit');
