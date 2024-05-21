@@ -101,7 +101,7 @@
                                             <td width="30" height="30" align="right">
                                                 <div class="imgpop">
                                                     <a target="_blank" href="#">
-                                                        <img src="{{ asset('images/logo_expreso.png') }}" alt="expreso" border="0" width="100" height="50" style="display:block; border:none; outline:none; text-decoration:none;">
+                                                        <img src="{{ asset('images/logo_expreso.png') }}" alt="expreso" border="0" width="75" height="50" style="display:block; border:none; outline:none; text-decoration:none;">
                                                     </a>
                                                 </div>
                                             </td>
@@ -156,7 +156,7 @@
                 <tbody>
                 <tr>
                     <td width="100%">
-                        <table width="600" cellpadding="0" cellspacing="0" border="0" align="left" class="devicewidth">
+                        <table width="600" cellpadding="0" cellspacing="0" border="0" align="center" class="devicewidth">
                             <tbody>
                             <!-- Spacing -->
                             <tr>
@@ -165,7 +165,7 @@
                             <!-- Spacing -->
                             <tr>
                                 <td>
-                                    <table width="560" align="left" cellpadding="0" cellspacing="0" border="0" class="devicewidthinner">
+                                    <table width="560" align="center" cellpadding="0" cellspacing="0" border="0" class="devicewidthinner">
                                         <tbody>
                                         <!-- Title -->
                                         <tr>

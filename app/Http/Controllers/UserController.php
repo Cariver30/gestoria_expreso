@@ -42,16 +42,8 @@ class UserController extends Controller
         $roles = Role::select('id', 'nombre')->where('estatus_id', 1)->get();
         
         $entidades = \Helper::entidadUsuario();
-
-        $user = User::leftJoin('roles', 'users.rol_id', 'roles.id')
-                    ->leftJoin('sedes', 'users.sede_id', 'sedes.id')
-                    ->where('users.id', Auth::user()->id)
-                    ->select(
-                        'users.id', 'users.nombre','users.primer_apellido', 'users.segundo_apellido', 'users.email',
-                        'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede', 'sedes.acceso_panel as panel')
-                    ->first();
         
-        return view('usuario.index', compact('usuarios', 'roles', 'entidades', 'user'));
+        return view('usuario.index', compact('usuarios', 'roles', 'entidades'));
     }
 
     /**
@@ -115,7 +107,6 @@ class UserController extends Controller
 
         }catch (\PDOException $e){
             DB::rollBack();
-            dd($e);
             return back()->withErrors(['Error' => substr($e->getMessage(), 0, 150)]);
         }
     }
@@ -126,8 +117,10 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::find($id);
+        $user_entidades = \Helper::entidadesUsuario($id);
+
         if ($user != null) {
-            return response()->json(['code' => 200, 'data' => $user]);
+            return response()->json(['code' => 200, 'data' => $user, 'user_entidades' => $user_entidades]);
         }
         return response()->json(['code' => 400, 'msg' => 'Usuario no encontrado']);
     }
@@ -145,32 +138,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // dd($request->all());
-        if ($request->nombre == '' || $request->primer_apellido == '' || $request->email == '' || $request->rol_id == '') {
-            return response()->json(['code' => 400, 'msg' => 'Hay campos vacios']);
-        }
-
-        DB::beginTransaction();
-
-        try {
-            $usuario = User::find($id);
-            $usuario->nombre = \Helper::capitalizeFirst($request->nombre, "1");
-            $usuario->primer_apellido = \Helper::capitalizeFirst($request->primer_apellido, "1");
-            $usuario->segundo_apellido = (!is_null($request->segundo_apellido) ? \Helper::capitalizeFirst($request->segundo_apellido, "1") : null );
-            $usuario->email = $request->email;
-            $usuario->pin = $request->pin;
-            $usuario->rol_id = $request->rol_id;
-            $usuario->sede_id = $request->entidad_id;
-            $usuario->save();
-
-            DB::commit();
-
-            return response()->json(['code' => 200, 'msg' => 'Usuario actualizado']);
-
-        }catch (\PDOException $e){
-            DB::rollBack();
-            return back()->withErrors(['Error' => substr($e->getMessage(), 0, 150)]);
-        }
+        
     }
 
     /**
@@ -247,6 +215,55 @@ class UserController extends Controller
             Mail::to('xbox.07@hotmail.com')->cc('yamihdz@gmail.com')->send(new UserPinReset($nombre, $pin));
 
             return response()->json(['code' => 200, 'msg' => '¡PIN resetado correctamente!']);
+        }
+    }
+
+    public function editarUsuario(Request $request, $id ) {
+        
+        if ($request->nombre == '' || $request->primer_apellido == '' || $request->email == '' || $request->rol_id == '') {
+            return response()->json(['code' => 400, 'msg' => 'Hay campos vacios']);
+        }
+        $entidades = $request->entidades;
+        foreach ($entidades as $entidad) {
+            if ($request->rol_id != 1 && $entidad == 1) {
+                return response()->json(['code' => 400, 'msg' => '¡Sólo el administrador puede estar en todas las entidades!']);
+            }
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $usuario = User::find($id);
+            $usuario->nombre = \Helper::capitalizeFirst($request->nombre, "1");
+            $usuario->primer_apellido = \Helper::capitalizeFirst($request->primer_apellido, "1");
+            $usuario->segundo_apellido = (!is_null($request->segundo_apellido) ? \Helper::capitalizeFirst($request->segundo_apellido, "1") : null );
+            $usuario->email = $request->email;
+            $usuario->pin = $request->pin;
+            $usuario->rol_id = $request->rol_id;
+            $usuario->sede_id = ($request->rol_id == 1) ? 1 : $request->entidades[0];
+            $usuario->save();
+
+            //Se obtienen las entidades para borrarlas
+            $entidadesUsuario = DB::table('usuario_sedes')->where('usuario_id', $id)->get();
+            foreach ($entidadesUsuario as $entidad) {
+                DB::table('usuario_sedes')->where('id', $entidad->id)->delete();
+            }
+
+            //Se registran la entidades
+            foreach ($entidades as $entidad) {
+                DB::table('usuario_sedes')->insert([
+                    'usuario_id' => $id,
+                    'sede_id' => $entidad 
+                ]);
+            }
+
+            DB::commit();
+
+            return response()->json(['code' => 200, 'msg' => 'Usuario actualizado']);
+
+        }catch (\PDOException $e){
+            DB::rollBack();
+            return back()->withErrors(['Error' => substr($e->getMessage(), 0, 150)]);
         }
     }
 }

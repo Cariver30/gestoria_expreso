@@ -37,6 +37,9 @@
                             <label for="pin" class="col-form-label"> PIN </label>
                             <input type="text" class="form-control form-control-sm" id="up_pin" maxlength="4">
                         </div>
+                        <div class="row col-md-12 mb-3" id="entidadUsuarioEdit">
+                            <label class="form-label">Entidades asignadas</label>
+                        </div>
                         @include('layouts.edit_entidad')
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" id="cerrar_usuario">Cerrar</button>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Venta;
+use App\Models\Cliente;
 use App\Models\ClienteVehiculo;
 use Illuminate\Http\Request;
 

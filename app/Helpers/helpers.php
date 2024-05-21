@@ -3,6 +3,7 @@
     
     use DB;
     use App\Models\Sede;
+    use App\Models\User;
     use App\Models\Cliente;
     use App\Models\ClienteVehiculo;
     use Illuminate\Support\Facades\Auth;
@@ -40,6 +41,28 @@ class Helper {
             }
             $entidades = collect($array_entidades);
         }
+        return $entidades;
+    }
+
+    public static function entidadesUsuario($id) {
+        $array_entidades = [];
+        $entidades = DB::table('usuario_sedes')->where('usuario_id', $id)->get();
+        if (count($entidades) == 0) {
+            $sede_id = User::where('id', $id)->select('sede_id')->pluck('sede_id')->first();
+            $entidades = Sede::where('id', $sede_id)->select('id', 'nombre')->get();
+
+            foreach ($entidades as $entidad) {
+                array_push($array_entidades, $entidad->nombre);
+            }
+            $entidades = $array_entidades;
+        } else {
+            foreach ($entidades as $entidad) {
+                $enti = Sede::where('id', $entidad->sede_id)->select('nombre')->first();
+                array_push($array_entidades, $enti->nombre);
+            }
+            $entidades = $array_entidades;
+        }
+
         return $entidades;
     }
 }

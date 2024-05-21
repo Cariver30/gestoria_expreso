@@ -5,7 +5,6 @@
 @endsection
 
 @section('css')
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link href="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 
@@ -157,7 +156,13 @@
                     $('#up_segundo_apellido').val(data.data.segundo_apellido);
                     $('#up_email').val(data.data.email);
                     $('#up_rol_id option[value="'+data.data.rol_id+'"]').attr("selected", "selected");
-                    $('#up_entidad_id option[value="'+data.data.sede_id+'"]').attr("selected", "selected");
+                    var listEntidadesActual = document.getElementById("entidadUsuarioEdit");
+                    var entidades = data.user_entidades;
+                    let html = '';
+                    for (const element of entidades) { // You can use `let` instead of `const` if you like
+                        html = html + '<button type="button" class="btn btn-soft-success col-md-3 waves-effect waves-light" style="margin: 1px;"> '+ element +' </button>'
+                    }
+                    $('#entidadUsuarioEdit').append(html);
                     $('#update_usuario').modal('show');
                 })
             });
@@ -165,7 +170,8 @@
             //Actualizar usuario
             $('#updateUsuario').click(function () {
                 var id = $('#up_id').val();
-                if($('#up_nombre').val() == '' || $('#up_primer_apellido').val() == '' || $('#up_email').val() == '' || $('#up_rol_id').val() == '' || $('#up_entidad_id').val() == '' || $('#up_pin').val() == ''){
+                var rol_id = $('#rol_id').val();
+                if($('#up_nombre').val() == '' || $('#up_primer_apellido').val() == '' || $('#up_email').val() == '' || $('#up_rol_id').val() == '' || $('#up_pin').val() == ''){
                     Swal.fire({
                         title: 'Hay campos vacíos',
                         icon: "warning",
@@ -175,10 +181,27 @@
                     });
                     return false;
                 }
-                $('#update_usuario').modal('hide');
+                if(rol_id != 1) {
+                    var entidadAsignadaUp = []
+                    var editListEntidad = document.querySelectorAll('#select-entidad .entidad-list li a.active');
+                    if (editListEntidad.length > 0) {
+                        Array.from(editListEntidad).forEach(function (ele) {
+                            var idPath = ele.querySelector(".avatar-xs img").getAttribute('id');
+                            entidadAsignadaUp.push(idPath);
+                        });
+                    } else {
+                        Swal.fire({
+                            title: '¡Debe seleccionar al menos una entidad!',
+                            icon: "warning",
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                        return false;
+                    }
+                }
                 $.ajax({
-                    type: 'PATCH',
-                    url: 'usuario/'+id,
+                    type: 'PUT',
+                    url: 'editar/usuario/'+id,
                     data : { 
                         _token: "{{ csrf_token() }}",
                         nombre: $('#up_nombre').val(),
@@ -186,12 +209,12 @@
                         segundo_apellido: $('#up_segundo_apellido').val(),
                         email: $('#up_email').val(),
                         rol_id: $('#up_rol_id').val(),
-                        entidad_id: $('#up_entidad_id').val(),
                         pin: $('#up_pin').val(),
-
+                        entidades: entidadAsignadaUp,
                     },
                     success: function (data) {
                         if (data.code == 200) {
+                            $('#update_usuario').modal('hide');
                             Swal.fire({
                                 title: data.msg,
                                 icon: "success",

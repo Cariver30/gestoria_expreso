@@ -37,12 +37,6 @@
                             <label for="pin" class="col-form-label"> PIN </label>
                             <input type="text" class="form-control form-control-sm" id="pin" maxlength="4">
                         </div>
-                        {{--  <div class="row col-md-12 mb-3">
-                            <label for="pin" class="col-form-label"> Entidades </label>
-                            @foreach ($entidades as $entidad)
-                                <button type="check" class="btn btn-soft-success col-md-3 waves-effect waves-light" style="margin: 1px;" data-id="{{ $entidad->id}}">{{ $entidad->nombre}} </button>
-                            @endforeach
-                        </div>  --}}
                        @include('layouts.entidad')
                     </div>
                     <div class="modal-footer">
