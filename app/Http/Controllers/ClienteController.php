@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Session;
 use App\Models\User;
 use App\Models\Sede;
 use App\Models\Venta;
@@ -21,7 +22,9 @@ class ClienteController extends Controller
      */
     public function index()
     {
-        $clientes = Cliente::all();
+        $clientes = Cliente::leftJoin('estatus', 'clientes.estatus_id', 'estatus.id')
+                                ->select('clientes.id', 'clientes.nombre', 'estatus.nombre as estatus')
+                                ->get();
 
         $user = User::leftJoin('roles', 'users.rol_id', 'roles.id')
                     ->leftJoin('sedes', 'users.sede_id', 'sedes.id')
@@ -113,7 +116,9 @@ class ClienteController extends Controller
      */
     public function show(Cliente $cliente)
     {
-        //
+        //$cliente = Cliente::select('id', 'nombre', 'email', 'telefono', 'seguro_social', 'identificacion')->where('id', $cliente->id)->first();
+        
+        //return response()->json(['code' => 200, 'data' => $cliente]);
     }
 
     /**
@@ -121,7 +126,12 @@ class ClienteController extends Controller
      */
     public function edit(Cliente $cliente)
     {
-        //
+        // dd($cliente);
+        $cliente = Cliente::select('id', 'nombre', 'email', 'telefono', 'seguro_social', 'identificacion')->where('id', $cliente->id)->first();
+
+        $entidades = \Helper::entidadUsuario();
+
+        return view('cliente.edit', compact('entidades', 'cliente'));
     }
 
     /**
@@ -129,7 +139,54 @@ class ClienteController extends Controller
      */
     public function update(Request $request, Cliente $cliente)
     {
-        //
+        // dd($cliente->id);
+
+        $input = $request->all();
+
+        $rules = [
+            'nombre' => 'required',
+            'email' => 'required',
+            'telefono' => 'required',
+            'seguro_social' => 'required',
+            'identificacion' => 'required'
+        ];
+
+        $messages = [
+            'nombre.required'   => 'El nombre es un campo requerido',
+            'email.required'   => 'El email es un campo requerido',
+            'telefono.required'   => 'El telefono es un campo requerido',
+            'seguro_social.required'   => 'El seguro_social es un campo requerido',
+            'identificacion.required'   => 'El seguro_social es un campo requerido'
+        ];
+
+        $validator = Validator::make($input, $rules, $messages);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        DB::beginTransaction();
+
+        try {
+            
+            $cliente = Cliente::find($cliente->id);
+            $cliente->nombre = \Helper::capitalizeFirst($request->nombre, "1");
+            $cliente->email = $request->email;
+            $cliente->telefono = $request->telefono;
+            $cliente->email = $request->email;
+            $cliente->seguro_social = $request->seguro_social;
+            $cliente->identificacion = $request->identificacion;
+            $cliente->save();
+
+            DB::commit();
+
+            Session::flash('success', 'Cliente actualizado');
+            return redirect()->route('clientes.index');
+
+        }catch (\PDOException $e){
+            DB::rollBack();
+            return back()->withErrors(['Error' => substr($e->getMessage(), 0, 150)]);
+        }
     }
 
     /**

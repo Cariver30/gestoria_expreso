@@ -19,16 +19,18 @@
                         </div>
                         <img src="{{ URL::asset('build/images/companies/adobe.svg') }}" alt="" height="50" class="mb-3">
                         <h5 class="fs-17 mb-2"><a href="" class="text-dark">{{ $cliente->nombre }} </a></h5>
+                        <span class="badge bg-success">{{ $cliente->estatus }}</span>
                         <div class="mt-4">
-                            <button class="btn btn-soft-success waves-effect waves-light" style="margin-right: 10px;" data-id="{{ $cliente->id }}"><i class="mdi mdi-pencil font-size-16 text-danger me-1"></i> Editar </a></li>
-                            <button class="btn btn-soft-info waves-effect waves-light" style="margin-right: 10px;" data-id="{{ $cliente->id }}"><i class="mdi mdi-trash-can-outline font-size-16 text-danger me-1"></i>Ver detalle</button>
-                            <button class="btn btn-soft-danger waves-effect waves-light" style="margin-right: 1px;" data-id="{{ $cliente->id }}"><i class="mdi mdi-trash-can-outline font-size-16 text-danger me-1"></i>Agregar servicio</button>
+                            {{--  <a class="btn btn-soft-success waves-effect waves-light" style="margin-right: 10px;" data-id="{{ $cliente->id }}"><i class="mdi mdi-pencil font-size-16 me-1"></i> Editar </a></li>  --}}
+                            <a class="btn btn-soft-info waves-effect waves-light" style="margin-right: 1px;" href="{{ route('clientes.edit', $cliente->id)}}"><i class="mdi mdi-eye-outline font-size-16 me-1"></i>Ver detalle</a>
+                            <button class="btn btn-soft-secondary waves-effect waves-light" style="margin-right: 1px;" data-id="{{ $cliente->id }}"><i class="mdi mdi-plus-outline font-size-16 me-1"></i>Agregar servicio</button>
                         </div>
                     </div>
                 </div>
             </div>
         @endforeach
     </div>
+    {{--  @include('cliente.edit')  --}}
 @endsection
 
 @section('script')
@@ -52,6 +54,31 @@
                     }, 1000);
                 });
             });
+
+            @if(Session::has('success'))
+                <script>
+                    Swal.fire({
+                        title: 'Cliente actualizado',
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                </script>
+            @endif
+
+            //Modal para editar cliente
+            {{--  $(document).on('click','.editCliente',function(){
+                var id = $(this).attr('data-id');
+                $.get('clientes/' + id, function (data) {
+                    $('#up_id').val(data.data.id);
+                    $('#up_nombre').val(data.data.nombre);
+                    $('#up_email').val(data.data.email);
+                    $('#up_telefono').val(data.data.telefono);
+                    $('#up_seguro_social').val(data.data.seguro_social);
+                    $('#up_identificacion').val(data.data.identificacion);
+                    $('#update_cliente').modal('show');
+                })
+            });  --}}
         });
     </script>
 @endsection
