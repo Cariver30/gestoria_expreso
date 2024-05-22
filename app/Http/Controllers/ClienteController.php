@@ -129,9 +129,11 @@ class ClienteController extends Controller
         // dd($cliente);
         $cliente = Cliente::select('id', 'nombre', 'email', 'telefono', 'seguro_social', 'identificacion')->where('id', $cliente->id)->first();
 
+        $vehiculos = ClienteVehiculo::where('cliente_id', $cliente->id)->select('id', 'compania', 'vehiculo', 'tablilla', 'marca', 'anio', 'created_at')->get();
+
         $entidades = \Helper::entidadUsuario();
 
-        return view('cliente.edit', compact('entidades', 'cliente'));
+        return view('cliente.edit', compact('entidades', 'cliente', 'vehiculos'));
     }
 
     /**
