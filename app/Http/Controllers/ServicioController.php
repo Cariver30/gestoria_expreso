@@ -213,11 +213,10 @@ class ServicioController extends Controller
         $venta_multas = SubServicio::where('servicio_id', 9)->get();
 
         //Entidades para selector
-        $entidades = Sede::where('estatus_id', 1)->select('id', 'nombre')->get();
+        $entidades = \Helper::entidadUsuario();
 
         // Validar si hay un registro en curso
         $vehiculo_id = \Helper::registroEnCurso();
-        // dd($vehiculo_id);
         if ($vehiculo_id != null) {
             $total_checkout = Venta::where('vehiculo_id', $vehiculo_id)->select('total')->pluck('total')->first();
             if (is_null($total_checkout)) {
@@ -226,21 +225,6 @@ class ServicioController extends Controller
         } else {
             $total_checkout = 0;
         }
-        // dd($total_checkout);
-        
-        // $cliente_pendientes = Cliente::select('id')->where('usuario_id', Auth::user()->id)->where('estatus_id', 5)->get();
-        // if (count($cliente_pendientes) != 0) {
-        //     foreach ($cliente_pendientes as $cliente) {
-        //         $pendiente = ClienteVehiculo::where('cliente_id', $cliente->id)->where('estatus_id', 3)->first();
-        //         if ($pendiente != null) {
-        //             $en_curso = 1;       
-        //         } else {
-        //             $en_curso = 0;
-        //         }
-        //     }
-        // } else {
-        //     $en_curso = 0;
-        // }
 
         $user = User::leftJoin('roles', 'users.rol_id', 'roles.id')
                     ->leftJoin('sedes', 'users.sede_id', 'sedes.id')
@@ -249,7 +233,7 @@ class ServicioController extends Controller
                         'users.id', 'users.nombre','users.primer_apellido', 'users.segundo_apellido', 'users.email',
                         'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede', 'sedes.acceso_panel as panel')
                     ->first();
-//  dd($notificaciones);
+
         return view('modulo.inspeccion.index', compact('costosInspeccion', 'marbetes', 'seguros', 'meses', 'total_checkout', 'extras', 'licencias', 'notificaciones', 'costo_servicios', 'venta_multas', 'user', 'entidades', 'vehiculo_id'));
     }
 

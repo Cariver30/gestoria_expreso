@@ -61,12 +61,15 @@
     </div>
 </div>
 @if ($total_checkout != 0)
-    <div class="row col-sm-12 text-center" style="margin-left: 33%;">
-        <div class="col-sm-2 col-sm-2">
+    <div class="row col-sm-12 text-center" style="margin-left: 12%;">
+        <div class="col-sm-3 col-sm-2">
             <button type="button" class="btn btn-soft-success col-md-8 waves-effect waves-light btn-lg" data-id=""> PAGAR </button>
         </div>
-        <div class="col-sm-2 col-sm-2">
-            <button type="button" class="btn btn-soft-danger col-md-8 waves-effect waves-light btn-lg finalizarProceso" data-id="{{ $vehiculo_id }}"> FINALIZAR </button>
+        <div class="col-sm-3 col-sm-2">
+            <button type="button" class="btn btn-soft-warning col-md-8 waves-effect waves-light btn-lg" data-id=""> PENDIENTE POR PAGAR </button>
+        </div>
+        <div class="col-sm-3 col-sm-2">
+            <button type="button" class="btn btn-soft-danger col-md-8 waves-effect waves-light btn-lg finalizarProceso" data-id="{{ $vehiculo_id }}"> CANCELAR </button>
         </div>
     </div>
 @endif
@@ -101,6 +104,12 @@
     </script>
     <script>
         $(document).ready(function() {
+
+            // Se deshabilita cuando ya se tiene una venta en curso.
+            var total_checkout = {{$total_checkout}};
+            if(total_checkout != 0){
+                $('#change_entidad').prop('disabled', true);
+            }
 
             {{--  if({{$en_curso}} == 1){
                 Swal.fire({
@@ -146,8 +155,6 @@
                         break;
                   }
             });
-
-            
 
             //Validación de tablilla existente
             var elementTablilla = document.getElementById('tablilla');

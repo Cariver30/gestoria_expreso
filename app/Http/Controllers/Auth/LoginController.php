@@ -45,9 +45,6 @@ class LoginController extends Controller
     }
 
     public function validarLogin(Request $request) {
-        // $costosInspeccion = SubServicio::where('servicio_id', 1)->get();
-        // $marbetes = SubServicio::where('servicio_id', 2)->get();
-        // $seguros = SubServicio::where('servicio_id', 7)->get();
         $pin = $request->digit1.$request->digit2.$request->digit3.$request->digit4;
         $user = User::leftJoin('roles', 'users.rol_id', 'roles.id')
                     ->leftJoin('sedes', 'users.sede_id', 'sedes.id')
@@ -57,7 +54,6 @@ class LoginController extends Controller
                         'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede', 'sedes.acceso_panel as panel')
                     ->first();
 
-                    // dd($user);
         if($user) {
             Auth::loginUsingId($user->id);
             $entidades = \Helper::entidadUsuario();

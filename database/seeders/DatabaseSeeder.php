@@ -22,7 +22,10 @@ class DatabaseSeeder extends Seeder
             ServicioTableSeeder::class,
             SeguroTableSeeder::class,
             MesTableSeeder::class,
-            UsuarioEntidadTableSeeder::class
+            UsuarioEntidadTableSeeder::class,
+            GestoriaTableSeeder::class,
+            GestoriaServiciosTableSeeder::class,
+            GestoriaSubServiciosTableSeeder::class
         ]);
     }
 }

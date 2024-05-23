@@ -25,7 +25,7 @@
         </a>
     @endif
     @if (Auth::user()->rol_id == 1 || $user->panel == 2)
-        <a href="{{ route('modulo.gestoria') }}" class="col-md-6">
+        <a href="{{ route('gestoria.index') }}" class="col-md-6">
             <div>
                 <div class="col-lg-6" id="mod_gestoria">
                     <div class="card bg-primary text-white-50">

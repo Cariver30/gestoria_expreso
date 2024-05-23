@@ -19,9 +19,23 @@ class Helper {
         return mb_convert_case($cadena, MB_CASE_TITLE, 'UTF-8');
     }
 
+    public static function getInfoUsuario() {
+        $user = User::leftJoin('roles', 'users.rol_id', 'roles.id')
+                    ->leftJoin('sedes', 'users.sede_id', 'sedes.id')
+                    ->where('users.id', Auth::user()->id)
+                    ->select(
+                        'users.id', 'users.nombre','users.primer_apellido', 'users.segundo_apellido', 'users.email',
+                        'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede', 'sedes.acceso_panel as panel')
+                    ->first();
+
+        return $user;
+    }
+
     public static function registroEnCurso() {
         $cliente_id = Cliente::where('estatus_id', 3)->where('usuario_id', Auth::user()->id)->select('id')->pluck('id')->first();
-        $vehiculo_id = ClienteVehiculo::where('estatus_id', 3)->where('cliente_id', $cliente_id)->select('id')->pluck('id')->first();
+        // dd($cliente_id);
+        $vehiculo_id = ClienteVehiculo::where('estatus_id', 5)->where('cliente_id', $cliente_id)->select('id')->pluck('id')->first();
+        // dd($vehiculo_id);
 
         return $vehiculo_id;
     }
@@ -34,13 +48,15 @@ class Helper {
             $entidades = DB::table('usuario_sedes')->where('usuario_id', Auth::user()->id)->get();
             if (count($entidades) == 0) {
                 $entidades = Sede::where('id', Auth::user()->sede_id)->select('id', 'nombre')->get();
+            } else {
+                foreach ($entidades as $entidad) {
+                    $enti = Sede::where('id', $entidad->sede_id)->select('id', 'nombre')->first();
+                    array_push($array_entidades, $enti);
+                }
+                $entidades = collect($array_entidades);
             }
-            foreach ($entidades as $entidad) {
-                $enti = Sede::where('id', $entidad->id)->select('id', 'nombre')->first();
-                array_push($array_entidades, $enti);
-            }
-            $entidades = collect($array_entidades);
         }
+        
         return $entidades;
     }
 

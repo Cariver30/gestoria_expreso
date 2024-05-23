@@ -32,7 +32,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('update/subservicio/{id}', [App\Http\Controllers\ServicioController::class, 'updateSubServicio']);
     Route::get('seccion', [App\Http\Controllers\ServicioController::class, 'getViewInspeccion'])->name('modulo.inspeccion');
     Route::get('consulta/tablilla/{tablilla}', [App\Http\Controllers\ServicioController::class, 'getTablilla'])->name('consulta.tablilla');
-    Route::get('gestoria', [App\Http\Controllers\ServicioController::class, 'getViewGestoria'])->name('modulo.gestoria');
     Route::post('clientes/marbete', [App\Http\Controllers\ClienteController::class, 'vehiculoMarbete'])->name('vehiculo.marbete');
     Route::post('seguro/vehiculo', [App\Http\Controllers\ClienteController::class, 'seguroVehiculo'])->name('seguro.vehiculo');
     Route::get('marcar/bienvenida', [App\Http\Controllers\UserController::class, 'marcarInicio'])->name('marcar.inicio');
@@ -41,6 +40,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('servicio', App\Http\Controllers\ServicioController::class);
     Route::resource('roles', App\Http\Controllers\RoleController::class);
     Route::resource('estatus', App\Http\Controllers\EstatusController::class);
+    Route::resource('gestoria', App\Http\Controllers\GestoriaController::class);
     Route::resource('sedes', App\Http\Controllers\SedeController::class);
     Route::resource('clientes', App\Http\Controllers\ClienteController::class);
 

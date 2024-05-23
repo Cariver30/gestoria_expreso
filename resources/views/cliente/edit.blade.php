@@ -14,7 +14,7 @@
         @method('PUT')
         <div class="card">
             <div class="card-body">
-            <h4 class="card-title mb-5"> Datos del cliente </h4>
+            <h4 class="card-title"> Datos del cliente </h4>
             <div class="card-body">
                 <div class="row col-md-12">
                     <div class="col-md-3 mb-3">
@@ -47,7 +47,7 @@
     </form>
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title mb-5"> Vehículos </h4>
+            <h4 class="card-title mb-3"> Vehículos </h4>
             <div class="">
                 <ul class="verti-timeline list-unstyled">
                     @foreach ($vehiculos as $vehiculo)
@@ -61,11 +61,12 @@
                                 </div>
                                 <div class="flex-grow-1">
                                     <div>
-                                        <h5 class="font-size-15"><a href="javascript: void(0);" class="text-dark"> {{ $vehiculo->vehiculo }}</a></h5>
+                                        <h5 class="font-size-15"><a href="javascript: void(0);" class="text-dark"> {{ $vehiculo->vehiculo }}</a></h5></span>
                                         <span class="text-primary"> {{ $vehiculo->tablilla}} </span><br>
                                         <span class="text-primary"> {{ $vehiculo->compania }} </span><br>
                                         <span class="text-primary"> {{ $vehiculo->marca }} </span><br>
-                                        <span class="text-primary"> {{ $vehiculo->created_at }} </span><br>
+                                        <span class="text-primary"> {{ Carbon\Carbon::parse($vehiculo->created_at)->format('d-m-Y H:i') }} </span><br>
+                                        <span class="badge bg-warning">{{ $vehiculo->estatus }}
                                     </div>
                                 </div>
                             </div>

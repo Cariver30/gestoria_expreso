@@ -22,18 +22,18 @@ class ClienteController extends Controller
      */
     public function index()
     {
-        $clientes = Cliente::leftJoin('estatus', 'clientes.estatus_id', 'estatus.id')
-                                ->select('clientes.id', 'clientes.nombre', 'estatus.nombre as estatus')
+        if (Auth::user()->rol_id == 1) {
+            $clientes = Cliente::leftJoin('estatus', 'clientes.estatus_id', 'estatus.id')
+                                ->select('clientes.id', 'clientes.nombre', 'clientes.estatus_id', 'estatus.nombre as estatus')
+                                ->get();   
+        } else {
+            $clientes = Cliente::leftJoin('estatus', 'clientes.estatus_id', 'estatus.id')
+                                ->where('usuario_id', Auth::user()->id)
+                                ->select('clientes.id', 'clientes.nombre', 'clientes.estatus_id', 'estatus.nombre as estatus')
                                 ->get();
+        }
 
-        $user = User::leftJoin('roles', 'users.rol_id', 'roles.id')
-                    ->leftJoin('sedes', 'users.sede_id', 'sedes.id')
-                    ->where('users.id', Auth::user()->id)
-                    ->select(
-                        'users.id', 'users.nombre','users.primer_apellido', 'users.segundo_apellido', 'users.email',
-                        'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede', 'sedes.acceso_panel as panel')
-                    ->first();
-        
+        $user = \Helper::getInfoUsuario();
         $entidades = \Helper::entidadUsuario();
 
         return view('cliente.index', compact('clientes', 'user', 'entidades'));
@@ -81,7 +81,7 @@ class ClienteController extends Controller
             $clienteVehiculo->anio = $request->anio;
             $clienteVehiculo->mes_vencimiento_id = $request->mes_vencimiento;
             $clienteVehiculo->cliente_id = $cliente->id;
-            $clienteVehiculo->estatus_id = 3;
+            $clienteVehiculo->estatus_id = 5;
             $clienteVehiculo->save();
 
             //Se crea la venta
@@ -129,7 +129,18 @@ class ClienteController extends Controller
         // dd($cliente);
         $cliente = Cliente::select('id', 'nombre', 'email', 'telefono', 'seguro_social', 'identificacion')->where('id', $cliente->id)->first();
 
-        $vehiculos = ClienteVehiculo::where('cliente_id', $cliente->id)->select('id', 'compania', 'vehiculo', 'tablilla', 'marca', 'anio', 'created_at')->get();
+        $vehiculos = ClienteVehiculo::leftJoin('estatus', 'cliente_vehiculos.estatus_id', 'estatus.id')
+                                        ->where('cliente_id', $cliente->id)
+                                        ->select(
+                                            'cliente_vehiculos.id',
+                                            'cliente_vehiculos.compania',
+                                            'cliente_vehiculos.vehiculo',
+                                            'cliente_vehiculos.tablilla',
+                                            'cliente_vehiculos.marca',
+                                            'cliente_vehiculos.anio',
+                                            'cliente_vehiculos.created_at',
+                                            'estatus.nombre as estatus'
+                                        )->get();
 
         $entidades = \Helper::entidadUsuario();
 
