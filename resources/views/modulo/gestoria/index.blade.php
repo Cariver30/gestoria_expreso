@@ -21,9 +21,12 @@
         </div>
     @endforeach
 </div>
-@include('modulo.gestoria.transaccion')
-@include('modulo.gestoria.licencia')
-@include('modulo.gestoria.vehiculo')
+@include('modulo.gestoria.servicio.transaccion')
+@include('modulo.gestoria.servicio.licencia')
+@include('modulo.gestoria.servicio.vehiculo')
+
+@include('modulo.gestoria.subservicio.subtransaccion')
+@include('modulo.gestoria.subservicio.subRotulo')
 @endsection
 
 @section('script')
@@ -31,7 +34,7 @@
     <script src="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            //Sección para mostrar modales
+            //Sección para mostrar modales principales
             $(".servicioGestoria").click(function() {
                 var id = $(this).attr('data-id');
                 switch (id) {
@@ -45,6 +48,33 @@
                         $('#vehiculos').modal('show')
                         break;
                 }
+            });
+
+            //Sección para cada modal
+            $(".btnTransaccionGestoria").click(function() {
+                var id = $(this).attr('data-id');
+                $.get('get/data/gestoria/subservicio/' + id, function (data) {
+                    if(data.code == 200){
+                        var listPrecios = document.getElementById("divGestoriaTransaccion");
+                        var precios = data.data;
+                        let html = '';
+                        if(id == 1) {
+                            for (const element of precios) { // You can use `let` instead of `const` if you like
+                                console.log(element);
+                                html = html + '<button type="button" class="btn btn-soft-success col-md-3 waves-effect waves-light" style="margin: 1px;" data-id="'+element.id+'"> '+ element.nombre +' $' + element.costo +' </button>'
+                            }
+                            $('#divGestoriaTransaccion').append(html);
+                            $('#subTransaccion').modal('show');
+                        } else if(id == 2) {
+                            for (const element of precios) { // You can use `let` instead of `const` if you like
+                                console.log(element);
+                                html = html + '<button type="button" class="btn btn-soft-success col-md-6 waves-effect waves-light" style="margin: 1px;" data-id="'+element.id+'"> '+ element.nombre +' $' + element.costo +' </button>'
+                            }
+                            $('#divGestoriaRotulo').append(html);
+                            $('#subRotulo').modal('show');
+                        }
+                    }
+                });
             });
         });
     </script>

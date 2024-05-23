@@ -62,4 +62,11 @@ class GestoriaSubServicioController extends Controller
     {
         //
     }
+
+    public function getDataSubservicio($id) {
+
+        $sub_servicios = GestoriaSubServicio::where('gestoria_servicio_id', $id)->get();
+
+        return response()->json(['code' => 200, 'data' => $sub_servicios]);
+    }
 }

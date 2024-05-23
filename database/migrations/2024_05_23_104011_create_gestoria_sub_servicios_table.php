@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->integer('costo');
-            $table->integer('costo_real')->nullable();
             $table->unsignedBigInteger("gestoria_servicio_id")->nullable();
             $table->foreign("gestoria_servicio_id")->references("id")->on("gestoria_servicios")->onDelete('cascade');
             $table->unsignedBigInteger("estatus_id")->nullable();
