@@ -2,13 +2,13 @@
     <div class="navbar-header">
         <div class="d-flex">
             <!-- LOGO -->
-            <div class="navbar-brand-box">
+            <div class="navbar-brand-box" style="Background: white;">
                 <a class="logo logo-dark">
                     <span class="logo-sm">
                         <img src="{{ URL::asset('images/logo_expreso.png') }}" alt="" height="22">
                     </span>
                     <span class="logo-lg">
-                        <img src="{{ URL::asset('images/logo_expreso.png') }}" alt="" height="17">
+                        <img src="{{ URL::asset('images/logo.jpeg') }}" alt="" height="17">
                     </span>
                 </a>
 
@@ -17,7 +17,7 @@
                         <img src="{{ URL::asset('images/logo_expreso.png') }}" alt="" height="22">
                     </span>
                     <span class="logo-lg">
-                        <img src="{{ URL::asset('images/logo_expreso.png') }}" alt="" height="19">
+                        <img src="{{ URL::asset('images/logo.jpeg') }}" alt="" height="19">
                     </span>
                 </a>
             </div>

@@ -1,4 +1,4 @@
-<div class="modal fade" id="update_servicio" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal fade" id="up_servicio_gestoria_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -8,15 +8,15 @@
             <div class="modal-body">
                 <form autocomplete="off">
                     <div class="row col-md-12">
-                        <input type="hidden" name="up_id" id="up_id">
+                        <input type="hidden" name="up_servicio_gestoria_id" id="up_servicio_gestoria_id">
                         <div class="col-md-12 mb-3">
                             <label for="name" class="col-form-label"> Nombre del servicio </label>
-                            <input type="text" class="form-control form-control-sm" id="up_nombre" required>
+                            <input type="text" class="form-control form-control-sm" id="up_servicio_gestoria_nombre" required>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-primary" id="updateServicio">Guardar</button>
+                        <button type="button" class="btn btn-primary" id="upServicioGestoria">Guardar</button>
                     </div>
                 </form>
             </div>

@@ -2,7 +2,7 @@
     <div class="navbar-header">
         <div class="d-flex">
             <!-- LOGO -->
-            <div class="navbar-brand-box">
+            <div class="navbar-brand-box" style="Background: white; important: !;">
                 <a href="" class="logo logo-dark">
                     <span class="logo-sm">
                         <img src="{{ URL::asset ('build/images/logo.svg') }}" alt="" height="22">

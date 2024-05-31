@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use App\Models\User;
+use App\Models\Sede;
 use App\Models\Gestoria;
 use Illuminate\Http\Request;
 use App\Models\GestoriaServicio;
@@ -54,9 +56,18 @@ class GestoriaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Gestoria $gestoria)
+    public function edit($id)
     {
-        //
+        // dd($id);
+        $servicio = Gestoria::find($id);
+
+        if ($servicio) {
+            $subservicios = GestoriaServicio::where('gestoria_id', $id)->select('id', 'nombre')->get();
+            $entidades = \Helper::entidadUsuario();
+            
+            return view('modulo.gestoria.admin.servicio', compact('subservicios', 'id', 'servicio', 'entidades'));
+        }
+
     }
 
     /**
@@ -64,7 +75,25 @@ class GestoriaController extends Controller
      */
     public function update(Request $request, Gestoria $gestoria)
     {
-        //
+        if ($request->nombre == '') {
+            return response()->json(['code' => 400, 'msg' => 'El nombre es requerido']);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $gestoria = Gestoria::find($request->id);
+            $gestoria->nombre = \Helper::capitalizeFirst($request->nombre, "1");
+            $gestoria->save();
+
+            DB::commit();
+
+            return response()->json(['code' => 200, 'msg' => 'Servicio '.$request->nombre.' actualizado']);
+
+        }catch (\PDOException $e){
+            DB::rollBack();
+            return back()->withErrors(['Error' => substr($e->getMessage(), 0, 150)]);
+        }
     }
 
     /**
@@ -73,5 +102,13 @@ class GestoriaController extends Controller
     public function destroy(Gestoria $gestoria)
     {
         //
+    }
+
+    public function getGestoriaServicios() {
+
+        $entidades = Sede::where('estatus_id', 1)->select('id', 'nombre')->get();
+        $gestorias = Gestoria::where('estatus_id', 1)->select('id', 'nombre')->get();
+
+        return view('modulo.gestoria.admin.index', compact('gestorias', 'entidades'));
     }
 }

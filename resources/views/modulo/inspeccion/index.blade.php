@@ -195,115 +195,50 @@
                     });
                     return false;
                 }
-                var rol_id = {{ Auth::user()->rol_id }};
-                if($('#costo_inspeccion_id').val() == 0 && $('#costo_admin').val() == ''){
-                    Swal.fire({
-                        title: '¿El administrador ingresará el costo de inspección?',
-                        //text: "You won't be able to revert this!",
-                        icon: 'info',
-                        showCancelButton: true,
-                        confirmButtonText: 'Aceptar!',
-                        cancelButtonText: 'Cancelar!',
-                        confirmButtonClass: 'btn btn-success mt-2',
-                        cancelButtonClass: 'btn btn-danger ms-2 mt-2',
-                        buttonsStyling: false,
-                    }).then(function (result) {
-                        if (result.value) {
-                            $.ajax({
-                                type : 'POST',
-                                url :"{{ route('clientes.store') }}",
-                                data : { 
-                                    _token: "{{ csrf_token() }}",
-                                    nombre: $('#nombre').val(),
-                                    email: $('#email').val(),
-                                    telefono: $('#telefono').val(),
-                                    compania: $('#compania').val(),
-                                    vehiculo: $('#vehiculo').val(),
-                                    tablilla: $('#tablilla').val(),
-                                    marca: $('#marca').val(),
-                                    anio: $('#anio').val(),
-                                    seguro_social: $('#seguro_social').val(),
-                                    mes_vencimiento: $('#mes_vencimiento').val(),
-                                    costo_inspeccion: $('#costo_inspeccion_id').val(),
-                                    identificacion: $('#identificacion').val(),
-                                    costo_inspeccion_admin: $('#costo_admin').val()
-                                },
-                                success: function (data) {
-                                    if (data.code == 201) {
-                                        $('#add_vehiculo').modal('hide');
-                                        Swal.fire({
-                                            title: data.msg,
-                                            icon: "success",
-                                            showConfirmButton: false,
-                                            timer: 2000
-                                        });
-                                        setTimeout(function(){
-                                            window.location.reload();
-                                        }, 1000);
-                                    } else {
-                                        Swal.fire({
-                                            title: data.msg,
-                                            icon: "warning",
-                                            showConfirmButton: false,
-                                            {{--  timer: 2000  --}}
-                                        });
-                                    }
-            
-                                },
-                                error: function (data) {
-                                }
-                            });    
+                $.ajax({
+                    type : 'POST',
+                    url :"{{ route('clientes.store') }}",
+                    data : { 
+                        _token: "{{ csrf_token() }}",
+                        nombre: $('#nombre').val(),
+                        email: $('#email').val(),
+                        telefono: $('#telefono').val(),
+                        compania: $('#compania').val(),
+                        vehiculo: $('#vehiculo').val(),
+                        tablilla: $('#tablilla').val(),
+                        marca: $('#marca').val(),
+                        anio: $('#anio').val(),
+                        seguro_social: $('#seguro_social').val(),
+                        mes_vencimiento: $('#mes_vencimiento').val(),
+                        costo_inspeccion: $('#costo_inspeccion_id').val(),
+                        identificacion: $('#identificacion').val(),
+                        costo_inspeccion_admin: $('#costo_admin').val()
+                    },
+                    success: function (data) {
+                        if (data.code == 201) {
+                            $('#add_vehiculo').modal('hide');
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            setTimeout(function(){
+                                window.location.reload();
+                            }, 1000);
                         } else {
-                            // Read more about handling dismissals
-                            result.dismiss === Swal.DismissReason.cancel
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "warning",
+                                showConfirmButton: false,
+                                {{--  timer: 2000  --}}
+                            });
                         }
-                    });
-                } else {
-                    $.ajax({
-                        type : 'POST',
-                        url :"{{ route('clientes.store') }}",
-                        data : { 
-                            _token: "{{ csrf_token() }}",
-                            nombre: $('#nombre').val(),
-                            email: $('#email').val(),
-                            telefono: $('#telefono').val(),
-                            compania: $('#compania').val(),
-                            vehiculo: $('#vehiculo').val(),
-                            tablilla: $('#tablilla').val(),
-                            marca: $('#marca').val(),
-                            anio: $('#anio').val(),
-                            seguro_social: $('#seguro_social').val(),
-                            mes_vencimiento: $('#mes_vencimiento').val(),
-                            costo_inspeccion: $('#costo_inspeccion_id').val(),
-                            identificacion: $('#identificacion').val(),
-                            costo_inspeccion_admin: $('#costo_admin').val()
-                        },
-                        success: function (data) {
-                            if (data.code == 201) {
-                                $('#add_vehiculo').modal('hide');
-                                Swal.fire({
-                                    title: data.msg,
-                                    icon: "success",
-                                    showConfirmButton: false,
-                                    timer: 2000
-                                });
-                                setTimeout(function(){
-                                    window.location.reload();
-                                }, 1000);
-                            } else {
-                                Swal.fire({
-                                    title: data.msg,
-                                    icon: "warning",
-                                    showConfirmButton: false,
-                                    {{--  timer: 2000  --}}
-                                });
-                            }
-    
-                        },
-                        error: function (data) {
-                        }
-                    });
-                }
+
+                    },
+                    error: function (data) {
+                    }
+                });
             });
 
             $('.btnCostoInspeccion').click(function () {

@@ -81,7 +81,7 @@ class ClienteController extends Controller
             $clienteVehiculo->anio = $request->anio;
             $clienteVehiculo->mes_vencimiento_id = $request->mes_vencimiento;
             $clienteVehiculo->cliente_id = $cliente->id;
-            $clienteVehiculo->estatus_id = 5;
+            $clienteVehiculo->estatus_id = 3;
             $clienteVehiculo->save();
 
             //Se crea la venta
@@ -219,7 +219,6 @@ class ClienteController extends Controller
             $cliente_id = Cliente::where('estatus_id', 3)->where('usuario_id', Auth::user()->id)->select('id')->pluck('id')->first();
             $vehiculo_id = ClienteVehiculo::where('estatus_id', 3)->where('cliente_id', $cliente_id)->select('id')->pluck('id')->first();
             $venta = Venta::where('vehiculo_id', $vehiculo_id)->first();
-
             $venta->costo_marbete_id = ($request->marbete_id == null) ? null : $request->marbete_id;
             $venta->costo_marbete_admin = ($request->costo_marbete_admin == null) ? null : $request->costo_marbete_admin;
             $venta->costo_servicio_fijo = $request->marbete_five_id;

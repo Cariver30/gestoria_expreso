@@ -8,26 +8,26 @@
                 <li>
                     <a href="{{ route('root') }}" class="waves-effect">
                         <i class="bx bx-desktop"></i>
-                        <span key="t-file-manager"> Panel de Control </span>
+                        <span> Panel de Control </span>
                     </a>
                 </li>
                 <li>
                     <a href="{{ route('clientes.index') }}" class="waves-effect">
                         <i class="bx bx-user"></i>
-                        <span key="t-file-manager"> Clientes </span>
+                        <span> Clientes </span>
                     </a>
                 </li>
                 @if (Auth::user()->rol_id == 2)
                         <li>
                             <a href="{{ route('servicio.index') }}" class="waves-effect">
                                 <i class="bx bx-clipboard"></i>
-                                <span key="t-file-manager"> Servicios </span>
+                                <span> Servicios </span>
                             </a>
                         </li>
                         <li>
                             <a href="{{ route('usuario.index') }}" class="waves-effect">
                                 <i class="bx bx-group"></i>
-                                <span key="t-file-manager"> Usuarios </span>
+                                <span> Usuarios </span>
                             </a>
                         </li>
                     @endif
@@ -36,31 +36,37 @@
                     <li>
                         <a href="{{ route('usuario.index') }}" class="waves-effect">
                             <i class="bx bx-group"></i>
-                            <span key="t-file-manager"> Usuarios </span>
+                            <span> Usuarios </span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('servicio.index') }}" class="waves-effect">
                             <i class="bx bx-clipboard"></i>
-                            <span key="t-file-manager"> Servicios </span>
+                            <span> Servicios Inspección</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('gestoria.servicios') }}" class="waves-effect">
+                            <i class="bx bx-clipboard"></i>
+                            <span> Servicios Gestoría</span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('roles.index') }}" class="waves-effect">
                             <i class="bx bx-user"></i>
-                            <span key="t-file-manager"> Roles </span>
+                            <span> Roles </span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('estatus.index') }}" class="waves-effect">
                             <i class="bx bx-transfer-alt"></i>
-                            <span key="t-file-manager"> Cat. de Estatus </span>
+                            <span> Cat. de Estatus </span>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('sedes.index') }}" class="waves-effect">
                             <i class="bx bx-home"></i>
-                            <span key="t-file-manager"> Entidades </span>
+                            <span> Entidades </span>
                         </a>
                     </li>
                 @endif
@@ -68,7 +74,7 @@
                 <li>
                     <a href="#" class="waves-effect">
                         <i class="bx bx-cog"></i>
-                        <span key="t-file-manager"> Configuración </span>
+                        <span> Configuración </span>
                     </a>
                 </li>
                 
