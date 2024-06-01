@@ -118,7 +118,7 @@
             </fieldset>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="saveVehiculo" @if (count($costosInspeccion) == 0) disabled @endif >Guardar</button>
+                    <button type="button" class="btn btn-primary" id="saveVehiculo">Guardar</button>
                 </div>
             </div>
         </div>
