@@ -9,17 +9,17 @@
 @endsection
 
 @section('content')
-    {{--  <div class="row col-md-12">
+    <div class="row col-md-12">
         <div class="row col-md-12">
-            <input type="hidden" name="servicio_id" id="servicio_id" value="{{ $id }}">
-            <h3 class="col-md-6">{{ $servicio->nombre }}</h3>
+            <input type="hidden" id="s_gestoria_id" value="{{ $id }}">
+            <h3 class="col-md-12 text-center">{{ $servicio->nombre }}</h3>
         </div>
         <div class="row col-md-12">
             <div class="col-md-6 text-start">
                 <a href="{{ url()->previous() }}" type="button" class="btn btn-lg btn-primary col-md-3"> Volver </a>
             </div>
             <div class="col-md-6 text-end">
-                <button type="button" data-bs-toggle="modal" data-bs-target="#add_sub_servicio" class="btn btn-lg btn-primary col-md-3"> Agregar </button>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#add_ss_gestoria_modal" class="btn btn-lg btn-primary col-md-3"> Agregar </button>
             </div>
         </div>
         <div class="row">
@@ -44,7 +44,7 @@
                                             <td>@if ($subservicio->costo == '') 0 @else {{ $subservicio->costo }} @endif</td>
                                             
                                             <td>
-                                                <button class="btn btn-soft-success editSubserviciGestoria" data-id="{{ $subservicio->id }}" data-nombre="{{ $subservicio->nombre }}" data-costo="{{ $subservicio->costo }}"><i class="mdi mdi-pencil font-size-8 me-1"></i> Editar </a></li>
+                                                <button class="btn btn-soft-success editSSGestoria" data-id="{{ $subservicio->id }}" data-nombre="{{ $subservicio->nombre }}" data-costo="{{ $subservicio->costo }}"><i class="mdi mdi-pencil font-size-8 me-1"></i> Editar </a></li>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -55,37 +55,9 @@
                 </div>
             </div>
         </div>
-    </div>  --}}
-    <div class="row col-sm-12">
-        {{--  <div class="col-sm-12">
-            <div class="text-sm-end mb-4">
-                <button type="button" data-bs-toggle="modal" data-bs-target="#add_servicio_gestoria"
-                    class="btn btn-success btn-rounded waves-effect waves-light mb-2"><i
-                        class="mdi mdi-plus me-1"></i> Agregar</button>
-            </div>
-        </div>  --}}
-        <div class="row col-md-12">
-            @foreach ($subservicios as $subservicio)
-                <div class="col-xl-3 col-md-6">
-                    <div class="card">
-                        <div class="card-body text-center">
-                            <div class="favorite-icon">
-                                <a href="javascript:void(0)"><i class="uil uil-heart-alt fs-18"></i></a>
-                            </div>
-                            <img src="{{ URL::asset('build/images/companies/adobe.svg') }}" alt="" height="50" class="mb-3">
-                            <h5 class="fs-17 mb-2"><a href="job-details" class="text-dark">{{ $subservicio->nombre }} </a></h5>
-                            <div class="mt-4">
-                                <button class="btn btn-soft-success waves-effect waves-light editSubservicioGestoria" data-id="{{ $subservicio->id }}" data-nombre="{{ $subservicio->nombre }}"><i class="mdi mdi-pencil font-size-16 me-1"></i> Editar </a>
-                            </div>
-                            <a href="{{ route('servicio.subservicio.gestoria', ['id' => $subservicio->id])}}" class="btn btn-soft-info waves-effect waves-light"><i class="mdi mdi-plus font-size-16 text-info me-1"></i> Sub Servicios </a>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
     </div>
-    
-    @include('modulo.gestoria.admin.editSubservicio')
+    @include('modulo.gestoria.admin.subservicios.add_ss_gestoria')
+    @include('modulo.gestoria.admin.subservicios.edit_ss_gestoria')
 @endsection
 
 @section('script')
@@ -95,8 +67,8 @@
         $(document).ready(function() {
 
             //Crear subservicio en gestoría
-            $('#btnGuardarSubservicio').click(function () {
-                if($('#sub_nombre').val() == ''){
+            $('#btnAddSSGestoria').click(function () {
+                if($('#ss_gestoria_nombre').val() == ''){
                     Swal.fire({
                         title: '¡El nombre es requerido!',
                         icon: "warning",
@@ -105,14 +77,23 @@
                     });
                     return false;
                 }
+                if($('#ss_gestoria_costo').val() == ''){
+                    Swal.fire({
+                        title: '¡El costo es requerido!',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
                 $.ajax({
                     type: 'POST',
-                    url: "{{ route('servicio.store.subservicio') }}",
+                    url: "{{ route('ss.store.gestoria') }}",
                     data : { 
                         _token: "{{ csrf_token() }}",
-                        servicio_id: $('#servicio_id').val(),
-                        nombre: $('#sub_nombre').val(),
-                        costo: $('#sub_costo').val()
+                        s_gestoria_id: $('#s_gestoria_id').val(),
+                        nombre: $('#ss_gestoria_nombre').val(),
+                        costo: $('#ss_gestoria_costo').val()
                     },
                     success: function (data) {
                         if (data.code == 201) {
@@ -142,15 +123,16 @@
             });
 
             //Mostrar modal para actualizar sub servicio gestoria
-            $(document).on('click','.editSubservicioGestoria',function(){
-                $('#sub_servicio_gestoria_id').val($(this).attr('data-id'));
-                $('#up_sub_nombre_gestoria').val($(this).attr('data-nombre'));
-                $('#edit_subServicio_gestoria').modal('show');
+            $(document).on('click','.editSSGestoria',function(){
+                $('#up_ss_gestoria_id').val($(this).attr('data-id'));
+                $('#up_ss_nombre_gestoria').val($(this).attr('data-nombre'));
+                $('#up_ss_costo_gestoria').val($(this).attr('data-costo'));
+                $('#edit_ss_gestoria').modal('show');
             });
 
             //Actualizar subservicio gestoría
-            $('#btnUpdateSubservicioGestoria').click(function () {
-                if($('#up_sub_nombre_gestoria').val() == ''){
+            $('#btnEditSSGestoria').click(function () {
+                if($('#up_ss_nombre_gestoria').val() == ''){
                     Swal.fire({
                         title: '¡El nombre es requerido!',
                         icon: "warning",
@@ -159,12 +141,22 @@
                     });
                     return false;
                 }
+                if($('#up_ss_costo_gestoria').val() == ''){
+                    Swal.fire({
+                        title: '¡El costo es requerido!',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
                 $.ajax({
                     type: 'PUT',
-                    url: '/update/gestoria/subservicio/'+ $('#sub_servicio_gestoria_id').val(),
+                    url: '/sservicio/gestoria/'+ $('#up_ss_gestoria_id').val(),
                     data : { 
                         _token: "{{ csrf_token() }}",
-                        nombre: $('#up_sub_nombre_gestoria').val()
+                        nombre: $('#up_ss_nombre_gestoria').val(),
+                        costo: $('#up_ss_costo_gestoria').val()
                     },
                     success: function (data) {
                         if (data.code == 200) {

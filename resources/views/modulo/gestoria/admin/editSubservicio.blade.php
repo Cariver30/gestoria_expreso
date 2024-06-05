@@ -8,19 +8,15 @@
             <div class="modal-body">
                 <form autocomplete="off">
                     <div class="row col-md-12">
-                        <input type="hidden" name="sub_servicio_id" id="sub_servicio_id">
-                        <div class="col-md-8 mb-3">
+                        <input type="hidden" name="sub_servicio_id" id="sub_servicio_gestoria_id">
+                        <div class="col-md-12 mb-3">
                             <label for="nombre" class="col-form-label"> Nombre</label>
-                            <input type="text" class="form-control form-control-sm" id="up_sub_nombre" placeholder="Nombre">
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label for="costo" class="col-form-label"> Costo </label>
-                            <input type="text" class="form-control form-control-sm" id="up_sub_costo" placeholder="Costo">
+                            <input type="text" class="form-control form-control-sm" id="up_sub_nombre_gestoria" placeholder="Nombre">
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-primary" id="btnUpdateSubservicio">Guardar</button>
+                        <button type="button" class="btn btn-primary" id="btnUpdateSubservicioGestoria">Guardar</button>
                     </div>
                 </form>
             </div>

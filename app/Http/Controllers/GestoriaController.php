@@ -8,6 +8,7 @@ use App\Models\Sede;
 use App\Models\Gestoria;
 use Illuminate\Http\Request;
 use App\Models\GestoriaServicio;
+use App\Models\GestoriaSubServicio;
 use Illuminate\Support\Facades\Auth;
 
 class GestoriaController extends Controller
@@ -64,7 +65,7 @@ class GestoriaController extends Controller
         if ($servicio) {
             $subservicios = GestoriaServicio::where('gestoria_id', $id)->select('id', 'nombre')->get();
             $entidades = \Helper::entidadUsuario();
-            
+            // dd( $subservicios);
             return view('modulo.gestoria.admin.servicio', compact('subservicios', 'id', 'servicio', 'entidades'));
         }
 
@@ -110,5 +111,90 @@ class GestoriaController extends Controller
         $gestorias = Gestoria::where('estatus_id', 1)->select('id', 'nombre')->get();
 
         return view('modulo.gestoria.admin.index', compact('gestorias', 'entidades'));
+    }
+
+    public function updateSubServicio(Request $request, $id) {
+        // dd($id);
+        if ($request->nombre == '') {
+            return response()->json(['code' => 400, 'msg' => 'El Nombre es requerido']);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            
+            $sub_servicio = GestoriaServicio::find($id);
+            $sub_servicio->nombre = \Helper::capitalizeFirst($request->nombre, "1");
+            $sub_servicio->save();
+
+            DB::commit();
+
+            return response()->json(['code' => 200, 'msg' => 'Sub Servicio actualizado']);
+
+        }catch (\PDOException $e){
+            DB::rollBack();
+            // dd($e);
+            return back()->withErrors(['Error' => substr($e->getMessage(), 0, 150)]);
+        }
+    }
+
+    public function getSubServicios($id) {
+        $servicio = GestoriaServicio::where('id', $id)->select('nombre')->first();
+        $subservicios = GestoriaSubServicio::where('gestoria_servicio_id', $id)->select('id', 'nombre', 'costo')->get();
+        $entidades = Sede::where('estatus_id', 1)->select('id', 'nombre')->get();
+        
+        return view('modulo.gestoria.admin.editSubServicioTable', compact('id', 'servicio', 'subservicios', 'entidades'));
+    }
+
+    public function addSubServicioUltimo(Request $request) {
+
+        if ($request->nombre == '') {
+            return response()->json(['code' => 400, 'msg' => 'El nombre es requerido']);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $ss_gestoria = new GestoriaSubServicio();
+            $ss_gestoria->nombre = \Helper::capitalizeFirst($request->nombre, "1");
+            $ss_gestoria->costo = $request->costo;
+            $ss_gestoria->gestoria_servicio_id = $request->s_gestoria_id;
+            $ss_gestoria->estatus_id = 1;
+            $ss_gestoria->save();
+
+            DB::commit();
+
+            return response()->json(['code' => 201, 'msg' => 'Sub servicio '.$request->nombre.' registrado']);
+
+        }catch (\PDOException $e){
+            DB::rollBack();
+            return back()->withErrors(['Error' => substr($e->getMessage(), 0, 150)]);
+        }
+    }
+
+    public function upSubServicioUltimo(Request $request, $id) {
+
+        // dd($id);
+        if ($request->nombre == '') {
+            return response()->json(['code' => 400, 'msg' => 'El nombre es requerido']);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $ss_gestoria = GestoriaSubServicio::find($id);
+            $ss_gestoria->nombre = \Helper::capitalizeFirst($request->nombre, "1");
+            $ss_gestoria->costo = $request->costo;
+            $ss_gestoria->save();
+
+            DB::commit();
+
+            return response()->json(['code' => 200, 'msg' => 'Sub servicio '.$request->nombre.' actualizado']);
+
+        }catch (\PDOException $e){
+            DB::rollBack();
+            dd($e);
+            return back()->withErrors(['Error' => substr($e->getMessage(), 0, 150)]);
+        }
     }
 }

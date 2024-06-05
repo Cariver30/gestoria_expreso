@@ -32,6 +32,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('subservicios/{id}', [App\Http\Controllers\ServicioController::class, 'getSubServicio']);
     Route::get('servicio/subservicio/editar/{id}', [App\Http\Controllers\ServicioController::class, 'editSubServicio'])->name('servicio.subservicio.edit');
     Route::post('servicio/subservicio', [App\Http\Controllers\ServicioController::class, 'addSubServicio'])->name('servicio.store.subservicio');
+    //subservicios de gestoría
+    Route::get('servicio/subservicio/gestoria/{id}', [App\Http\Controllers\GestoriaController::class, 'getSubservicios'])->name('servicio.subservicio.gestoria');
+    Route::put('update/gestoria/subservicio/{id}', [App\Http\Controllers\GestoriaController::class, 'updateSubServicio']);
+    Route::post('servicio/subservicio/gestoria', [App\Http\Controllers\GestoriaController::class, 'addSubServicioUltimo'])->name('ss.store.gestoria');
+    Route::put('sservicio/gestoria/{id}', [App\Http\Controllers\GestoriaController::class, 'upSubServicioUltimo']);
+    
     Route::put('update/subservicio/{id}', [App\Http\Controllers\ServicioController::class, 'updateSubServicio']);
     Route::get('seccion', [App\Http\Controllers\ServicioController::class, 'getViewInspeccion'])->name('modulo.inspeccion');
     Route::get('consulta/tablilla/{tablilla}', [App\Http\Controllers\ServicioController::class, 'getTablilla'])->name('consulta.tablilla');

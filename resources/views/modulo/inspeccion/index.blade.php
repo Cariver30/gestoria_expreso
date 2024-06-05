@@ -30,7 +30,7 @@
         <div class="card bg-success text-white-50">
             <div class="card-body text-center">
                 <i class="mdi mdi-car me-3 text-white" style="font-size: 100px;"></i>
-                <h1 class="mt-0 mb-4 text-white"> Vehículos </h1>
+                <h1 class="mt-0 mb-4 text-white"> Inspección </h1>
             </div>
         </div>
     </div>
