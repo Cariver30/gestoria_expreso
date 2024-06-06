@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\gestoriaSubServicio;
+use App\Models\GestoriaSubServicio;
 use Illuminate\Http\Request;
 
 class GestoriaSubServicioController extends Controller

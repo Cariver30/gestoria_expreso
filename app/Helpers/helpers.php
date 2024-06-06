@@ -34,7 +34,7 @@ class Helper {
     public static function registroEnCurso() {
         $cliente_id = Cliente::where('estatus_id', 3)->where('usuario_id', Auth::user()->id)->select('id')->pluck('id')->first();
         // dd($cliente_id);
-        $vehiculo_id = ClienteVehiculo::where('estatus_id', 5)->where('cliente_id', $cliente_id)->select('id')->pluck('id')->first();
+        $vehiculo_id = ClienteVehiculo::where('estatus_id', 3)->where('cliente_id', $cliente_id)->select('id')->pluck('id')->first();
         // dd($vehiculo_id);
 
         return $vehiculo_id;

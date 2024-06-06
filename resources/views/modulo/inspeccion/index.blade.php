@@ -60,13 +60,13 @@
         </div>
     </div>
 </div>
-@if ($total_checkout != 0)
-    <div class="row col-sm-12 text-center" style="margin-left: 12%;">
+@if ($en_curso == 1)
+    <div class="row col-sm-12 text-center" style="margin-left: 7%;">
         <div class="col-sm-3 col-sm-2">
             <button type="button" class="btn btn-soft-success col-md-8 waves-effect waves-light btn-lg" data-id=""> PAGAR </button>
         </div>
-        <div class="col-sm-3 col-sm-2">
-            <button type="button" class="btn btn-soft-warning col-md-8 waves-effect waves-light btn-lg" data-id=""> PENDIENTE POR PAGAR </button>
+        <div class="col-sm-4 col-sm-2">
+            <button type="button" class="btn btn-soft-warning col-md-8 waves-effect waves-light btn-lg pendientePorPagar" data-id="{{ $vehiculo_id }}"> PENDIENTE POR PAGAR </button>
         </div>
         <div class="col-sm-3 col-sm-2">
             <button type="button" class="btn btn-soft-danger col-md-8 waves-effect waves-light btn-lg finalizarProceso" data-id="{{ $vehiculo_id }}"> CANCELAR </button>
@@ -405,6 +405,53 @@
                         $.ajax({
                             type : 'POST',
                             url :"{{ route('cancelar.venta') }}",
+                            data : { 
+                                _token: "{{ csrf_token() }}",
+                                vehiculo_id: id,
+                                motivo : result.value
+                            },
+                            success: function (data) {
+                                if (data.code == 200) {
+                                    Swal.fire({
+                                        title: data.msg,
+                                        icon: "success",
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                    setTimeout(function(){
+                                        window.location.reload();
+                                    }, 1000);
+                                } else {
+                                    Swal.fire({
+                                        title: data.msg,
+                                        icon: "warning",
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                }
+        
+                            },
+                            error: function (data) {
+                                // console.log(data);
+                            }
+                        }); 
+                    }
+                });
+            });
+
+            $('.pendientePorPagar').click(function () {
+                var id = $(this).attr('data-id');
+                Swal.fire({
+                    title: "La venta pasará a pendiente por pagar, ¿está seguro?",
+                    showCancelButton: true,
+                    confirmButtonText: "Aceptar",
+                    cancelButtonText: 'Cancelar!',
+                    showLoaderOnConfirm: true,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type : 'POST',
+                            url :"{{ route('pendiente.venta') }}",
                             data : { 
                                 _token: "{{ csrf_token() }}",
                                 vehiculo_id: id,

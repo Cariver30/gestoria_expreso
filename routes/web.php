@@ -24,6 +24,8 @@ Route::middleware(['auth'])->group(function () {
 
     //Cancelar venta de servicio a vehículo
     Route::post('cancelar/venta/vehiculo', [App\Http\Controllers\VentaController::class, 'cancelarVenta'])->name('cancelar.venta');
+    // Pendiente por pagar venta de servicio a vehículo
+    Route::post('pendiente/venta/vehiculo', [App\Http\Controllers\VentaController::class, 'pendienteVenta'])->name('pendiente.venta');
 
     Route::get('get/data/gestoria/subservicio/{id}', [App\Http\Controllers\GestoriaSubServicioController::class, 'getDataSubservicio']);
     Route::get('gestoria/servicios', [App\Http\Controllers\GestoriaController::class, 'getGestoriaServicios'])->name('gestoria.servicios');

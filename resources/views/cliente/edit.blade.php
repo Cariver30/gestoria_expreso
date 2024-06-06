@@ -66,7 +66,11 @@
                                         <span class="text-primary"> {{ $vehiculo->compania }} </span><br>
                                         <span class="text-primary"> {{ $vehiculo->marca }} </span><br>
                                         <span class="text-primary"> {{ Carbon\Carbon::parse($vehiculo->created_at)->format('d-m-Y H:i') }} </span><br>
-                                        <span class="badge bg-warning">{{ $vehiculo->estatus }}
+                                        @if($vehiculo->estatus_id == 5)
+                                            <span class="badge bg-warning">{{ $vehiculo->estatus }}
+                                        @elseif ($vehiculo->estatus_id == 6)
+                                            <span class="badge bg-danger">{{ $vehiculo->estatus }}</span>
+                                        @endif
                                     </div>
                                 </div>
                             </div>

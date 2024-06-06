@@ -217,7 +217,9 @@ class ServicioController extends Controller
 
         // Validar si hay un registro en curso
         $vehiculo_id = \Helper::registroEnCurso();
+        $en_curso = 0;
         if ($vehiculo_id != null) {
+            $en_curso = 1;
             $total_checkout = Venta::where('vehiculo_id', $vehiculo_id)->select('total')->pluck('total')->first();
             if (is_null($total_checkout)) {
                 $total_checkout = 0;
@@ -234,7 +236,7 @@ class ServicioController extends Controller
                         'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede', 'sedes.acceso_panel as panel')
                     ->first();
 
-        return view('modulo.inspeccion.index', compact('costosInspeccion', 'marbetes', 'seguros', 'meses', 'total_checkout', 'extras', 'licencias', 'notificaciones', 'costo_servicios', 'venta_multas', 'user', 'entidades', 'vehiculo_id'));
+        return view('modulo.inspeccion.index', compact('costosInspeccion', 'marbetes', 'seguros', 'meses', 'total_checkout', 'extras', 'licencias', 'notificaciones', 'costo_servicios', 'venta_multas', 'user', 'entidades', 'vehiculo_id', 'en_curso'));
     }
 
     public function getViewGestoria() {

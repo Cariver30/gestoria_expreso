@@ -82,4 +82,21 @@ class VentaController extends Controller
             return response()->json(['code' => 404, 'msg' => 'Transacción no encontrada!']);
         }
     }
+
+    public function pendienteVenta(Request $request) {
+
+        $vehiculo = ClienteVehiculo::find($request->vehiculo_id);
+        if ($vehiculo) {
+            $vehiculo->estatus_id = 5;
+            $vehiculo->save();
+
+            $cliente = Cliente::find($vehiculo->cliente_id);
+            $cliente->estatus_id = 5;
+            $cliente->save();
+
+            return response()->json(['code' => 200, 'msg' => 'Transacción pendiente de pago!']);
+        } else {
+            return response()->json(['code' => 404, 'msg' => 'Transacción no encontrada!']);
+        }
+    }
 }
