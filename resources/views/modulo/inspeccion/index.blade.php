@@ -15,6 +15,8 @@
             <label class="card-radio-label mb-3">
                 <input type="radio" name="suma_total" id="suma_total" class="card-radio-input" checked="">
                 <div class="card-radio">
+                    <small>@if (isset($cliente)) {{ $cliente->nombre }} @endif </small><br>
+                    <input type="hidden" name="vehiculo_id" id="vehiculo_id" value="{{ $vehiculo_id }}">
                     <i class="bx bx-cart font-size-24 text-primary align-middle me-2"></i><span>Total: {{$total_checkout}}</span>
                 </div>
             </label>
@@ -63,7 +65,7 @@
 @if ($en_curso == 1)
     <div class="row col-sm-12 text-center" style="margin-left: 7%;">
         <div class="col-sm-3 col-sm-2">
-            <button type="button" class="btn btn-soft-success col-md-8 waves-effect waves-light btn-lg" data-id=""> PAGAR </button>
+            <a type="button" href="{{ route('checkout.index')}}" class="btn btn-soft-success col-md-8 waves-effect waves-light btn-lg"> PAGAR </a>
         </div>
         <div class="col-sm-4 col-sm-2">
             <button type="button" class="btn btn-soft-warning col-md-8 waves-effect waves-light btn-lg pendientePorPagar" data-id="{{ $vehiculo_id }}"> PENDIENTE POR PAGAR </button>
@@ -104,6 +106,16 @@
     </script>
     <script>
         $(document).ready(function() {
+
+            $('input[type=number]').keypress(function(key) {
+                if(key.charCode < 48 || key.charCode > 57) return false;
+            });
+
+            function validarEmail(email) {
+                // Expresión regular para validar un correo electrónico
+                const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+                return regex.test(email);
+            }
 
             // Se deshabilita cuando ya se tiene una venta en curso.
             var total_checkout = {{$total_checkout}};
@@ -184,11 +196,20 @@
                }
             });
 
-             //Crear Cliente- vehículo
+             //Crear Cliente-vehículo
             $('#saveVehiculo').click(function () {
                 if($('#nombre').val() == '' || $('#email').val() == '' || $('#telefono').val() == '' || $('#compania').val() == '' || $('#vehiculo').val() == '' || $('#tablilla').val() == '' || $('#marca').val() == '' || $('#anio').val() == '' || $('#seguro_social').val() == '' || $('#mes_vencimiento').val() == '' || $('#identificacion').val() == ''){
                     Swal.fire({
                         title: 'Hay campos vacíos',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                if (!validarEmail($('#email').val())) {
+                    Swal.fire({
+                        title: 'Ingrese un correo válido',
                         icon: "warning",
                         showConfirmButton: false,
                         timer: 2000
@@ -212,7 +233,8 @@
                         mes_vencimiento: $('#mes_vencimiento').val(),
                         costo_inspeccion: $('#costo_inspeccion_id').val(),
                         identificacion: $('#identificacion').val(),
-                        costo_inspeccion_admin: $('#costo_admin').val()
+                        costo_inspeccion_admin: $('#costo_admin').val(),
+                        vehiculo_id: $('#vehiculo_id').val()
                     },
                     success: function (data) {
                         if (data.code == 201) {
@@ -226,7 +248,19 @@
                             setTimeout(function(){
                                 window.location.reload();
                             }, 1000);
-                        } else {
+                        } else if (data.code == 200) {
+                            $('#add_vehiculo').modal('hide');
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            setTimeout(function(){
+                                window.location.reload();
+                            }, 1000);
+                        }
+                        else {
                             Swal.fire({
                                 title: data.msg,
                                 icon: "warning",

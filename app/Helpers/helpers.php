@@ -81,4 +81,18 @@ class Helper {
 
         return $entidades;
     }
+
+    public static function getCliente($idVehiculo) {
+
+        $cliente_id = ClienteVehiculo::where('id', $idVehiculo)->select('cliente_id')->pluck('cliente_id')->first();
+        $cliente = Cliente::where('id', $cliente_id)->first();
+        
+        return $cliente;
+    }
+
+    public static function getVehiculo($idVehiculo) {
+        $vehiculo = ClienteVehiculo::where('id', $idVehiculo)->select('id', 'compania', 'vehiculo', 'tablilla', 'marca', 'anio', 'mes_vencimiento_id', 'cliente_id')->first();
+        
+        return $vehiculo;
+    }
 }

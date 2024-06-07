@@ -10,19 +10,19 @@
                     <h5> Datos del Propietario </h5>
                     <div class="col-md-3 mb-3">
                         <label for="seguro_social" class="col-form-label"> Últimos 4 dígitos de Seguro Social </label>
-                        <input type="text" class="form-control form-control-sm" name="seguro_social" id="seguro_social" maxlength="4" required>
+                        <input type="text" class="form-control form-control-sm" name="seguro_social" id="seguro_social" maxlength="4" @if (isset($cliente)) value="{{ $cliente->seguro_social }}" @endif required>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="nombre" class="col-form-label"> Nombre completo</label>
-                        <input type="text" class="form-control form-control-sm" name="nombre" id="nombre" required>
+                        <input type="text" class="form-control form-control-sm" name="nombre" id="nombre" @if (isset($cliente)) value="{{ $cliente->nombre }}" @endif required>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="email" class="col-form-label"> Correo Electrónico </label>
-                        <input type="email" class="form-control form-control-sm" name="email" id="email" required>
+                        <input type="email" class="form-control form-control-sm" name="email" id="email" @if (isset($cliente)) value="{{ $cliente->email }}" @endif required>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="telefono" class="col-form-label"> Teléfono </label>
-                        <input type="tel" class="form-control form-control-sm" name="telefono" id="telefono" maxlength="10" pattern="[0-9]{10}">
+                        <input type="tel" class="form-control form-control-sm" name="telefono" id="telefono" maxlength="10" pattern="[0-9]{10}" @if (isset($cliente)) value="{{ $cliente->telefono }}" @endif>
                     </div>
                 </fieldset>
             <fieldset class="border p-2 row col-md-12">
@@ -30,45 +30,47 @@
                 <div class="row col-md-12 formVehiculo">
                 <div class="col-md-3 mb-3">
                     <label for="compania" class="col-form-label"> Compañía </label>
-                    <input type="text" class="form-control form-control-sm" name="compania" id="compania" required>
+                    <input type="text" class="form-control form-control-sm" name="compania" id="compania" @if (isset($vehiculo)) value="{{ $vehiculo->compania }}" @endif required>
                 </div>
                     <div class="col-md-3 mb-3">
                         <label for="identificacion" class="col-form-label"> Licencia/Identificación </label>
-                        <input type="text" class="form-control form-control-sm" name="identificacion" id="identificacion">
+                        <input type="text" class="form-control form-control-sm" name="identificacion" id="identificacion" @if (isset($cliente)) value="{{ $cliente->identificacion }}" @endif>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="vehiculo" class="col-form-label"> Vehículo </label>
-                        <input type="text" class="form-control form-control-sm" name="vehiculo" id="vehiculo" required>
+                        <input type="text" class="form-control form-control-sm" name="vehiculo" id="vehiculo" @if (isset($vehiculo)) value="{{ $vehiculo->vehiculo }}" @endif required>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="tablilla" class="col-form-label"> Tablilla </label>
-                        <input type="text" class="form-control form-control-sm" name="tablilla" id="tablilla" required>
+                        <input type="text" class="form-control form-control-sm" name="tablilla" id="tablilla" @if (isset($vehiculo)) value="{{ $vehiculo->tablilla }}" @endif required>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="marca" class="col-form-label"> Marca </label>
-                        <input type="text" class="form-control form-control-sm" name="marca" id="marca" required>
+                        <input type="text" class="form-control form-control-sm" name="marca" id="marca" @if (isset($vehiculo)) value="{{ $vehiculo->marca }}" @endif required>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="anio" class="col-form-label"> Año </label>
-                        <input type="text" class="form-control form-control-sm" name="anio" id="anio" maxlength="4" minlength="4">
+                        <input type="text" class="form-control form-control-sm" name="anio" id="anio" maxlength="4" minlength="4" @if (isset($vehiculo)) value="{{ $vehiculo->anio }}" @endif>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="mes_vencimiento" class="col-form-label"> Mes de Vencimiento </label>
                         <select class="form-select form-select-sm" style="cursor: pointer;" id="mes_vencimiento" name="mes_vencimiento">
                             <option value="" selected>Selecciona un mes</option>
                             @foreach ($meses as $mes)
-                                <option value="{{$mes->id}}">{{ $mes->nombre }}</option>
+                                <option value="{{$mes->id}}" @if (isset($vehiculo) && $mes->id == $vehiculo->mes_vencimiento_id) selected @endif>{{ $mes->nombre }}</option>
                             @endforeach
                         </select>
                     </div>
                     <input type="hidden" name="costo_inspeccion_id" id="costo_inspeccion_id" value="0">
-                    <div class="row col-md-12 mb-3">
-                        <label for="costo_inspeccion" class="col-form-label"> Costo de Inspección </label>
-                        @if (count($costosInspeccion) == 0) <small class="text-danger">Debe registrar por lo menos un costo de inspección</small> @endif
-                        @foreach ($costosInspeccion as $costo)
-                            <button type="button" class="btn btn-soft-success col-md-3 waves-effect waves-light btnCostoInspeccion" style="margin: 1px;" data-id="{{ $costo->id}}">{{ $costo->nombre}} - ${{ $costo->costo}} </button>
-                        @endforeach
-                    </div>
+                    @if (count($costosInspeccion) != 0)
+                        <div class="row col-md-12 mb-3">
+                            <label for="costo_inspeccion" class="col-form-label"> Costo de Inspección </label>
+                            {{--  @if (count($costosInspeccion) == 0) <small class="text-danger">Debe registrar por lo menos un costo de inspección</small> @endif  --}}
+                            @foreach ($costosInspeccion as $costo)
+                                <button type="button" class="btn btn-soft-success col-md-3 waves-effect waves-light btnCostoInspeccion" style="margin: 1px;" data-id="{{ $costo->id}}">{{ $costo->nombre}} - ${{ $costo->costo}} </button>
+                            @endforeach
+                        </div>
+                    @endif
                     <div class="col-md-12 mb-4" style="height: 50% important;">
                         <div class="dropzone">
                             <div class="fallback">

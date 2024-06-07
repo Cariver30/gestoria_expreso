@@ -218,25 +218,61 @@ class ServicioController extends Controller
         // Validar si hay un registro en curso
         $vehiculo_id = \Helper::registroEnCurso();
         $en_curso = 0;
+        
         if ($vehiculo_id != null) {
+            $cliente = \Helper::getCliente($vehiculo_id);
+            $vehiculo = \Helper::getVehiculo($vehiculo_id);
             $en_curso = 1;
             $total_checkout = Venta::where('vehiculo_id', $vehiculo_id)->select('total')->pluck('total')->first();
             if (is_null($total_checkout)) {
                 $total_checkout = 0;
             }
+            // dd($vehiculo);
+            return view('modulo.inspeccion.index', compact(
+                'costosInspeccion',
+                'marbetes',
+                'seguros',
+                'meses',
+                'total_checkout',
+                'extras',
+                'licencias',
+                'notificaciones',
+                'costo_servicios',
+                'venta_multas',
+                'entidades',
+                'vehiculo_id',
+                'en_curso',
+                'cliente',
+                'vehiculo'
+            ));
         } else {
             $total_checkout = 0;
+
+            return view('modulo.inspeccion.index', compact(
+                'costosInspeccion',
+                'marbetes',
+                'seguros',
+                'meses',
+                'total_checkout',
+                'extras',
+                'licencias',
+                'notificaciones',
+                'costo_servicios',
+                'venta_multas',
+                'entidades',
+                'vehiculo_id',
+                'en_curso'
+            ));
         }
 
-        $user = User::leftJoin('roles', 'users.rol_id', 'roles.id')
-                    ->leftJoin('sedes', 'users.sede_id', 'sedes.id')
-                    ->where('users.id', Auth::user()->id)
-                    ->select(
-                        'users.id', 'users.nombre','users.primer_apellido', 'users.segundo_apellido', 'users.email',
-                        'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede', 'sedes.acceso_panel as panel')
-                    ->first();
+        // $user = User::leftJoin('roles', 'users.rol_id', 'roles.id')
+        //             ->leftJoin('sedes', 'users.sede_id', 'sedes.id')
+        //             ->where('users.id', Auth::user()->id)
+        //             ->select(
+        //                 'users.id', 'users.nombre','users.primer_apellido', 'users.segundo_apellido', 'users.email',
+        //                 'users.estatus_id', 'users.rol_id', 'roles.nombre as rol', 'sedes.nombre as sede', 'sedes.acceso_panel as panel')
+        //             ->first();
 
-        return view('modulo.inspeccion.index', compact('costosInspeccion', 'marbetes', 'seguros', 'meses', 'total_checkout', 'extras', 'licencias', 'notificaciones', 'costo_servicios', 'venta_multas', 'user', 'entidades', 'vehiculo_id', 'en_curso'));
     }
 
     public function getViewGestoria() {

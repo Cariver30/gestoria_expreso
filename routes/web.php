@@ -54,6 +54,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('gestoria', App\Http\Controllers\GestoriaController::class);
     Route::resource('sedes', App\Http\Controllers\SedeController::class);
     Route::resource('clientes', App\Http\Controllers\ClienteController::class);
+    Route::resource('checkout', App\Http\Controllers\CheckoutController::class);
 
     //Update User Details
     Route::post('/update-profile/{id}', [App\Http\Controllers\HomeController::class, 'updateProfile'])->name('updateProfile');
