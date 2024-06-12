@@ -15,11 +15,21 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger("costo_inspeccion_id")->nullable();
             $table->foreign("costo_inspeccion_id")->references("id")->on("sub_servicios")->onDelete('cascade');
+            
             $table->integer('costo_inspeccion_admin')->nullable();
+            
+            $table->unsignedBigInteger('costo_marbete_acca_id')->nullable();
+            $table->foreign("costo_marbete_acca_id")->references("id")->on("sub_servicios")->onDelete('cascade');
+            
             $table->unsignedBigInteger("costo_marbete_id")->nullable();
             $table->foreign("costo_marbete_id")->references("id")->on("sub_servicios")->onDelete('cascade');
+
+            
             $table->integer('costo_marbete_admin')->nullable();
+            $table->unsignedBigInteger('costo_seguro_id')->nullable();
+            $table->foreign("costo_seguro_id")->references("id")->on("sub_servicios")->onDelete('cascade');
             $table->integer('costo_servicio_fijo')->nullable();
+            $table->integer('derechos_anuales')->nullable();
             $table->integer('total');
             $table->date('fecha_pago')->nullable();
             $table->integer('tipo_pago')->nullable();

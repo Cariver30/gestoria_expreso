@@ -7,7 +7,7 @@
             </div>
             <div class="row modal-body">
                 <input type="hidden" name="marbete_id" id="marbete_id">
-                <input type="hidden" name="marbete_five_id" id="marbete_five_id" value="0">
+                <input type="hidden" name="marbete_five_id" id="marbete_five_id" @if (isset($vehiculo)) value="{{ $venta->costo_servicio_fijo}}" @else value="0" @endif>
                 <div class="row col-md-12 mb-3">
                     @foreach ($marbetes as $marbete)
                         <button type="button" class="btn btn-soft-success col-md-3 waves-effect waves-light btnInspeccionMarbete" style="margin: 1px;" data-id="{{ $marbete->id}}">{{ $marbete->nombre}} - ${{ $marbete->costo}} </button>
@@ -28,12 +28,12 @@
                         <div class="card bg-success text-white">
                             <div class="card-header bg-transparent border-success">
                                 <label for="">Derechos Anuales</label>
-                                <input type="number" class="form-control form-control-sm">
+                                <input type="number" class="form-control form-control-sm" id="derecho_anual">
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <button type="button" class="btn btn-soft-info col-md-12 waves-effect waves-light btnInspeccionMarbeteACCA"> ACCA </button>
+                        <button type="button" class="btn btn-info col-md-12 waves-effect waves-light btnInspeccionMarbeteACCA"> ACCA </button>
                     </div>
                     <div class="col-md-3 mb-4 costoServicioObligatorio" style="cursor: pointer;">
                         <div class="card border border-success cardMain">

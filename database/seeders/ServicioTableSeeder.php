@@ -21,7 +21,8 @@ class ServicioTableSeeder extends Seeder
             ['nombre' => 'Costo por servicio', 'estatus_id' => 1, 'created_at' => now()],
             ['nombre' => 'Certificación de Venta o Multa', 'estatus_id' => 1, 'created_at' => now()],
             ['nombre' => 'Extras', 'estatus_id' => 1, 'created_at' => now()],
-            ['nombre' => 'Multas de Ley', 'estatus_id' => 1, 'created_at' => now()]
+            ['nombre' => 'Multas de Ley', 'estatus_id' => 1, 'created_at' => now()],
+            ['nombre' => 'ACCA', 'estatus_id' => 1, 'created_at' => now()]
         ]);
     }
 }

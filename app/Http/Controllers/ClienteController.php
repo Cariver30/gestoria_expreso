@@ -89,17 +89,16 @@ class ClienteController extends Controller
                 //Se crea la venta
                 $venta = new Venta();
                 $venta->costo_inspeccion_id = ($request->costo_inspeccion == 0) ? null : $request->costo_inspeccion ;
-                $venta->costo_inspeccion_admin = ($request->costo_inspeccion_admin == null) ? null : $request->costo_inspeccion_admin;
-                $venta->costo_servicio_fijo = 0;
+                $venta->costo_inspeccion_admin = ($request->costo_inspeccion_admin == null) ? 0 : $request->costo_inspeccion_admin;
+                
                 //Se va calculando el total
                 if ($request->costo_inspeccion != 0) {
                     $costoInspección = SubServicio::where('id', $request->costo_inspeccion)->select('costo')->pluck('costo')->first();
                 } else {
                     $costoInspección = $request->costo_inspeccion_admin;
                 }
-                
-                $total = $costoInspección + $venta->costo_servicio_fijo;
-                $venta->total = $total;
+                // dd($costoInspección);
+                $venta->total = ($costoInspección == null) ? 0 : $costoInspección ;
                 $venta->vehiculo_id = $clienteVehiculo->id;
                 $venta->save();
                 
@@ -107,8 +106,9 @@ class ClienteController extends Controller
                 
                 return response()->json(['code' => 201, 'msg' => 'Cliente registrado', 'id' => $cliente->id]);
             } else {
-                // dd('sd');
+                
                 $vehiculo = \Helper::getVehiculo($request->vehiculo_id);
+                // dd($vehiculo);
 
                 //Se actualiza el cliente
                 $cliente = Cliente::find($vehiculo->cliente_id);
@@ -118,9 +118,6 @@ class ClienteController extends Controller
                 $cliente->seguro_social = $request->seguro_social;
                 $cliente->identificacion = $request->identificacion;
                 $cliente->save();
-                // $cliente->img_licencia = 'path/img_licencia';
-                // $cliente->usuario_id = Auth::user()->id;
-                // $cliente->estatus_id = 3;
 
                 //Se actualiza el vehículo
                 $clienteVehiculo = ClienteVehiculo::find($vehiculo->id);
@@ -133,10 +130,9 @@ class ClienteController extends Controller
                 $clienteVehiculo->save();
             
                 //Se crea la venta
-                $venta = Venta::find($vehiculo->id);
+                $venta = Venta::where('vehiculo_id', $vehiculo->id)->first();
                 $venta->costo_inspeccion_id = ($request->costo_inspeccion == 0) ? null : $request->costo_inspeccion ;
                 $venta->costo_inspeccion_admin = ($request->costo_inspeccion_admin == null) ? null : $request->costo_inspeccion_admin;
-                $venta->costo_servicio_fijo = 0;
                 //Se va calculando el total
                 if ($request->costo_inspeccion != 0) {
                     $costoInspección = SubServicio::where('id', $request->costo_inspeccion)->select('costo')->pluck('costo')->first();
@@ -155,6 +151,7 @@ class ClienteController extends Controller
             }
         }catch (\PDOException $e){
             DB::rollBack();
+            dd($e);
             return response()->json(['code' => 201, 'msg' => substr($e->getMessage(), 0, 150)]);
         }
     }
@@ -271,38 +268,48 @@ class ClienteController extends Controller
             $venta->costo_marbete_id = ($request->marbete_id == null) ? null : $request->marbete_id;
             $venta->costo_marbete_admin = ($request->costo_marbete_admin == null) ? null : $request->costo_marbete_admin;
             $venta->costo_servicio_fijo = $request->marbete_five_id;
+            $venta->derechos_anuales = $request->derecho_anual;
 
-            //Se suma al total
-            if ($request->marbete_id != 0) {
+            //Se va calculando el total
+            if ($venta->costo_inspeccion_id != null) {
+                $costoInspección = SubServicio::where('id', $request->costo_inspeccion)->select('costo')->pluck('costo')->first();
+            } else {
+                $costoInspección = $venta->costo_inspeccion_admin;
+            }
+
+            if ($request->marbete_id != null) {
                 $costoMarbete = SubServicio::where('id', $request->marbete_id)->select('costo')->pluck('costo')->first();
             } else {
                 $costoMarbete = $request->costo_marbete_admin;
             }
-            // dd($costoMarbete);
 
-            $total = $venta->total + $costoMarbete + $request->marbete_five_id;
-            // dd($total);
+            $total = $costoInspección + $costoMarbete + $venta->costo_servicio_fijo + $venta->derechos_anuales;
             $venta->total = $total;
             $venta->save();
-            // $marbeteVehiculo = VehiculoMarbete::where('vehiculo_id', $vehiculo_id)->first();
-
-            // if (!$marbeteVehiculo) {
-            //     $marbeteVehiculo = new VehiculoMarbete();
-            // } 
-            // $marbeteVehiculo->vehiculo_id = $vehiculo_id;
-            // $marbeteVehiculo->marbete_id = ($request->marbete_id == null) ? null : $request->marbete_id;
-            // $marbeteVehiculo->marbete_admin = ($request->costo_marbeta_admin == null) ? null : $request->costo_marbeta_admin;
-
-            // $marbeteVehiculo->save();
             
             DB::commit();
 
-            return response()->json(['code' => 201, 'msg' => 'Marbete registrado']);
+            return response()->json(['code' => 201, 'msg' => 'Marbete actualizado']);
 
         }catch (\PDOException $e){
             DB::rollBack();
             dd($e);
             return response()->json(['code' => 201, 'msg' => substr($e->getMessage(), 0, 150)]);
         }
+    }
+
+    Public function vehiculoSeguro(Request $request) {
+
+        // dd($request->all());
+        $vehiculo_id = \Helper::registroEnCurso();
+        $venta = Venta::where('vehiculo_id', $vehiculo_id)->first();
+        $venta->costo_seguro_id = $request->seguro_id;
+
+        $total = \Helper::getTotalCheckout($venta_id);
+
+        $venta->total = $total;
+
+        return response()->json(['code' => 200, 'msg' => 'Seguro actualizado']);
+
     }
 }

@@ -219,15 +219,17 @@ class ServicioController extends Controller
         $vehiculo_id = \Helper::registroEnCurso();
         $en_curso = 0;
         
+        //Si existe un registro en curso
         if ($vehiculo_id != null) {
             $cliente = \Helper::getCliente($vehiculo_id);
             $vehiculo = \Helper::getVehiculo($vehiculo_id);
             $en_curso = 1;
-            $total_checkout = Venta::where('vehiculo_id', $vehiculo_id)->select('total')->pluck('total')->first();
-            if (is_null($total_checkout)) {
+            $venta = Venta::where('vehiculo_id', $vehiculo_id)->first();
+            $total_checkout = $venta->total;
+            if (is_null($total_checkout) || $total_checkout == 0) {
                 $total_checkout = 0;
             }
-            // dd($vehiculo);
+
             return view('modulo.inspeccion.index', compact(
                 'costosInspeccion',
                 'marbetes',
@@ -243,11 +245,12 @@ class ServicioController extends Controller
                 'vehiculo_id',
                 'en_curso',
                 'cliente',
-                'vehiculo'
+                'vehiculo',
+                'venta'
             ));
         } else {
             $total_checkout = 0;
-
+            
             return view('modulo.inspeccion.index', compact(
                 'costosInspeccion',
                 'marbetes',

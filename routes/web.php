@@ -44,7 +44,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('seccion', [App\Http\Controllers\ServicioController::class, 'getViewInspeccion'])->name('modulo.inspeccion');
     Route::get('consulta/tablilla/{tablilla}', [App\Http\Controllers\ServicioController::class, 'getTablilla'])->name('consulta.tablilla');
     Route::post('clientes/marbete', [App\Http\Controllers\ClienteController::class, 'vehiculoMarbete'])->name('vehiculo.marbete');
-    Route::post('seguro/vehiculo', [App\Http\Controllers\ClienteController::class, 'seguroVehiculo'])->name('seguro.vehiculo');
+    Route::post('seguro/vehiculo', [App\Http\Controllers\ClienteController::class, 'vehiculoSeguro'])->name('vehiculo.seguro');
     Route::get('marcar/bienvenida', [App\Http\Controllers\UserController::class, 'marcarInicio'])->name('marcar.inicio');
     Route::put('editar/usuario/{id}', [App\Http\Controllers\UserController::class, 'editarUsuario']);
     Route::resource('usuario', App\Http\Controllers\UserController::class);

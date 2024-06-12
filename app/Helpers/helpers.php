@@ -95,4 +95,32 @@ class Helper {
         
         return $vehiculo;
     }
+
+    public static function getTotalCheckout($venta_id) {
+        $venta = Venta::where('id', $venta_id)->first();
+
+         //Se va calculando el total
+        if ($venta->costo_inspeccion_id != null) {
+            $costoInspección = SubServicio::where('id', $venta->costo_inspeccion_id)->select('costo')->pluck('costo')->first();
+        } else {
+            $costoInspección = $venta->costo_inspeccion_admin;
+        }
+
+        if ($venta->costo_marbete_id != null) {
+            $costoMarbete = SubServicio::where('id', $venta->costo_marbete_id)->select('costo')->pluck('costo')->first();
+        } else {
+            $costoMarbete = $venta->costo_marbete_admin;
+        }
+
+        if ($venta->costo_seguro_id != null) {
+            $costoSeguro = SubServicio::where('id', $venta->costo_seguro_id)->select('costo')->pluck('costo')->first();
+        } else {
+            $costoSeguro = 0;
+        }
+
+        $total_sin_seguro = $costoInspección + $costoMarbete + $venta->costo_servicio_fijo + $venta->derechos_anuales;
+        $total = $total_sin_seguro - $costoSeguro;
+
+        return $total;
+    }
 }

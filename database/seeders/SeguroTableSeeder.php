@@ -13,8 +13,8 @@ class SeguroTableSeeder extends Seeder
     public function run(): void
     {
         \DB::table('sub_servicios')->insert([
-            ['nombre' => 'Seguro Privado', 'costo' => -99, 'estatus_id' => 1, 'servicio_id' => 3, 'created_at' => now()],
-            ['nombre' => 'Seguro de Carga', 'costo' => -148, 'estatus_id' => 1, 'servicio_id' => 3, 'created_at' => now()]
+            ['nombre' => 'Seguro Privado', 'costo' => 99, 'estatus_id' => 1, 'servicio_id' => 3, 'created_at' => now()],
+            ['nombre' => 'Seguro de Carga', 'costo' => 148, 'estatus_id' => 1, 'servicio_id' => 3, 'created_at' => now()]
         ]);
     }
 }

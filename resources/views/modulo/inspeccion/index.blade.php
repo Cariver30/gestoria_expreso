@@ -36,7 +36,7 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-3" id="ventaMarbetes">
+    <div class="col-lg-3" @if ($vehiculo_id != null) id="ventaMarbetes" @endif>
         <div class="card bg-success text-white-50">
             <div class="card-body text-center">
                 <i class="mdi mdi-car me-3 text-white" style="font-size: 100px;"></i>
@@ -44,7 +44,7 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-3" id="seguro">
+    <div class="col-lg-3" @if ($vehiculo_id != null) id="seguro" @endif>
         <div class="card bg-success text-white-50">
             <div class="card-body text-center">
                 <i class="mdi mdi-car me-3 text-white" style="font-size: 100px;"></i>
@@ -52,7 +52,7 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-3" id="extras">
+    <div class="col-lg-3" @if ($vehiculo_id != null) id="extras" @endif>
         <div class="card bg-success text-white-50">
             <div class="card-body text-center">
                 <i class="mdi mdi-car me-3 text-white" style="font-size: 100px;"></i>
@@ -259,13 +259,11 @@
                             setTimeout(function(){
                                 window.location.reload();
                             }, 1000);
-                        }
-                        else {
+                        } else {
                             Swal.fire({
                                 title: data.msg,
                                 icon: "warning",
                                 showConfirmButton: false,
-                                {{--  timer: 2000  --}}
                             });
                         }
 
@@ -368,7 +366,8 @@
                             _token: "{{ csrf_token() }}",
                             marbete_id: $('#marbete_id').val(),
                             costo_marbete_admin: $('#costo_marbete_admin').val(),
-                            marbete_five_id : $('#marbete_five_id').val()
+                            marbete_five_id : $('#marbete_five_id').val(),
+                            derecho_anual : $('#derecho_anual').val()
                         },
                         success: function (data) {
                             if (data.code == 201) {
@@ -399,8 +398,9 @@
                 }
             });
 
-            // Botón que guarda el marbete seleccionado en el modal del módulo de Inspección
+            // Botón que guarda el seguro seleccionado en el modal del módulo de Inspección
             $('#saveInspeccionSeguro').click(function () {
+                alert($('#seguro_id').val());
                 if($('#seguro_id').val() == 0){
                     Swal.fire({
                         title: '¡Debe seleccionar un seguro!',
@@ -410,13 +410,40 @@
                     });
                     return false;
                 }
-                Swal.fire({
-                    title: 'Seguro guardado',
-                    icon: "success",
-                    showConfirmButton: false,
-                    timer: 2000
-                });
-                $('#modal_inspeccion_seguro').modal('hide');
+                $.ajax({
+                    type : 'POST',
+                    url :"{{ route('vehiculo.seguro') }}",
+                    data : { 
+                        _token: "{{ csrf_token() }}",
+                        seguro_id: $('#seguro_id').val()
+                    },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            $('#modal_inspeccion_seguro').modal('hide');
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            $('#select_marbete').modal('hide');
+                            setTimeout(function(){
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "warning",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                        }
+
+                    },
+                    error: function (data) {
+                        // console.log(data);
+                    }
+                }); 
             });
 
             $('.finalizarProceso').click(function () {
