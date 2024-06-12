@@ -225,7 +225,12 @@ class ServicioController extends Controller
             $vehiculo = \Helper::getVehiculo($vehiculo_id);
             $en_curso = 1;
             $venta = Venta::where('vehiculo_id', $vehiculo_id)->first();
+            // dd($venta);
             $total_checkout = $venta->total;
+
+            //Se valida si ya existen los 3 requisitos para generar el pago (inspección, marbete y seguro)
+            $nextPago = \Helper::validaBtnPago($venta->id);
+
             if (is_null($total_checkout) || $total_checkout == 0) {
                 $total_checkout = 0;
             }
@@ -246,7 +251,8 @@ class ServicioController extends Controller
                 'en_curso',
                 'cliente',
                 'vehiculo',
-                'venta'
+                'venta',
+                'nextPago'
             ));
         } else {
             $total_checkout = 0;

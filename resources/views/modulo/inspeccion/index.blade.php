@@ -64,9 +64,11 @@
 </div>
 @if ($en_curso == 1)
     <div class="row col-sm-12 text-center" style="margin-left: 7%;">
-        <div class="col-sm-3 col-sm-2">
-            <a type="button" href="{{ route('checkout.index')}}" class="btn btn-soft-success col-md-8 waves-effect waves-light btn-lg"> PAGAR </a>
-        </div>
+        @if ($nextPago != 0)
+            <div class="col-sm-3 col-sm-2">
+                <a type="button" href="{{ route('checkout.index')}}" class="btn btn-soft-success col-md-8 waves-effect waves-light btn-lg"> PAGAR </a>
+            </div>
+        @endif
         <div class="col-sm-4 col-sm-2">
             <button type="button" class="btn btn-soft-warning col-md-8 waves-effect waves-light btn-lg pendientePorPagar" data-id="{{ $vehiculo_id }}"> PENDIENTE POR PAGAR </button>
         </div>

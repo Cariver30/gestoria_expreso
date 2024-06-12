@@ -127,4 +127,33 @@ class Helper {
 
         return $total;
     }
+
+    public static function validaBtnPago($venta) {
+
+        $venta = Venta::where('id', $venta)->first();
+        $flag = 0;
+
+        // dd($venta);
+        //Se va calculando el total
+        if ($venta->costo_inspeccion_id != null || $venta->costo_inspeccion_admin != null) {
+            $flag += 1;
+        }
+        
+        if ($venta->costo_marbete_id != null || $venta->costo_marbete_admin != null) {
+            $flag += 1;
+        }
+
+        if ($venta->costo_seguro_id != null) {
+            $flag += 1;
+        }
+
+        if ($flag == 3) {
+            $valida = 1;
+        } else {
+            $valida = 0;
+        }
+        // dd($valida);
+
+        return $valida;
+    }
 }
