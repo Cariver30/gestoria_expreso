@@ -4,7 +4,9 @@
     use DB;
     use App\Models\Sede;
     use App\Models\User;
+    use App\Models\Venta;
     use App\Models\Cliente;
+    use App\Models\SubServicio;
     use App\Models\ClienteVehiculo;
     use Illuminate\Support\Facades\Auth;
 
@@ -96,8 +98,9 @@ class Helper {
         return $vehiculo;
     }
 
-    public static function getTotalCheckout($venta_id) {
-        $venta = Venta::where('id', $venta_id)->first();
+    public static function getTotalCheckout($vehiculo) {
+        // dd($vehiculo);
+        $venta = Venta::where('vehiculo_id', $vehiculo)->first();
 
          //Se va calculando el total
         if ($venta->costo_inspeccion_id != null) {
@@ -112,6 +115,7 @@ class Helper {
             $costoMarbete = $venta->costo_marbete_admin;
         }
 
+        // dd($venta->costo_seguro_id);
         if ($venta->costo_seguro_id != null) {
             $costoSeguro = SubServicio::where('id', $venta->costo_seguro_id)->select('costo')->pluck('costo')->first();
         } else {

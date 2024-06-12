@@ -400,7 +400,6 @@
 
             // Botón que guarda el seguro seleccionado en el modal del módulo de Inspección
             $('#saveInspeccionSeguro').click(function () {
-                alert($('#seguro_id').val());
                 if($('#seguro_id').val() == 0){
                     Swal.fire({
                         title: '¡Debe seleccionar un seguro!',

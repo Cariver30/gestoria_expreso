@@ -304,10 +304,12 @@ class ClienteController extends Controller
         $vehiculo_id = \Helper::registroEnCurso();
         $venta = Venta::where('vehiculo_id', $vehiculo_id)->first();
         $venta->costo_seguro_id = $request->seguro_id;
+        $venta->save();
 
-        $total = \Helper::getTotalCheckout($venta_id);
+        $total = \Helper::getTotalCheckout($vehiculo_id);
 
-        $venta->total = $total;
+        DB::table('ventas')->where('vehiculo_id', $vehiculo_id)->update(['total' => $total]);
+
 
         return response()->json(['code' => 200, 'msg' => 'Seguro actualizado']);
 
