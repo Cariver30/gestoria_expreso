@@ -34,6 +34,7 @@
                                 @if (count($subservicios) == 0)
                                     <td colspan="4" class="text-center">SIN INFORMACIÓN </td>
                                 @else
+                                @dump($subservicios)
                                     @foreach ($subservicios as $subservicio)
                                         <tr>
                                             <td><p class="text-muted mb-0">{{ $subservicio->nombre }}</p></td>

@@ -177,6 +177,8 @@ class ServicioController extends Controller
             return response()->json(['code' => 400, 'msg' => 'El Nombre es requerido']);
         }
 
+        dd($id);
+
         DB::beginTransaction();
 
         try {
@@ -310,12 +312,12 @@ class ServicioController extends Controller
 
     public function editSubServicio($id) {
         $servicio = Servicio::find($id);
-
         $subservicios = SubServicio::leftJoin('estatus', 'sub_servicios.estatus_id', 'estatus.id')
-                                    ->where('servicio_id', $id)
-                                    ->select('sub_servicios.id', 'sub_servicios.nombre', 'sub_servicios.costo', 'estatus.nombre as estatus')
-                                    ->get();
-
+                    ->where('servicio_id', $id)
+                    ->select('sub_servicios.id', 'sub_servicios.nombre', 'sub_servicios.costo', 'estatus.nombre as estatus', 'estatus.servicio_id')
+                    ->get();
+        
+        dd($subservicios);
         $entidades = Sede::where('estatus_id', 1)->select('id', 'nombre')->get();
 
         return view('servicio.subservicio', compact('subservicios', 'id', 'servicio', 'entidades'));

@@ -133,11 +133,10 @@ class Helper {
         $venta = Venta::where('id', $venta)->first();
         $flag = 0;
 
-        // dd($venta);
         //Se va calculando el total
-        if ($venta->costo_inspeccion_id != null || $venta->costo_inspeccion_admin != null) {
-            $flag += 1;
-        }
+        // if ($venta->costo_inspeccion_id != null || $venta->costo_inspeccion_admin != null) {
+        //     $flag += 1;
+        // }
         
         if ($venta->costo_marbete_id != null || $venta->costo_marbete_admin != null) {
             $flag += 1;
@@ -147,7 +146,7 @@ class Helper {
             $flag += 1;
         }
 
-        if ($flag == 3) {
+        if ($flag == 2) {
             $valida = 1;
         } else {
             $valida = 0;
@@ -155,5 +154,50 @@ class Helper {
         // dd($valida);
 
         return $valida;
+    }
+
+    public static function getServicioDesglose($vehiculo_id) {
+        // dd($vehiculo_id);
+        $venta = Venta::where('id', $vehiculo_id)->first();
+        // dd($venta);
+        $array_servicios = [];
+
+         //Se va obteniendo cada servicio registrado
+         if ($venta->costo_inspeccion_id != null) {
+            $costoInspección = SubServicio::where('id', $venta->costo_inspeccion_id)->select('id', 'nombre', 'costo', 'servicio_id')->first();
+            // dd($costoInspección);
+            array_push($array_servicios, $costoInspección);
+        } else {
+            $costoInspección = $venta->costo_inspeccion_admin;
+            $array_inspeccion = [
+                'id' => 1,
+                'nombre' => 'Inspección customizado',
+                'costo' => $costoInspección,
+                'servicio_id' => 1
+            ];
+            array_push($array_servicios, $array_inspeccion);
+        }
+
+        if ($venta->costo_marbete_id != null) {
+            $costoMarbete = SubServicio::where('id', $venta->costo_marbete_id)->select('id', 'nombre', 'costo', 'servicio_id')->first();
+            array_push($array_servicios, $costoMarbete);
+        } else {
+            $costoMarbete = $venta->costo_marbete_admin;
+            $array_marbete = [
+                'id' => 1,
+                'nombre' => 'Marbete customizado',
+                'costo' => $costoMarbete,
+                'servicio_id' => 2
+            ];
+            array_push($array_servicios, $array_inspeccion);
+        }
+
+        // dd($array_servicios);
+        if ($venta->costo_seguro_id != null) {
+            $costoSeguros = SubServicio::where('id', $venta->costo_seguro_id)->select('id', 'nombre', 'costo', 'servicio_id')->first();
+            array_push($array_servicios, $costoSeguros);
+        }
+
+        return $array_servicios;
     }
 }

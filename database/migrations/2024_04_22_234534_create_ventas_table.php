@@ -29,7 +29,7 @@ return new class extends Migration
             $table->unsignedBigInteger('costo_seguro_id')->nullable();
             $table->foreign("costo_seguro_id")->references("id")->on("sub_servicios")->onDelete('cascade');
             $table->integer('costo_servicio_fijo')->nullable();
-            $table->integer('derechos_anuales')->nullable();
+            $table->decimal('derechos_anuales', 10, 3)->nullable();
             $table->integer('total');
             $table->date('fecha_pago')->nullable();
             $table->integer('tipo_pago')->nullable();

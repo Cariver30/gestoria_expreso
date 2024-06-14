@@ -269,23 +269,11 @@ class ClienteController extends Controller
             $venta->costo_marbete_admin = ($request->costo_marbete_admin == null) ? null : $request->costo_marbete_admin;
             $venta->costo_servicio_fijo = $request->marbete_five_id;
             $venta->derechos_anuales = $request->derecho_anual;
-
-            //Se va calculando el total
-            if ($venta->costo_inspeccion_id != null) {
-                $costoInspección = SubServicio::where('id', $request->costo_inspeccion)->select('costo')->pluck('costo')->first();
-            } else {
-                $costoInspección = $venta->costo_inspeccion_admin;
-            }
-
-            if ($request->marbete_id != null) {
-                $costoMarbete = SubServicio::where('id', $request->marbete_id)->select('costo')->pluck('costo')->first();
-            } else {
-                $costoMarbete = $request->costo_marbete_admin;
-            }
-
-            $total = $costoInspección + $costoMarbete + $venta->costo_servicio_fijo + $venta->derechos_anuales;
-            $venta->total = $total;
             $venta->save();
+
+            $total = \Helper::getTotalCheckout($vehiculo_id);
+
+            DB::table('ventas')->where('vehiculo_id', $vehiculo_id)->update(['total' => $total]);
             
             DB::commit();
 

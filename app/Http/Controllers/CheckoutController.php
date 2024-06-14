@@ -14,7 +14,13 @@ class CheckoutController extends Controller
     {
         $entidades = \Helper::entidadUsuario();
 
-        return view('modulo.checkout.index', compact('entidades'));
+        // Validar si hay un registro en curso
+        $vehiculo_id = \Helper::registroEnCurso();
+        $servicios = \Helper::getServicioDesglose($vehiculo_id);
+        $total = \Helper::getTotalCheckout($vehiculo_id);
+        // dd($servicios);
+
+        return view('modulo.checkout.index', compact('entidades', 'servicios', 'total'));
     }
 
     /**

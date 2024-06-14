@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-    <div class="col-sm-12">
+    <div class="col-sm-10" style="align-content: center">
         <div class="card-body">
             <h3 class="card-title mb-4 text-center">Desglosado de Servicios Recepcionados</h3>
 
@@ -22,25 +22,20 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @foreach ($servicios as $servicio)
+                            
                         <tr>
-                            <th scope="row">Servicio 1</th>
-                            <td>$ 450</td>
+                            <th> {{ $servicio->nombre }} </th>
+                            <td> $ @if ($servicio->id == 1 || $servicio->id == 2 && $servicio->servicio_id == 3)-@endif{{$servicio->costo }} </td>
+                        </tr>
+                        @endforeach
+                        <tr>
+                            <td colspan="1"><h6 class="m-0 text-end">Sub Total:</h6></td>
+                            <td> ${{ $total }} </td>
                         </tr>
                         <tr>
-                            <td colspan="1">
-                                <h6 class="m-0 text-end">Sub Total:</h6>
-                            </td>
-                            <td>
-                                $ 675
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="1">
-                                <h6 class="m-0 text-end">Total:</h6>
-                            </td>
-                            <td>
-                                $ 675
-                            </td>
+                            <td colspan="1"><h6 class="m-0 text-end">Total:</h6></td>
+                            <td> ${{ $total }} </td>
                         </tr>
                     </tbody>
                 </table>
