@@ -12,9 +12,9 @@
     <div class="row col-md-12">
         <div class="row col-md-12">
             <input type="hidden" name="servicio_id" id="servicio_id" value="{{ $id }}">
-            <h3 class="col-md-6">{{ $servicio->nombre }}</h3>
+            <h3 class="col-md-6 text-end">{{ $servicio->nombre }}</h3>
             <div class="col-md-6 text-end">
-                <button type="button" data-bs-toggle="modal" data-bs-target="#add_sub_servicio" class="btn btn-sm btn-primary col-md-3"> Agregar </button>
+                <button type="button" data-bs-toggle="modal" data-bs-target="#add_sub_servicio" class="btn btn-lg btn-primary col-md-3"> Agregar </button>
             </div>
         </div>
         <div class="row">
@@ -34,7 +34,6 @@
                                 @if (count($subservicios) == 0)
                                     <td colspan="4" class="text-center">SIN INFORMACIÓN </td>
                                 @else
-                                @dump($subservicios)
                                     @foreach ($subservicios as $subservicio)
                                         <tr>
                                             <td><p class="text-muted mb-0">{{ $subservicio->nombre }}</p></td>
