@@ -183,6 +183,7 @@ class ClienteController extends Controller
                                             'cliente_vehiculos.tablilla',
                                             'cliente_vehiculos.marca',
                                             'cliente_vehiculos.anio',
+                                            'cliente_vehiculos.motivo',
                                             'cliente_vehiculos.estatus_id',
                                             'cliente_vehiculos.created_at',
                                             'estatus.nombre as estatus'

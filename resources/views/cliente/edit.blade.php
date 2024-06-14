@@ -69,7 +69,8 @@
                                         @if($vehiculo->estatus_id == 5)
                                             <span class="badge bg-warning">{{ $vehiculo->estatus }}
                                         @elseif ($vehiculo->estatus_id == 6)
-                                            <span class="badge bg-danger">{{ $vehiculo->estatus }}</span>
+                                            <span class="badge bg-danger">{{ $vehiculo->estatus }}</span><br>
+                                            <small class="text-danger">{{ $vehiculo->motivo }}</small>
                                         @endif
                                     </div>
                                 </div>
