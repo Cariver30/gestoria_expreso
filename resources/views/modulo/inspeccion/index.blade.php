@@ -63,12 +63,12 @@
     </div>
 </div>
 @if ($en_curso == 1)
-    <div class="row col-sm-12 text-center" style="margin-left: 7%;">
-        @if ($nextPago != 0)
-            <div class="col-sm-3 col-sm-2">
-                <a type="button" href="{{ route('checkout.index')}}" class="btn btn-soft-success col-md-8 waves-effect waves-light btn-lg"> CONTINUAR A PAGAR </a>
+    <div class="row col-sm-12 text-center">
+        {{--  @if ($nextPago != 0)  --}}
+            <div class="col-sm-4 col-sm-2">
+                <a type="button" href="{{ route('checkout.index')}}" class="btn btn-soft-info col-md-8 waves-effect waves-light btn-lg"> CONTINUAR A PAGAR </a>
             </div>
-        @endif
+        {{--  @endif  --}}
         <div class="col-sm-4 col-sm-2">
             <button type="button" class="btn btn-soft-warning col-md-8 waves-effect waves-light btn-lg pendientePorPagar" data-id="{{ $vehiculo_id }}"> PENDIENTE </button>
         </div>
@@ -118,6 +118,29 @@
                 const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
                 return regex.test(email);
             }
+
+            //Se obtiene el dato de un cliente ya registrado
+            var seguroSocial = document.getElementById('seguro_social');
+            seguroSocial.addEventListener("change", function (evt) {
+                var numSeguroSocial = $('#seguro_social').val();
+                if(numSeguroSocial.length == 4) {
+                    $.get('consulta/seguro-social/' + numSeguroSocial, function (data) {
+                        if(data.code == 200){
+                            $('#nombre').val(data.data.nombre);
+                            $('#email').val(data.data.email);
+                            $('#telefono').val(data.data.telefono);
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'El seguro social debe de ser de 4 dígitos',
+                        icon: "warning",
+                        showConfirmButton: false
+                    });
+                    $('#seguro_social').val('');
+                    return false;
+                }
+            }, false);
 
             // Se deshabilita cuando ya se tiene una venta en curso.
             var total_checkout = {{$total_checkout}};
@@ -547,6 +570,7 @@
                     }
                 });
             });
+            
         });
     </script>
 @endsection

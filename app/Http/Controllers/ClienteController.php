@@ -62,17 +62,27 @@ class ClienteController extends Controller
         try {
             if (is_null($request->vehiculo_id)) {
             
-                //Se crea el cliente
-                $cliente = new Cliente();
-                $cliente->nombre = \Helper::capitalizeFirst($request->nombre, "1");
-                $cliente->email = $request->email;
-                $cliente->telefono = $request->telefono;
-                $cliente->seguro_social = $request->seguro_social;
-                $cliente->identificacion = $request->identificacion;
-                $cliente->img_licencia = 'path/img_licencia';
-                $cliente->usuario_id = Auth::user()->id;
-                $cliente->estatus_id = 3;
-                $cliente->save();
+                //Se valida si el cliente existe para no crearlo
+                $data_cliente = Cliente::where('seguro_social', $request->seguro_social)->first();
+
+                if ($data_cliente != null) {
+                    $num_cliente = $data_cliente->id;
+                    Cliente::where('id', $data_cliente->id)->update(['estatus_id' => 3]);
+                } else {
+                    //Se crea el cliente
+                    $cliente = new Cliente();
+                    $cliente->nombre = \Helper::capitalizeFirst($request->nombre, "1");
+                    $cliente->email = $request->email;
+                    $cliente->telefono = $request->telefono;
+                    $cliente->seguro_social = $request->seguro_social;
+                    $cliente->identificacion = $request->identificacion;
+                    $cliente->img_licencia = 'path/img_licencia';
+                    $cliente->usuario_id = Auth::user()->id;
+                    $cliente->estatus_id = 3;
+                    $cliente->save();
+
+                    $num_cliente = $cliente->id;
+                }
 
                 //Se crea el vehículo
                 $clienteVehiculo = new ClienteVehiculo();
@@ -82,7 +92,7 @@ class ClienteController extends Controller
                 $clienteVehiculo->marca = \Helper::capitalizeFirst($request->marca, "1");
                 $clienteVehiculo->anio = $request->anio;
                 $clienteVehiculo->mes_vencimiento_id = $request->mes_vencimiento;
-                $clienteVehiculo->cliente_id = $cliente->id;
+                $clienteVehiculo->cliente_id = $num_cliente;
                 $clienteVehiculo->estatus_id = 3;
                 $clienteVehiculo->save();
             
@@ -99,12 +109,13 @@ class ClienteController extends Controller
                 }
                 // dd($costoInspección);
                 $venta->total = ($costoInspección == null) ? 0 : $costoInspección ;
+                $venta->estatus_id = 3;
                 $venta->vehiculo_id = $clienteVehiculo->id;
                 $venta->save();
                 
                 DB::commit();
                 
-                return response()->json(['code' => 201, 'msg' => 'Cliente registrado', 'id' => $cliente->id]);
+                return response()->json(['code' => 201, 'msg' => 'Transacción iniciada', 'id' => $num_cliente]);
             } else {
                 
                 $vehiculo = \Helper::getVehiculo($request->vehiculo_id);
@@ -147,7 +158,7 @@ class ClienteController extends Controller
                 
                 DB::commit();
                 
-                return response()->json(['code' => 200, 'msg' => 'Cliente actualizado', 'id' => $cliente->id]);
+                return response()->json(['code' => 200, 'msg' => 'Información actualizado', 'id' => $num_cliente]);
             }
         }catch (\PDOException $e){
             DB::rollBack();
@@ -171,9 +182,8 @@ class ClienteController extends Controller
      */
     public function edit(Cliente $cliente)
     {
-        // dd($cliente);
+        $entidades = \Helper::entidadUsuario();
         $cliente = Cliente::select('id', 'nombre', 'email', 'telefono', 'seguro_social', 'identificacion')->where('id', $cliente->id)->first();
-
         $vehiculos = ClienteVehiculo::leftJoin('estatus', 'cliente_vehiculos.estatus_id', 'estatus.id')
                                         ->where('cliente_id', $cliente->id)
                                         ->select(
@@ -189,10 +199,18 @@ class ClienteController extends Controller
                                             'estatus.nombre as estatus'
                                         )->get();
 
-        $entidades = \Helper::entidadUsuario();
-        // dd($vehiculos);
+        $ordenes = [];
+        foreach ($vehiculos as $vehiculo) {
+            $venta = Venta::leftJoin('estatus', 'ventas.estatus_id', 'estatus.id')
+                            ->where('vehiculo_id', $vehiculo->id)
+                            ->select('ventas.id', 'ventas.total', 'ventas.fecha_pago', 'ventas.tipo_pago', 'estatus.id as estatus_id', 'estatus.nombre as estatus')
+                            ->first();
+                            // dd($venta);
+            array_push($ordenes, $venta);
+        } 
+        // dd($ordenes);
 
-        return view('cliente.edit', compact('entidades', 'cliente', 'vehiculos'));
+        return view('cliente.edit', compact('entidades', 'cliente', 'vehiculos', 'ordenes'));
     }
 
     /**

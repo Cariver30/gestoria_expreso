@@ -99,4 +99,20 @@ class VentaController extends Controller
             return response()->json(['code' => 404, 'msg' => 'Transacción no encontrada!']);
         }
     }
+
+    public function finalizarVenta(Request $request) {
+
+        $vehiculo = Venta::where('vehiculo_id', $request->vehiculo_id)->where('estatus_id',3 )->first();
+
+        if ($vehiculo) {
+            $clienteVehiculo = ClienteVehiculo::where('id', $request->vehiculo_id)->update(array('estatus_id' => 4));
+            $venta = Venta::where('vehiculo_id', $request->vehiculo_id)->update(array('estatus_id' => 4, 'tipo_pago' => 1));
+            $cliente = \Helper::getCliente($request->vehiculo_id);
+            Cliente::where('id', $cliente->id)->update(array('estatus_id' => 4));
+
+            return response()->json(['code' => 200, 'msg' => 'Transacción finalizada!', 'url' => route('clientes.edit', ['cliente' => $cliente->id ])]);
+        } else {
+            return response()->json(['code' => 404, 'msg' => 'Transacción no encontrada!']);
+        }
+    }
 }

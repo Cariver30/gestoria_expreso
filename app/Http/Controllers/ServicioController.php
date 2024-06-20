@@ -213,6 +213,7 @@ class ServicioController extends Controller
         $notificaciones = SubServicio::where('servicio_id', 5)->get();
         $costo_servicios = SubServicio::where('servicio_id', 6)->get();
         $venta_multas = SubServicio::where('servicio_id', 9)->get();
+        $accas = SubServicio::where('servicio_id', 10)->get();
 
         //Entidades para selector
         $entidades = \Helper::entidadUsuario();
@@ -254,7 +255,8 @@ class ServicioController extends Controller
                 'cliente',
                 'vehiculo',
                 'venta',
-                'nextPago'
+                'nextPago',
+                'accas'
             ));
         } else {
             $total_checkout = 0;
@@ -272,7 +274,8 @@ class ServicioController extends Controller
                 'venta_multas',
                 'entidades',
                 'vehiculo_id',
-                'en_curso'
+                'en_curso',
+                'accas'
             ));
         }
 
@@ -307,6 +310,13 @@ class ServicioController extends Controller
             return response()->json(['code' => 200, 'msg' => '¡La tablilla ingresada ya existe!']);
         } else {
             return response()->json(['code' => 001]);
+        }
+    }
+
+    public function getSeguroSocial($numero) {
+        $data = Cliente::select('nombre', 'email', 'telefono')->where('seguro_social', $numero)->first();
+        if ($data != null) {
+            return response()->json(['code' => 200, 'data' => $data]);
         }
     }
 

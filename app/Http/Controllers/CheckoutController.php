@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Venta;
 use App\Models\Checkout;
 use Illuminate\Http\Request;
 
@@ -16,11 +17,12 @@ class CheckoutController extends Controller
 
         // Validar si hay un registro en curso
         $vehiculo_id = \Helper::registroEnCurso();
+        $venta = Venta::where('id', $vehiculo_id)->first();
         $servicios = \Helper::getServicioDesglose($vehiculo_id);
         $total = \Helper::getTotalCheckout($vehiculo_id);
         // dd($servicios);
 
-        return view('modulo.checkout.index', compact('entidades', 'servicios', 'total'));
+        return view('modulo.checkout.index', compact('entidades', 'servicios', 'total', 'venta', 'vehiculo_id'));
     }
 
     /**

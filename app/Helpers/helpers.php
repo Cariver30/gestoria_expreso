@@ -146,7 +146,7 @@ class Helper {
             $flag += 1;
         }
 
-        if ($flag == 2) {
+        if ($flag == 1) {
             $valida = 1;
         } else {
             $valida = 0;
@@ -162,10 +162,10 @@ class Helper {
         // dd($venta);
         $array_servicios = [];
 
-         //Se va obteniendo cada servicio registrado
-         if ($venta->costo_inspeccion_id != null) {
+        //Se va obteniendo cada servicio registrado
+        // Inspección
+        if ($venta->costo_inspeccion_id != null) {
             $costoInspección = SubServicio::where('id', $venta->costo_inspeccion_id)->select('id', 'nombre', 'costo', 'servicio_id')->first();
-            // dd($costoInspección);
             array_push($array_servicios, $costoInspección);
         } else {
             $costoInspección = $venta->costo_inspeccion_admin;
@@ -178,6 +178,7 @@ class Helper {
             array_push($array_servicios, $array_inspeccion);
         }
 
+        // Marbete
         if ($venta->costo_marbete_id != null) {
             $costoMarbete = SubServicio::where('id', $venta->costo_marbete_id)->select('id', 'nombre', 'costo', 'servicio_id')->first();
             array_push($array_servicios, $costoMarbete);
@@ -189,12 +190,12 @@ class Helper {
                 'costo' => $costoMarbete,
                 'servicio_id' => 2
             ];
-            array_push($array_servicios, $array_inspeccion);
+            array_push($array_servicios, $array_marbete);
         }
 
-        // dd($array_servicios);
+        // Seguros
         if ($venta->costo_seguro_id != null) {
-            $costoSeguros = SubServicio::where('id', $venta->costo_seguro_id)->select('id', 'nombre', 'costo', 'servicio_id')->first();
+            $costoSeguros = SubServicio::where('id', $venta->costo_seguro_id)->select('id', 'nombre', 'costo', 'servicio_id')->first()->toArray();
             array_push($array_servicios, $costoSeguros);
         }
 

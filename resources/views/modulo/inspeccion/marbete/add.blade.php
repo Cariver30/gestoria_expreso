@@ -28,12 +28,12 @@
                         <div class="card bg-success text-white">
                             <div class="card-header bg-transparent border-success">
                                 <label for="">Derechos Anuales</label>
-                                <input type="number" class="form-control form-control-sm" id="derecho_anual">
+                                <input type="text" class="form-control form-control-sm" id="derecho_anual">
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <button type="button" class="btn btn-info col-md-12 waves-effect waves-light btnInspeccionMarbeteACCA"> ACCA </button>
+                        <button type="button" class="btn btn-info col-md-12 waves-effect waves-light btnInspeccionMarbeteACCA" @if (count($accas) == 0) disabled @endif > ACCA </button>
                     </div>
                     <div class="col-md-3 mb-4 costoServicioObligatorio" style="cursor: pointer;">
                         <div class="card border border-success cardMain">

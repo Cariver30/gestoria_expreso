@@ -66,7 +66,11 @@
                                         <span class="text-primary"> {{ $vehiculo->compania }} </span><br>
                                         <span class="text-primary"> {{ $vehiculo->marca }} </span><br>
                                         <span class="text-primary"> {{ Carbon\Carbon::parse($vehiculo->created_at)->format('d-m-Y H:i') }} </span><br>
-                                        @if($vehiculo->estatus_id == 5)
+                                        @if($vehiculo->estatus_id == 3)
+                                            <span class="badge bg-warning">{{ $vehiculo->estatus }}
+                                        @elseif ($vehiculo->estatus_id == 4)
+                                            <span class="badge bg-success">{{ $vehiculo->estatus }}
+                                        @elseif ($vehiculo->estatus_id == 5)
                                             <span class="badge bg-warning">{{ $vehiculo->estatus }}
                                         @elseif ($vehiculo->estatus_id == 6)
                                             <span class="badge bg-danger">{{ $vehiculo->estatus }}</span><br>
@@ -90,23 +94,45 @@
                     <div class="table-responsive">
                         <table class="table align-middle table-nowrap dt-responsive nowrap w-100 table-check"
                             id="order-list">
-                            <thead class="table-light">
+                            <thead class="table-light" align="center">
                                 <tr>
-                                    <th style="width: 20px;" class="align-middle">
+                                    {{--  <th style="width: 20px;" class="align-middle">
                                         <div class="form-check font-size-16">
                                             <input class="form-check-input" type="checkbox" id="checkAll">
                                             <label class="form-check-label" for="checkAll"></label>
                                         </div>
-                                    </th>
-                                    <th class="align-middle"> Núm </th>
+                                    </th>  --}}
+                                    {{--  <th class="align-middle"> Núm </th>  --}}
                                     <th class="align-middle"> Fecha </th>
                                     <th class="align-middle"> Estatus </th>
                                     <th class="align-middle"> Metodo de Pago </th>
                                     <th class="align-middle"> Total </th>
-                                    <th class="align-middle"> Ver Detalle </th>
                                     <th class="align-middle"> Acción </th>
                                 </tr>
                             </thead>
+                            <tbody align="center">
+                                @foreach ($ordenes as $orden)
+                                    <tr>
+                                        <td> {{ Carbon\Carbon::parse($orden->updated_at)->format('d-m-Y H:i') }} </td>
+                                        <td> 
+                                            @if ($orden->estatus_id == 3)
+                                                <span class="badge bg-warning">{{ $orden->estatus }}</span>
+                                            @elseif($orden->estatus_id == 4)
+                                                <span class="badge bg-success">{{ $orden->estatus }}</span>
+                                            @endif
+                                        </td>
+                                        <td> @if ($orden->tipo_pago == 1) Efectivo @endif </td>
+                                        <td> ${{ $orden->total}} </td>
+                                        <td>
+                                            @if ($orden->estatus_id ==4)
+                                                <button type="button" class="btn btn-soft-secondary col-md-2 waves-effect waves-light"><i class="mdi mdi-eye font-size-19 text-primary align-middle me-2"></i></button>
+                                                <button type="button" class="btn btn-soft-secondary col-md-2 waves-effect waves-light"><i class="bx bx-printer font-size-20 text-secondary align-middle me-2"></i></button>
+                                            @endif
+                                        </td>
+                                        
+                                    </tr>
+                                @endforeach
+                            </tbody>
                         </table>
                     </div>
                     <!-- end table responsive -->

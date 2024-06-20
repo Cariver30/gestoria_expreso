@@ -26,6 +26,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('cancelar/venta/vehiculo', [App\Http\Controllers\VentaController::class, 'cancelarVenta'])->name('cancelar.venta');
     // Pendiente por pagar venta de servicio a vehículo
     Route::post('pendiente/venta/vehiculo', [App\Http\Controllers\VentaController::class, 'pendienteVenta'])->name('pendiente.venta');
+    // Finalizar venta de servicio a vehículo
+    Route::post('finalizar/venta/vehiculo', [App\Http\Controllers\VentaController::class, 'finalizarVenta'])->name('finalizar.venta');
 
     Route::get('get/data/gestoria/subservicio/{id}', [App\Http\Controllers\GestoriaSubServicioController::class, 'getDataSubservicio']);
     Route::get('gestoria/servicios', [App\Http\Controllers\GestoriaController::class, 'getGestoriaServicios'])->name('gestoria.servicios');
@@ -43,6 +45,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('update/subservicio/{id}', [App\Http\Controllers\ServicioController::class, 'updateSubServicio']);
     Route::get('seccion', [App\Http\Controllers\ServicioController::class, 'getViewInspeccion'])->name('modulo.inspeccion');
     Route::get('consulta/tablilla/{tablilla}', [App\Http\Controllers\ServicioController::class, 'getTablilla'])->name('consulta.tablilla');
+    Route::get('consulta/seguro-social/{segurosocial}', [App\Http\Controllers\ServicioController::class, 'getSeguroSocial'])->name('consulta.seguro.social');
     Route::post('clientes/marbete', [App\Http\Controllers\ClienteController::class, 'vehiculoMarbete'])->name('vehiculo.marbete');
     Route::post('seguro/vehiculo', [App\Http\Controllers\ClienteController::class, 'vehiculoSeguro'])->name('vehiculo.seguro');
     Route::get('marcar/bienvenida', [App\Http\Controllers\UserController::class, 'marcarInicio'])->name('marcar.inicio');
