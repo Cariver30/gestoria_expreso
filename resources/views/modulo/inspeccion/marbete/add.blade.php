@@ -19,7 +19,7 @@
                         <div class="card bg-success text-white">
                             <div class="card-header bg-transparent border-success">
                                 <label for="costo_marbete_admin"> Customizado </label>
-                                <input type="number" class="form-control form-control-sm" name="costo_marbete_admin" id="costo_marbete_admin">
+                                <input type="string" class="form-control form-control-sm" name="costo_marbete_admin" id="costo_marbete_admin">
                             </div>
                         </div>
                     </div>

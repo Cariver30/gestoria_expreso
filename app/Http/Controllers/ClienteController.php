@@ -22,16 +22,9 @@ class ClienteController extends Controller
      */
     public function index()
     {
-        if (Auth::user()->rol_id == 1) {
-            $clientes = Cliente::leftJoin('estatus', 'clientes.estatus_id', 'estatus.id')
-                                ->select('clientes.id', 'clientes.nombre', 'clientes.estatus_id', 'estatus.nombre as estatus')
-                                ->get();   
-        } else {
-            $clientes = Cliente::leftJoin('estatus', 'clientes.estatus_id', 'estatus.id')
-                                ->where('usuario_id', Auth::user()->id)
-                                ->select('clientes.id', 'clientes.nombre', 'clientes.estatus_id', 'estatus.nombre as estatus')
-                                ->get();
-        }
+        $clientes = Cliente::leftJoin('estatus', 'clientes.estatus_id', 'estatus.id')
+                            ->select('clientes.id', 'clientes.nombre', 'clientes.estatus_id', 'estatus.nombre as estatus')
+                            ->get();
 
         $user = \Helper::getInfoUsuario();
         $entidades = \Helper::entidadUsuario();
@@ -158,7 +151,7 @@ class ClienteController extends Controller
                 
                 DB::commit();
                 
-                return response()->json(['code' => 200, 'msg' => 'Información actualizado', 'id' => $num_cliente]);
+                return response()->json(['code' => 200, 'msg' => 'Información actualizada', 'id' => $cliente->id]);
             }
         }catch (\PDOException $e){
             DB::rollBack();

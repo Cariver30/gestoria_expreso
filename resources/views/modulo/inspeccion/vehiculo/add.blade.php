@@ -113,7 +113,7 @@
                     @if (Auth::user()->rol_id == 1 || Auth::user()->rol_id == 2)
                         <div class="col-md-2">
                             <label for="costo_admin" class="col-form-label"> Customizado </label>
-                            <input type="number" class="form-control form-control-sm" name="costo_admin" id="costo_admin" >
+                            <input type="string" class="form-control form-control-sm" name="costo_admin" id="costo_admin" @if (isset($venta)) value="{{ $venta->costo_inspeccion_admin }}" @endif>
                         </div>
                     @endif
                 </div>
