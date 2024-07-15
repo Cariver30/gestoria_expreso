@@ -177,8 +177,6 @@ class ServicioController extends Controller
             return response()->json(['code' => 400, 'msg' => 'El Nombre es requerido']);
         }
 
-        dd($id);
-
         DB::beginTransaction();
 
         try {
@@ -324,11 +322,30 @@ class ServicioController extends Controller
         $servicio = Servicio::find($id);
         $subservicios = SubServicio::leftJoin('estatus', 'sub_servicios.estatus_id', 'estatus.id')
                     ->where('servicio_id', $id)
-                    ->select('sub_servicios.id', 'sub_servicios.nombre', 'sub_servicios.costo', 'estatus.nombre as estatus', 'sub_servicios.servicio_id')
+                    ->select('sub_servicios.id', 'sub_servicios.nombre', 'sub_servicios.costo', 'estatus.nombre as estatus','estatus.id as estatus_id', 'sub_servicios.servicio_id')
                     ->get();
         
         $entidades = Sede::where('estatus_id', 1)->select('id', 'nombre')->get();
 
         return view('servicio.subservicio', compact('subservicios', 'id', 'servicio', 'entidades'));
     }
+
+    public function destroySubservicio($id)
+    {
+        $subServicio = SubServicio::find($id);
+
+        if ($subServicio != null) {
+            if ($subServicio->estatus_id == 1) {
+                $subServicio->estatus_id = 2;
+                $mensaje = 'Sub servicio deshabilitado';
+            } else {
+                $subServicio->estatus_id = 1;
+                $mensaje = 'Sub servicio habilitado';
+            }
+            $subServicio->save();
+            return response()->json(['code' => 200, 'msg' => $mensaje]);
+        }
+        return response()->json(['code' => 400, 'msg' => 'Sub servicio no encontrado']);
+    }
+
 }

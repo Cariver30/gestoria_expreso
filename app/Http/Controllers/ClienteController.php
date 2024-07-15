@@ -198,7 +198,6 @@ class ClienteController extends Controller
                             ->where('vehiculo_id', $vehiculo->id)
                             ->select('ventas.id', 'ventas.total', 'ventas.fecha_pago', 'ventas.tipo_pago', 'estatus.id as estatus_id', 'estatus.nombre as estatus')
                             ->first();
-                            // dd($venta);
             array_push($ordenes, $venta);
         } 
         // dd($ordenes);

@@ -17,30 +17,34 @@
             <h4 class="card-title"> Datos del cliente </h4>
             <div class="card-body">
                 <div class="row col-md-12">
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-4 mb-3">
                         <label for="nombre" class="col-form-label"> Nombre </label>
                         <input type="text" class="form-control form-control-sm" name="nombre" value="{{ $cliente->nombre}}" required>
                     </div>
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-4 mb-3">
                         <label for="email" class="col-form-label"> Email </label>
                         <input type="email" class="form-control form-control-sm" name="email" value="{{ $cliente->email}}" required>
                     </div>
-                    <div class="col-md-2 mb-3">
+                    <div class="col-md-4 mb-3">
                         <label for="telefono" class="col-form-label"> Teléfono </label>
                         <input type="text" class="form-control form-control-sm" name="telefono" value="{{ $cliente->telefono}}" required>
                     </div>
-                    <div class="col-md-2 mb-3">
+                    <div class="col-md-4 mb-3">
                         <label for="seguro_social" class="col-form-label"> Seguro Social </label>
                         <input type="text" class="form-control form-control-sm" name="seguro_social" value="{{ $cliente->seguro_social}}" required>
                     </div>
-                    <div class="col-md-2 mb-3">
+                    <div class="col-md-4 mb-3">
                         <label for="identificacion" class="col-form-label"> Licencia/Identificación </label>
                         <input type="text" class="form-control form-control-sm" name="identificacion" value="{{ $cliente->identificacion}}" required>
                     </div>
-                    <div class="col-md-3 mb-3">
-                        <label for="identificacion" class="col-form-label"> </label>
-                        <button type="submit" class="btn btn-primary" >Guardar</button>
+                    <div class="col-md-4 mb-3">
+                        <label for="identificacion" class="col-form-label"> Licencia </label><br>
+                        <button type="button" class="btn btn-secondary btn-sm col-md-1 "><i class="bx bx-id-card font-size-20 text-light align-middle me-2"></i></button>
                     </div>
+                </div>
+                <div class="col-md-12 mb-3">
+                    <label for="identificacion" class="col-form-label"> </label>
+                    <button type="submit" class="btn btn-primary" >Guardar</button>
                 </div>
             </div>
         </div>
@@ -116,9 +120,11 @@
                                         <td> {{ Carbon\Carbon::parse($orden->updated_at)->format('d-m-Y H:i') }} </td>
                                         <td> 
                                             @if ($orden->estatus_id == 3)
-                                                <span class="badge bg-warning">{{ $orden->estatus }}</span>
+                                                <span class="badge bg-info">{{ $orden->estatus }}</span>
                                             @elseif($orden->estatus_id == 4)
                                                 <span class="badge bg-success">{{ $orden->estatus }}</span>
+                                            @elseif($orden->estatus_id == 5)
+                                                <span class="badge bg-warning">{{ $orden->estatus }}</span>
                                             @endif
                                         </td>
                                         <td> @if ($orden->tipo_pago == 1) Efectivo @endif </td>

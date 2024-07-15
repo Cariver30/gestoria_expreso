@@ -41,7 +41,7 @@
                                             <td>@if ($subservicio->estatus == 'Activo') <span class="badge bg-success"> @else <span class="badge bg-danger"> @endif {{ $subservicio->estatus }}</span></td>
                                             <td>
                                                 <button class="btn btn-soft-success editSubservicio" data-id="{{ $subservicio->id }}" data-nombre="{{ $subservicio->nombre }}" data-costo="{{ $subservicio->costo }}"><i class="mdi mdi-pencil font-size-8 me-1"></i> Editar </a></li>
-                                                <button class="btn btn-soft-danger" data-id="{{ $subservicio->id }}"><i class="mdi mdi-account-convert font-size-8 text-warning me-1"></i> Deshabilitar </a></li>
+                                                <button class="btn btn-soft-danger inActivarServicio" data-id="{{ $subservicio->id }}" data-estatus="{{ $subservicio->estatus_id }}"><i class="mdi mdi-account-convert font-size-8 text-warning me-1"></i> @if ($subservicio->estatus_id == 1) Desactivar @else Activar @endif </a></li>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -192,8 +192,8 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            type: 'delete',
-                            url: 'servicio/'+id,
+                            type: 'post',
+                            url: '/delete/subservicio/'+id,
                             data : { 
                                 _token: "{{ csrf_token() }}" 
                             },

@@ -43,6 +43,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('sservicio/gestoria/{id}', [App\Http\Controllers\GestoriaController::class, 'upSubServicioUltimo']);
     
     Route::put('update/subservicio/{id}', [App\Http\Controllers\ServicioController::class, 'updateSubServicio']);
+    Route::post('delete/subservicio/{id}', [App\Http\Controllers\ServicioController::class, 'destroySubservicio']);
     Route::get('seccion', [App\Http\Controllers\ServicioController::class, 'getViewInspeccion'])->name('modulo.inspeccion');
     Route::get('consulta/tablilla/{tablilla}', [App\Http\Controllers\ServicioController::class, 'getTablilla'])->name('consulta.tablilla');
     Route::get('consulta/seguro-social/{segurosocial}', [App\Http\Controllers\ServicioController::class, 'getSeguroSocial'])->name('consulta.seguro.social');

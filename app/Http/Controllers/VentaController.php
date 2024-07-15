@@ -94,6 +94,10 @@ class VentaController extends Controller
             $cliente->estatus_id = 5;
             $cliente->save();
 
+            $venta = Venta::where('vehiculo_id', $request->vehiculo_id)->first();
+            $venta->estatus_id = 5;
+            $venta->save();
+
             return response()->json(['code' => 200, 'msg' => 'Transacción pendiente de pago!']);
         } else {
             return response()->json(['code' => 404, 'msg' => 'Transacción no encontrada!']);
