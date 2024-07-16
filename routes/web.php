@@ -41,6 +41,9 @@ Route::middleware(['auth'])->group(function () {
     Route::put('update/gestoria/subservicio/{id}', [App\Http\Controllers\GestoriaController::class, 'updateSubServicio']);
     Route::post('servicio/subservicio/gestoria', [App\Http\Controllers\GestoriaController::class, 'addSubServicioUltimo'])->name('ss.store.gestoria');
     Route::put('sservicio/gestoria/{id}', [App\Http\Controllers\GestoriaController::class, 'upSubServicioUltimo']);
+
+    //Checkout
+    Route::get('pay/checkout/{id}', [App\Http\Controllers\CheckoutController::class, 'payCheckoutVehicle'])->name('pay.checkout.vehicle');
     
     Route::put('update/subservicio/{id}', [App\Http\Controllers\ServicioController::class, 'updateSubServicio']);
     Route::post('delete/subservicio/{id}', [App\Http\Controllers\ServicioController::class, 'destroySubservicio']);

@@ -72,4 +72,15 @@ class CheckoutController extends Controller
     {
         //
     }
+
+    public function payCheckoutVehicle ($id) {
+        $entidades = \Helper::entidadUsuario();
+
+        
+        $venta = Venta::where('id', $id)->first();
+        $servicios = \Helper::getServicioDesglose($id);
+        $total = \Helper::getTotalCheckout($id);
+
+        return view('modulo.checkout.vehiculo', compact('entidades', 'servicios', 'total', 'venta', 'id'));
+    }
 }

@@ -71,11 +71,14 @@
                                         <span class="text-primary"> {{ $vehiculo->marca }} </span><br>
                                         <span class="text-primary"> {{ Carbon\Carbon::parse($vehiculo->created_at)->format('d-m-Y H:i') }} </span><br>
                                         @if($vehiculo->estatus_id == 3)
-                                            <span class="badge bg-warning">{{ $vehiculo->estatus }}
+                                            <span class="badge bg-info">{{ $vehiculo->estatus }} </span>
                                         @elseif ($vehiculo->estatus_id == 4)
-                                            <span class="badge bg-success">{{ $vehiculo->estatus }}
+                                            <span class="badge bg-success">{{ $vehiculo->estatus }} </span>
                                         @elseif ($vehiculo->estatus_id == 5)
-                                            <span class="badge bg-warning">{{ $vehiculo->estatus }}
+                                            <span class="badge bg-warning">{{ $vehiculo->estatus }} </span><br>
+                                            <a href="{{ route('pay.checkout.vehicle', ['id' => $vehiculo->id]) }}"><span class="badge bg-info"> Pagar </span></a>
+                                            {{--  <button type="button" class="btn btn-soft-secondary col-sm-1 waves-effect waves-light"><i class="bx bx-dollar-circle text-primary"></i>  --}}
+                                            </button>
                                         @elseif ($vehiculo->estatus_id == 6)
                                             <span class="badge bg-danger">{{ $vehiculo->estatus }}</span><br>
                                             <small class="text-danger">{{ $vehiculo->motivo }}</small>

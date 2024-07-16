@@ -33,7 +33,7 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <button type="button" class="btn btn-info col-md-12 waves-effect waves-light btnInspeccionMarbeteACCA" @if (count($accas) == 0) disabled @endif > ACCA </button>
+                        <button type="button" class="btn btn-info col-md-12 waves-effect waves-light btnInspeccionMarbeteACAA" @if (count($accas) == 0) disabled @endif > ACCA </button>
                     </div>
                     <div class="col-md-3 mb-4 costoServicioObligatorio" style="cursor: pointer;">
                         <div class="card border border-success cardMain">
