@@ -78,7 +78,7 @@
                     <div class="col-md-3 mb-3">
                         <label for="mes_vencimiento" class="col-form-label"> Mes de Vencimiento </label>
                         <select class="form-select form-select-sm" style="cursor: pointer;" id="mes_vencimiento" name="mes_vencimiento">
-                            <option value="" selected>Selecciona un mes</option>
+                            <option value="" disabled selected hidden >Selecciona un mes</option>
                             @foreach ($meses as $mes)
                                 <option value="{{$mes->id}}" @if (isset($vehiculo) && $mes->id == $vehiculo->mes_vencimiento_id) selected @endif>{{ $mes->nombre }}</option>
                             @endforeach

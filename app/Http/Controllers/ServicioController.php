@@ -255,7 +255,8 @@ class ServicioController extends Controller
                 'vehiculo',
                 'venta',
                 'nextPago',
-                'accas'
+                'accas',
+                'listClientes'
             ));
         } else {
             $total_checkout = 0;

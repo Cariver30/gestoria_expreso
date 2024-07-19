@@ -77,17 +77,25 @@ class ClienteController extends Controller
                     $num_cliente = $cliente->id;
                 }
 
-                //Se crea el vehículo
-                $clienteVehiculo = new ClienteVehiculo();
-                $clienteVehiculo->compania = \Helper::capitalizeFirst($request->compania, "1");
-                $clienteVehiculo->vehiculo = \Helper::capitalizeFirst($request->vehiculo, "1");
-                $clienteVehiculo->tablilla = $request->tablilla;
-                $clienteVehiculo->marca = \Helper::capitalizeFirst($request->marca, "1");
-                $clienteVehiculo->anio = $request->anio;
-                $clienteVehiculo->mes_vencimiento_id = $request->mes_vencimiento;
-                $clienteVehiculo->cliente_id = $num_cliente;
-                $clienteVehiculo->estatus_id = 3;
-                $clienteVehiculo->save();
+                if ($request->tipo_registro == 0) {
+
+                    //Se crea el vehículo
+                    $clienteVehiculo = new ClienteVehiculo();
+                    $clienteVehiculo->compania = \Helper::capitalizeFirst($request->compania, "1");
+                    $clienteVehiculo->vehiculo = \Helper::capitalizeFirst($request->vehiculo, "1");
+                    $clienteVehiculo->tablilla = $request->tablilla;
+                    $clienteVehiculo->marca = \Helper::capitalizeFirst($request->marca, "1");
+                    $clienteVehiculo->anio = $request->anio;
+                    $clienteVehiculo->mes_vencimiento_id = $request->mes_vencimiento;
+                    $clienteVehiculo->cliente_id = $num_cliente;
+                    $clienteVehiculo->estatus_id = 3;
+                    $clienteVehiculo->save();
+                }
+
+                if ($request->tipo_registro == 1) {
+                    $vehiculoId = ClienteVehiculo::where('tablilla', $request->tablilla)->select('id')->first();
+                    ClienteVehiculo::where('tablilla', $request->tablilla)->update(['estatus_id' => 3]);
+                }
             
                 //Se crea la venta
                 $venta = new Venta();
@@ -103,7 +111,7 @@ class ClienteController extends Controller
                 // dd($costoInspección);
                 $venta->total = ($costoInspección == null) ? 0 : $costoInspección ;
                 $venta->estatus_id = 3;
-                $venta->vehiculo_id = $clienteVehiculo->id;
+                $venta->vehiculo_id = ($request->tipo_registro == 0) ? $clienteVehiculo->id : $vehiculoId->id ;
                 $venta->save();
                 
                 DB::commit();
@@ -268,7 +276,6 @@ class ClienteController extends Controller
     }
 
     public function vehiculoMarbete(Request $request) {
-        // dd($request->all());
 
         DB::beginTransaction();
 
@@ -292,7 +299,6 @@ class ClienteController extends Controller
 
         }catch (\PDOException $e){
             DB::rollBack();
-            dd($e);
             return response()->json(['code' => 201, 'msg' => substr($e->getMessage(), 0, 150)]);
         }
     }

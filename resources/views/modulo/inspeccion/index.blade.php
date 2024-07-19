@@ -223,7 +223,15 @@
 
              //Crear Cliente-vehículo
             $('#saveVehiculo').click(function () {
-                if($('#nombre').val() == '' || $('#email').val() == '' || $('#telefono').val() == '' || $('#compania').val() == '' || $('#vehiculo').val() == '' || $('#tablilla').val() == '' || $('#marca').val() == '' || $('#anio').val() == '' || $('#seguro_social').val() == '' || $('#mes_vencimiento').val() == '' || $('#identificacion').val() == ''){
+                if($('#tipo_registro').val() == 0 && $('#tablilla').val() == '') {
+                    Swal.fire({
+                        title: 'La tablilla es requerida',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                } else if($('#nombre').val() == '' || $('#email').val() == '' || $('#telefono').val() == '' || $('#compania').val() == '' || $('#vehiculo').val() == '' || $('#marca').val() == '' || $('#anio').val() == '' || $('#seguro_social').val() == '' || $('#mes_vencimiento').val() == '' || $('#identificacion').val() == ''){
                     Swal.fire({
                         title: 'Hay campos vacíos',
                         icon: "warning",
@@ -231,6 +239,12 @@
                         timer: 2000
                     });
                     return false;
+                }
+                var reg_tablilla = 0;
+                if($('#tipo_registro').val() == 0){
+                    reg_tablilla = $('#tablilla').val();
+                } else {
+                    reg_tablilla = $('.select_tablilla_vehiculo').val();
                 }
                 if (!validarEmail($('#email').val())) {
                     Swal.fire({
@@ -251,7 +265,7 @@
                         telefono: $('#telefono').val(),
                         compania: $('#compania').val(),
                         vehiculo: $('#vehiculo').val(),
-                        tablilla: $('#tablilla').val(),
+                        tablilla: reg_tablilla,
                         marca: $('#marca').val(),
                         anio: $('#anio').val(),
                         seguro_social: $('#seguro_social').val(),
@@ -259,7 +273,8 @@
                         costo_inspeccion: $('#costo_inspeccion_id').val(),
                         identificacion: $('#identificacion').val(),
                         costo_inspeccion_admin: $('#costo_admin').val(),
-                        vehiculo_id: $('#vehiculo_id').val()
+                        vehiculo_id: $('#vehiculo_id').val(),
+                        tipo_registro: $('#tipo_registro').val()
                     },
                     success: function (data) {
                         if (data.code == 201) {
@@ -651,6 +666,7 @@
                         $('#marca').val(data.vehiculo[0].marca);
                         $('#vehiculo').val(data.vehiculo[0].vehiculo);
                         $('#compania').val(data.vehiculo[0].compania);
+                        $('#mes_vencimiento option[value="'+data.vehiculo[0].mes_vencimiento_id+'"]').attr("selected", "selected");
                     }
                 },
                 error: function (data) {
