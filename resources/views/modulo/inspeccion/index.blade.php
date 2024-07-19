@@ -572,5 +572,92 @@
             });
             
         });
+
+        // Selector de tipo de registro
+        $("#tipo_registro").on("change", function() {
+            var tipo_registro = $(this).val();
+            if(tipo_registro == 1){
+                document.getElementById("cliente_select_id").style.display = "initial";
+                document.getElementById("cliente_select_tablilla").style.display = "initial";
+                $(".cliente_select_tablilla").attr("disabled", "disabled");
+                $("#tablilla").attr("disabled", "disabled");
+            }else{
+                document.getElementById("cliente_select_id").style.display = "none";
+                document.getElementById("cliente_select_tablilla").style.display = "none";
+                $("#tablilla").attr("disabled", false);
+           }
+        });
+
+        //Obtener las tablillas de un cliente para agregar servicio
+        $(".buscarTablillaCliente").on("change", function() {
+            var idCliente = $("#getClientes").val();
+            $.ajax({
+                type : 'GET',
+                url :"{{ route('cliente.tablillas') }}",
+                data : { 
+                    _token: "{{ csrf_token() }}",
+                    idCliente: idCliente,
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+                        $(".select_tablilla_vehiculo").attr("disabled", false);
+                        console.log(data.cliente);
+                        var fila = '';
+                        for (let i = 0; i < data.vehiculos.length; i++) {
+                            {{--  console.log(data.vehiculos[i].tablilla);  --}}
+                            fila += '<option value="'+data.vehiculos[i].tablilla+'">'+data.vehiculos[i].vehiculo+' - '+data.vehiculos[i].tablilla+'</option>';
+                        }
+                        $(".select_tablilla_vehiculo").append(fila)
+                        $('#seguro_social').val(data.cliente.seguro_social);
+                        $('#nombre').val(data.cliente.nombre);
+                        $('#email').val(data.cliente.email);
+                        $('#telefono').val(data.cliente.telefono);
+                        $('#identificacion').val(data.cliente.identificacion);
+                    } else {
+                        Swal.fire({
+                            title: data.msg,
+                            icon: "warning",
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                        $('#seguro_social').val('');
+                        $('#nombre').val('');
+                        $('#email').val('');
+                        $('#telefono').val('');
+                        $(".select_tablilla_vehiculo").val('');
+                        $(".select_tablilla_vehiculo").attr("disabled", true);
+                    }
+                },
+                error: function (data) {
+                    // console.log(data);
+                }
+            });
+        });
+
+        //get data vehículo por tablilla
+        $(".select_tablilla_vehiculo").on("change", function() {
+            var getDataTablilla = $(this).val();
+            $.ajax({
+                type : 'GET',
+                url :"{{ route('cliente.tablilla.vehiculo') }}",
+                data : { 
+                    _token: "{{ csrf_token() }}",
+                    getDataTablilla: getDataTablilla,
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+                        console.log(data.vehiculo[0]);
+                        $('#anio').val(data.vehiculo[0].anio);
+                        $('#marca').val(data.vehiculo[0].marca);
+                        $('#vehiculo').val(data.vehiculo[0].vehiculo);
+                        $('#compania').val(data.vehiculo[0].compania);
+                    }
+                },
+                error: function (data) {
+                    // console.log(data);
+                }
+            });
+        });
+
     </script>
 @endsection

@@ -313,4 +313,28 @@ class ClienteController extends Controller
         return response()->json(['code' => 200, 'msg' => 'Seguro actualizado']);
 
     }
+
+    public function getTablillaCliente(Request $request) {
+
+        $cliente = Cliente::where('id', $request->idCliente)->select('id', 'nombre', 'seguro_social', 'email', 'telefono', 'identificacion')->first();
+        if ($cliente != null) {
+            $vehiculos = ClienteVehiculo::where('cliente_id', $cliente->id)->select('vehiculo', 'tablilla')->get();
+
+            return response()->json(['code' => 200, 'vehiculos' => $vehiculos, 'cliente' => $cliente]);
+        } else {
+            return response()->json(['code' => 400, 'msg' => 'Cliente no existente']);
+        }
+    }
+    public function getTablillaVehiculoCliente(Request $request) {
+        // dd($request->all());
+        
+        $vehiculo = ClienteVehiculo::where('tablilla', $request->getDataTablilla)->select('id', 'compania', 'vehiculo', 'marca', 'anio', 'mes_vencimiento_id')->get();
+
+        if ($vehiculo != null) {
+
+            return response()->json(['code' => 200, 'vehiculo' => $vehiculo]);
+        } else {
+            return response()->json(['code' => 400, 'msg' => 'Vehículo no existente']);
+        }
+    }
 }

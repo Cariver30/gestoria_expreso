@@ -7,8 +7,31 @@
             </div>
             <div class="modal-body">
                 <fieldset class="border p-2 row col-md-12">
-                    <h5> Datos del Propietario </h5>
                     <div class="col-md-3 mb-3">
+                        <h5> Registro<small>(*)</small></h5>
+                        <select class="form-select form-select-sm" style="cursor: pointer;" id="tipo_registro" name="tipo_registro">
+                            <option value=""> Selecciona una opción </option>
+                            <option value="0"> Nuevo registro </option>
+                            <option value="1"> Agregar servicio </option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-3" style="display: none;" id="cliente_select_id">
+                        <h5>Cliente</h5>
+                        <select class="form-select form-select-sm buscarTablillaCliente" style="cursor: pointer;" id="getClientes" name="cliente_select_id">
+                            <option value="" selected>Selecciona un cliente</option>
+                            @foreach ($listClientes as $listCliente)
+                                <option value="{{$listCliente->id}}">{{ $listCliente->nombre }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-3" style="display: none;" id="cliente_select_tablilla">
+                        <h5> Tablilla </h5>
+                        <select class="form-select form-select-sm select_tablilla_vehiculo" style="cursor: pointer;" name="cliente_select_tablilla">
+                            <option value="" selected>Selecciona un vehículo</option>
+                        </select>
+                    </div>
+                    <h5 class="mb-4 pt-4"> Datos del Propietario </h5>
+                    <div class="col-md-3 mb-4">
                         <label for="seguro_social" class="col-form-label"> Últimos 4 dígitos de Seguro Social </label>
                         <input type="text" class="form-control form-control-sm" name="seguro_social" id="seguro_social" maxlength="4" @if (isset($cliente)) value="{{ $cliente->seguro_social }}" @endif required>
                     </div>

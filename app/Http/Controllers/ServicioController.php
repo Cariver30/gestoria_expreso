@@ -212,6 +212,7 @@ class ServicioController extends Controller
         $costo_servicios = SubServicio::where('servicio_id', 6)->get();
         $venta_multas = SubServicio::where('servicio_id', 9)->get();
         $accas = SubServicio::where('servicio_id', 10)->get();
+        $listClientes = Cliente::select('id', 'nombre', 'seguro_social', 'email', 'telefono')->get();
 
         //Entidades para selector
         $entidades = \Helper::entidadUsuario();
@@ -273,7 +274,8 @@ class ServicioController extends Controller
                 'entidades',
                 'vehiculo_id',
                 'en_curso',
-                'accas'
+                'accas',
+                'listClientes'
             ));
         }
 

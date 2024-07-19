@@ -80,6 +80,7 @@ class CheckoutController extends Controller
         $venta = Venta::where('id', $id)->first();
         $servicios = \Helper::getServicioDesglose($id);
         $total = \Helper::getTotalCheckout($id);
+        // dd($venta, $servicios, $total);
 
         return view('modulo.checkout.vehiculo', compact('entidades', 'servicios', 'total', 'venta', 'id'));
     }

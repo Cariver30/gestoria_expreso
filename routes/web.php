@@ -49,6 +49,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('delete/subservicio/{id}', [App\Http\Controllers\ServicioController::class, 'destroySubservicio']);
     Route::get('seccion', [App\Http\Controllers\ServicioController::class, 'getViewInspeccion'])->name('modulo.inspeccion');
     Route::get('consulta/tablilla/{tablilla}', [App\Http\Controllers\ServicioController::class, 'getTablilla'])->name('consulta.tablilla');
+    
+    Route::get('consulta/cliente/tablilla', [App\Http\Controllers\ClienteController::class, 'getTablillaCliente'])->name('cliente.tablillas');
+    Route::get('consulta/cliente/tablilla/vehiculo', [App\Http\Controllers\ClienteController::class, 'getTablillaVehiculoCliente'])->name('cliente.tablilla.vehiculo');
+    
+    
     Route::get('consulta/seguro-social/{segurosocial}', [App\Http\Controllers\ServicioController::class, 'getSeguroSocial'])->name('consulta.seguro.social');
     Route::post('clientes/marbete', [App\Http\Controllers\ClienteController::class, 'vehiculoMarbete'])->name('vehiculo.marbete');
     Route::post('seguro/vehiculo', [App\Http\Controllers\ClienteController::class, 'vehiculoSeguro'])->name('vehiculo.seguro');
