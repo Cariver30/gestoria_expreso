@@ -23,7 +23,7 @@ class ClienteController extends Controller
     public function index()
     {
         $clientes = Cliente::leftJoin('estatus', 'clientes.estatus_id', 'estatus.id')
-                            ->select('clientes.id', 'clientes.nombre', 'clientes.estatus_id', 'estatus.nombre as estatus')
+                            ->select('clientes.id', 'clientes.nombre', 'clientes.estatus_id', 'estatus.nombre as estatus', 'clientes.seguro_social')
                             ->get();
 
         $user = \Helper::getInfoUsuario();
@@ -46,6 +46,7 @@ class ClienteController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
+        // dd($request->venta_id);
         if ($request->nombre == '' || $request->email == '' || $request->telefono == '' || $request->compania == '' || $request->vehiculo == '' || $request->tablilla == '' || $request->marca == '' || $request->anio == '' || $request->seguro_social == '' || $request->mes_vencimiento == '' || $request->identificacion == '') {
             return response()->json(['code' => 400, 'msg' => 'Hay campos vacíos']);
         }
@@ -53,7 +54,7 @@ class ClienteController extends Controller
         DB::beginTransaction();
 
         try {
-            if (is_null($request->vehiculo_id)) {
+            if ($request->venta_id == null) {
             
                 //Se valida si el cliente existe para no crearlo
                 $data_cliente = Cliente::where('seguro_social', $request->seguro_social)->first();
@@ -88,7 +89,7 @@ class ClienteController extends Controller
                     $clienteVehiculo->anio = $request->anio;
                     $clienteVehiculo->mes_vencimiento_id = $request->mes_vencimiento;
                     $clienteVehiculo->cliente_id = $num_cliente;
-                    $clienteVehiculo->estatus_id = 3;
+                    $clienteVehiculo->estatus_id = 1;
                     $clienteVehiculo->save();
                 }
 
@@ -111,6 +112,7 @@ class ClienteController extends Controller
                 // dd($costoInspección);
                 $venta->total = ($costoInspección == null) ? 0 : $costoInspección ;
                 $venta->estatus_id = 3;
+                $venta->usuario_id = Auth::user()->id;
                 $venta->vehiculo_id = ($request->tipo_registro == 0) ? $clienteVehiculo->id : $vehiculoId->id ;
                 $venta->save();
                 
@@ -119,7 +121,7 @@ class ClienteController extends Controller
                 return response()->json(['code' => 201, 'msg' => 'Transacción iniciada', 'id' => $num_cliente]);
             } else {
                 
-                $vehiculo = \Helper::getVehiculo($request->vehiculo_id);
+                $vehiculo = \Helper::getVehiculo($request->venta_id);
                 // dd($vehiculo);
 
                 //Se actualiza el cliente
@@ -135,14 +137,13 @@ class ClienteController extends Controller
                 $clienteVehiculo = ClienteVehiculo::find($vehiculo->id);
                 $clienteVehiculo->compania = \Helper::capitalizeFirst($request->compania, "1");
                 $clienteVehiculo->vehiculo = \Helper::capitalizeFirst($request->vehiculo, "1");
-                $clienteVehiculo->tablilla = $request->tablilla;
                 $clienteVehiculo->marca = \Helper::capitalizeFirst($request->marca, "1");
                 $clienteVehiculo->anio = $request->anio;
                 $clienteVehiculo->mes_vencimiento_id = $request->mes_vencimiento;
                 $clienteVehiculo->save();
             
-                //Se crea la venta
-                $venta = Venta::where('vehiculo_id', $vehiculo->id)->first();
+                //Se actualiza la venta
+                $venta = Venta::where('id', $request->venta_id)->first();
                 $venta->costo_inspeccion_id = ($request->costo_inspeccion == 0) ? null : $request->costo_inspeccion ;
                 $venta->costo_inspeccion_admin = ($request->costo_inspeccion_admin == null) ? null : $request->costo_inspeccion_admin;
                 //Se va calculando el total
@@ -194,19 +195,23 @@ class ClienteController extends Controller
                                             'cliente_vehiculos.tablilla',
                                             'cliente_vehiculos.marca',
                                             'cliente_vehiculos.anio',
-                                            'cliente_vehiculos.motivo',
                                             'cliente_vehiculos.estatus_id',
                                             'cliente_vehiculos.created_at',
                                             'estatus.nombre as estatus'
                                         )->get();
+                                        // dd($vehiculos);
 
-        $ordenes = [];
+        $ordenes = array();
         foreach ($vehiculos as $vehiculo) {
-            $venta = Venta::leftJoin('estatus', 'ventas.estatus_id', 'estatus.id')
+            $ventas = Venta::leftJoin('estatus', 'ventas.estatus_id', 'estatus.id')
                             ->where('vehiculo_id', $vehiculo->id)
-                            ->select('ventas.id', 'ventas.total', 'ventas.fecha_pago', 'ventas.tipo_pago', 'estatus.id as estatus_id', 'estatus.nombre as estatus')
-                            ->first();
-            array_push($ordenes, $venta);
+                            ->select('ventas.id', 'ventas.total', 'ventas.fecha_pago', 'ventas.tipo_pago', 'estatus.id as estatus_id', 'estatus.nombre as estatus', 'ventas.updated_at', 'ventas.motivo')
+                            ->get()->toArray();
+                            // dd($ventas);
+                            foreach ($ventas as $venta) {
+                                // dd($venta);
+                                array_push($ordenes, $venta);
+                            }
         } 
         // dd($ordenes);
 
@@ -334,7 +339,7 @@ class ClienteController extends Controller
     public function getTablillaVehiculoCliente(Request $request) {
         // dd($request->all());
         
-        $vehiculo = ClienteVehiculo::where('tablilla', $request->getDataTablilla)->select('id', 'compania', 'vehiculo', 'marca', 'anio', 'mes_vencimiento_id')->get();
+        $vehiculo = ClienteVehiculo::where('tablilla', $request->getDataTablilla)->select('id', 'compania', 'vehiculo', 'marca', 'anio', 'mes_vencimiento_id', 'tablilla')->get();
 
         if ($vehiculo != null) {
 

@@ -34,12 +34,15 @@ class Helper {
     }
 
     public static function registroEnCurso() {
-        $cliente_id = Cliente::where('estatus_id', 3)->where('usuario_id', Auth::user()->id)->select('id')->pluck('id')->first();
-        // dd($cliente_id);
-        $vehiculo_id = ClienteVehiculo::where('estatus_id', 3)->where('cliente_id', $cliente_id)->select('id')->pluck('id')->first();
-        // dd($vehiculo_id);
+        // $cliente_id = Cliente::where('estatus_id', 3)->where('usuario_id', Auth::user()->id)->select('id')->pluck('id')->first();
+        // // dd($cliente_id);
+        // $vehiculo_id = ClienteVehiculo::where('estatus_id', 3)->where('cliente_id', $cliente_id)->select('id')->pluck('id')->first();
 
-        return $vehiculo_id;
+        // return $vehiculo_id;
+        $venta = Venta::where('estatus_id', 3)->where('usuario_id', Auth::user()->id)->first();
+
+        return $venta;
+        dd($venta);
     }
 
     public static function entidadUsuario() {
@@ -84,23 +87,30 @@ class Helper {
         return $entidades;
     }
 
-    public static function getCliente($idVehiculo) {
+    public static function getCliente($venta_id) {
 
-        $cliente_id = ClienteVehiculo::where('id', $idVehiculo)->select('cliente_id')->pluck('cliente_id')->first();
+
+        $cliente_id = Venta::where('id', $venta_id)->select('vehiculo_id')->pluck('vehiculo_id')->first();
         $cliente = Cliente::where('id', $cliente_id)->first();
+
+
+        // $cliente_id = ClienteVehiculo::where('id', $idVehiculo)->select('cliente_id')->pluck('cliente_id')->first();
+        // $cliente = Cliente::where('id', $cliente_id)->first();
         
         return $cliente;
     }
 
-    public static function getVehiculo($idVehiculo) {
-        $vehiculo = ClienteVehiculo::where('id', $idVehiculo)->select('id', 'compania', 'vehiculo', 'tablilla', 'marca', 'anio', 'mes_vencimiento_id', 'cliente_id')->first();
+    public static function getVehiculo($venta_id) {
+        $vehiculo_id = Venta::where('id', $venta_id)->select('vehiculo_id')->pluck('vehiculo_id')->first();
+        $vehiculo = ClienteVehiculo::where('id', $vehiculo_id)->select('id', 'compania', 'vehiculo', 'tablilla', 'marca', 'anio', 'mes_vencimiento_id', 'cliente_id')->first();
+        // $vehiculo = ClienteVehiculo::where('id', $idVehiculo)->select('id', 'compania', 'vehiculo', 'tablilla', 'marca', 'anio', 'mes_vencimiento_id', 'cliente_id')->first();
         
         return $vehiculo;
     }
 
-    public static function getTotalCheckout($vehiculo) {
+    public static function getTotalCheckout($venta_id) {
         // dd($vehiculo);
-        $venta = Venta::where('vehiculo_id', $vehiculo)->first();
+        $venta = Venta::where('id', $venta_id)->first();
 
          //Se va calculando el total
         if ($venta->costo_inspeccion_id != null) {
@@ -156,9 +166,9 @@ class Helper {
         return $valida;
     }
 
-    public static function getServicioDesglose($vehiculo_id) {
+    public static function getServicioDesglose($venta_id) {
         // dd($vehiculo_id);
-        $venta = Venta::where('id', $vehiculo_id)->first();
+        $venta = Venta::where('id', $venta_id)->first();
         // dd($venta);
         $array_servicios = [];
 
@@ -200,5 +210,11 @@ class Helper {
         }
 
         return $array_servicios;
+    }
+
+    public static function goCheckoutInspeccion($id) {
+        $vehiculo_id = ClienteVehiculo::where('estatus_id', 3)->where('cliente_id', $cliente_id)->select('id')->pluck('id')->first();
+
+        return $vehiculo_id;
     }
 }

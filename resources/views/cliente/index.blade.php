@@ -9,6 +9,28 @@
 @endsection
 
 @section('content')
+    <div class="card">
+        <div class="card-body text-center">
+            <div class="row col-md-12">
+                <div class="col">
+                    <input type="text" class="form-control form-control-md" name="search_seguro_social" id="search_seguro_social" placeholder="Ingrese seguro social">
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control form-control-md" name="search_tablilla" id="search_tablilla" placeholder="Ingrese tablilla">
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-warning waves-effect waves-light">
+                        <i class="bx bx-search font-size-16 align-middle me-2"></i> Buscar
+                    </button>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-warning waves-effect waves-light">
+                        <i class="bx bx-user font-size-16 align-middle me-2"></i> Ver todos
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row col-md-12">
         @if (count($clientes) == 0)
             <div class="card">
@@ -27,13 +49,13 @@
                             </div>
                             <img src="{{ URL::asset('build/images/companies/adobe.svg') }}" alt="" height="50" class="mb-3">
                             <h5 class="fs-17 mb-2"><a href="" class="text-dark">{{ $cliente->nombre }} </a></h5>
+                            <small>{{ $cliente->seguro_social }}</small><br>
                             @if ($cliente->estatus_id == 5)
                                 <span class="badge bg-warning">{{ $cliente->estatus }}</span>
                             @endif
                             <div class="mt-4">
                                 {{--  <a class="btn btn-soft-success waves-effect waves-light" style="margin-right: 10px;" data-id="{{ $cliente->id }}"><i class="mdi mdi-pencil font-size-16 me-1"></i> Editar </a></li>  --}}
                                 <a class="btn btn-soft-info waves-effect waves-light" style="margin-right: 1px;" href="{{ route('clientes.edit', $cliente->id)}}"><i class="mdi mdi-eye-outline font-size-16 me-1"></i>Ver detalle</a>
-                                <button class="btn btn-soft-secondary waves-effect waves-light" style="margin-right: 1px;" data-id="{{ $cliente->id }}"><i class="mdi mdi-plus-outline font-size-16 me-1"></i>Agregar servicio</button>
                             </div>
                         </div>
                     </div>

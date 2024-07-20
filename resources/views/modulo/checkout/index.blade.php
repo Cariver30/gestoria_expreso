@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title')
-    Usuarios
+    Desgloes de servicios
 @endsection
 
 @section('css')
@@ -26,16 +26,16 @@
                             <tr>
                                 <th> {{ $servicio['nombre'] }} </th>
                                 {{--  <td> $ @if ($servicio['id'] == 1 || $servicio['id'] == 2 && $servicio['servicio_id'] == 3)-@endif{{$servicio['costo'] }} </td>  --}}
-                                <td> ${{$servicio['costo'] }} </td>
+                                <td> @if ($servicio['costo'] == null)  $0.00 @else ${{$servicio['costo'] }} @endif </td>
                             </tr>
                         @endforeach
                         <tr>
                             <th> Derechos anuales</th>
-                            <td> ${{ $venta->derechos_anuales }} </td>
+                            <td> @if($venta->derechos_anuales ==null) $0.00 @else ${{ $venta->derechos_anuales }} @endif</td>
                         </tr>
                         <tr>
                             <th> Costo de Servicio: </th>
-                            <td> ${{ $venta->costo_servicio_fijo }} </td>
+                            <td> @if($venta->costo_servicio_fijo ==null) $0.00 @else ${{ $venta->costo_servicio_fijo }} @endif</td>
                         </tr>
                         <tr>
                             <td colspan="1"><h6 class="m-0 text-end">Sub Total:</h6></td>
@@ -48,20 +48,21 @@
                     </tbody>
                 </table>
             </div>
-            <div class="row col-sm-12 text-center" align="center">
-                {{--  <div class="col-sm-3 col-sm-2">
-                    <button type="button" class="btn btn-soft-info col-md-8 waves-effect waves-light btn-lg"><i class="bx bx-printer font-size-24 text-primary align-middle me-2"></i> Imprimir </button>
-                </div>  --}}
-                <div class="col-sm-12 col-sm-2">
-                    <button type="button" class="btn btn-soft-success col-md-4 waves-effect waves-light btn-lg pagarVehiculo" data-id="{{ $vehiculo_id }}">PAGAR </button>
-                </div>
-                {{--  
-                <div class="col-sm-3 col-sm-2">
-                    <button type="button" class="btn btn-soft-danger col-md-8 waves-effect waves-light btn-lg finalizarProceso" data-id="{{ $vehiculo_id }}"> CANCELAR </button>
-                </div>  --}}
+            <div class="row mt-4">
+                <div class="col-sm-6">
+                    <a href="" class="btn text-muted d-none d-sm-inline-block btn-link">
+                        <i class="mdi mdi-arrow-left me-3"></i> Volver </a>
+                </div> <!-- end col -->
+                <div class="col-sm-6">
+                    <div class="text-end">
+                        <button class="btn btn-success mostrar_tipo_pago" data-id="{{ $venta->id }}">
+                            <i class="mdi mdi-truck-fast me-1"></i> Proceder al pago  </button>
+                    </div>
+                </div> <!-- end col -->
             </div>
         </div>
     </div>
+    @include('modulo.checkout.tipo_de_pago')
 @endsection
 
 @section('script')
@@ -69,8 +70,16 @@
     <script src="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.js') }}"></script>
 
     <script>
-        $('.pagarVehiculo').click(function () {
-            var id = $(this).attr('data-id');
+
+        $(".mostrar_tipo_pago").click(function() {
+
+            $('#venta_id').val($(this).attr('data-id'));
+            $('#modal_tipo_de_pago').modal('show')
+        });
+
+        $('#payService').click(function () {
+
+            var id = $('#venta_id').val();
             Swal.fire({
                 title: "La transacción se cerrará, ¿está seguro?",
                 showCancelButton: true,
@@ -84,7 +93,7 @@
                         url :"{{ route('finalizar.venta') }}",
                         data : { 
                             _token: "{{ csrf_token() }}",
-                            vehiculo_id: id,
+                            venta_id: id,
                         },
                         success: function (data) {
                             if (data.code == 200) {

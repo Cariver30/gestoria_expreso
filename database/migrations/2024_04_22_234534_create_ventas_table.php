@@ -26,8 +26,11 @@ return new class extends Migration
             $table->integer('costo_servicio_fijo')->nullable();
             $table->decimal('derechos_anuales', 10, 3)->nullable();
             $table->decimal('total', 8,2);
+            $table->string('motivo')->nullable();
             $table->date('fecha_pago')->nullable();
             $table->integer('tipo_pago')->nullable();
+            $table->unsignedBigInteger("usuario_id")->nullable();
+            $table->foreign("usuario_id")->references("id")->on("users");
             $table->unsignedBigInteger("estatus_id")->nullable();
             $table->foreign("estatus_id")->references("id")->on("estatus")->onDelete('cascade');
             $table->unsignedBigInteger("vehiculo_id")->nullable();

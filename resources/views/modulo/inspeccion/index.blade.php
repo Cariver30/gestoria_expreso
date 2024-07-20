@@ -16,7 +16,7 @@
                 <input type="radio" name="suma_total" id="suma_total" class="card-radio-input" checked="">
                 <div class="card-radio">
                     <small>@if (isset($cliente)) {{ $cliente->nombre }} @endif </small><br>
-                    <input type="hidden" name="vehiculo_id" id="vehiculo_id" value="{{ $vehiculo_id }}">
+                    <input type="hidden" name="venta_id" id="venta_id" @if (isset($cliente)) value="{{ $venta->id }}" @endif>
                     <i class="bx bx-cart font-size-24 text-primary align-middle me-2"></i><span>Total: {{$total_checkout}}</span>
                 </div>
             </label>
@@ -36,7 +36,7 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-3" @if ($vehiculo_id != null) id="ventaMarbetes" @endif>
+    <div class="col-lg-3" @if (isset($venta) && $venta->id != null) id="ventaMarbetes" @endif>
         <div class="card bg-success text-white-50">
             <div class="card-body text-center">
                 <i class="mdi mdi-car me-3 text-white" style="font-size: 100px;"></i>
@@ -44,7 +44,7 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-3" @if ($vehiculo_id != null) id="seguro" @endif>
+    <div class="col-lg-3" @if (isset($venta) && $venta->id != null) id="seguro" @endif>
         <div class="card bg-success text-white-50">
             <div class="card-body text-center">
                 <i class="mdi mdi-car me-3 text-white" style="font-size: 100px;"></i>
@@ -52,7 +52,7 @@
             </div>
         </div>
     </div>
-    <div class="col-lg-3" @if ($vehiculo_id != null) id="extras" @endif>
+    <div class="col-lg-3" @if (isset($venta) && $venta->id != null) id="extras" @endif>
         <div class="card bg-success text-white-50">
             <div class="card-body text-center">
                 <i class="mdi mdi-car me-3 text-white" style="font-size: 100px;"></i>
@@ -64,16 +64,16 @@
 </div>
 @if ($en_curso == 1)
     <div class="row col-sm-12 text-center">
-        {{--  @if ($nextPago != 0)  --}}
+        @if ($total_checkout != 0)
             <div class="col-sm-4 col-sm-2">
                 <a type="button" href="{{ route('checkout.index')}}" class="btn btn-soft-info col-md-8 waves-effect waves-light btn-lg"> CONTINUAR A PAGAR </a>
             </div>
-        {{--  @endif  --}}
+        @endif
         <div class="col-sm-4 col-sm-2">
-            <button type="button" class="btn btn-soft-warning col-md-8 waves-effect waves-light btn-lg pendientePorPagar" data-id="{{ $vehiculo_id }}"> PENDIENTE </button>
+            <button type="button" class="btn btn-soft-warning col-md-8 waves-effect waves-light btn-lg pendientePorPagar" data-id="{{ $venta->id }}"> PENDIENTE </button>
         </div>
         <div class="col-sm-3 col-sm-2">
-            <button type="button" class="btn btn-soft-danger col-md-8 waves-effect waves-light btn-lg finalizarProceso" data-id="{{ $vehiculo_id }}"> CANCELAR </button>
+            <button type="button" class="btn btn-soft-danger col-md-8 waves-effect waves-light btn-lg finalizarProceso" data-id="{{ $venta->id }}"> CANCELAR </button>
         </div>
     </div>
 @endif
@@ -129,6 +129,7 @@
                             $('#nombre').val(data.data.nombre);
                             $('#email').val(data.data.email);
                             $('#telefono').val(data.data.telefono);
+                            $('#identificacion').val(data.data.identificacion);
                         }
                     });
                 } else {
@@ -240,12 +241,7 @@
                     });
                     return false;
                 }
-                var reg_tablilla = 0;
-                if($('#tipo_registro').val() == 0){
-                    reg_tablilla = $('#tablilla').val();
-                } else {
-                    reg_tablilla = $('.select_tablilla_vehiculo').val();
-                }
+                
                 if (!validarEmail($('#email').val())) {
                     Swal.fire({
                         title: 'Ingrese un correo válido',
@@ -265,7 +261,7 @@
                         telefono: $('#telefono').val(),
                         compania: $('#compania').val(),
                         vehiculo: $('#vehiculo').val(),
-                        tablilla: reg_tablilla,
+                        tablilla: $('#tablilla').val(),
                         marca: $('#marca').val(),
                         anio: $('#anio').val(),
                         seguro_social: $('#seguro_social').val(),
@@ -273,7 +269,7 @@
                         costo_inspeccion: $('#costo_inspeccion_id').val(),
                         identificacion: $('#identificacion').val(),
                         costo_inspeccion_admin: $('#costo_admin').val(),
-                        vehiculo_id: $('#vehiculo_id').val(),
+                        venta_id: $('#venta_id').val(),
                         tipo_registro: $('#tipo_registro').val()
                     },
                     success: function (data) {
@@ -488,7 +484,7 @@
             $('.finalizarProceso').click(function () {
                 var id = $(this).attr('data-id');
                 Swal.fire({
-                    title: "Motivo por el cual finaliza",
+                    title: "Motivo",
                     input: "text",
                     inputAttributes: {
                         autocapitalize: "on"
@@ -507,7 +503,7 @@
                             url :"{{ route('cancelar.venta') }}",
                             data : { 
                                 _token: "{{ csrf_token() }}",
-                                vehiculo_id: id,
+                                venta_id: id,
                                 motivo : result.value
                             },
                             success: function (data) {
@@ -554,8 +550,7 @@
                             url :"{{ route('pendiente.venta') }}",
                             data : { 
                                 _token: "{{ csrf_token() }}",
-                                vehiculo_id: id,
-                                motivo : result.value
+                                venta_id: id
                             },
                             success: function (data) {
                                 if (data.code == 200) {
@@ -595,7 +590,7 @@
                 document.getElementById("cliente_select_id").style.display = "initial";
                 document.getElementById("cliente_select_tablilla").style.display = "initial";
                 $(".cliente_select_tablilla").attr("disabled", "disabled");
-                $("#tablilla").attr("disabled", "disabled");
+                $("#tablilla").attr("readOnly", true);
             }else{
                 document.getElementById("cliente_select_id").style.display = "none";
                 document.getElementById("cliente_select_tablilla").style.display = "none";
@@ -666,6 +661,7 @@
                         $('#marca').val(data.vehiculo[0].marca);
                         $('#vehiculo').val(data.vehiculo[0].vehiculo);
                         $('#compania').val(data.vehiculo[0].compania);
+                        $('#tablilla').val(data.vehiculo[0].tablilla);
                         $('#mes_vencimiento option[value="'+data.vehiculo[0].mes_vencimiento_id+'"]').attr("selected", "selected");
                     }
                 },

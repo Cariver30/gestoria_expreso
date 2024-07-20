@@ -66,23 +66,10 @@
                                 <div class="flex-grow-1">
                                     <div>
                                         <h5 class="font-size-15"><a href="javascript: void(0);" class="text-dark"> {{ $vehiculo->vehiculo }}</a></h5></span>
-                                        <span class="text-primary"> {{ $vehiculo->tablilla}} </span><br>
-                                        <span class="text-primary"> {{ $vehiculo->compania }} </span><br>
-                                        <span class="text-primary"> {{ $vehiculo->marca }} </span><br>
+                                        <span class="text-primary"> - {{ $vehiculo->tablilla}} </span><br>
+                                        <span class="text-primary"> - {{ $vehiculo->compania }} </span><br>
+                                        <span class="text-primary"> - {{ $vehiculo->marca }} </span><br>
                                         <span class="text-primary"> {{ Carbon\Carbon::parse($vehiculo->created_at)->format('d-m-Y H:i') }} </span><br>
-                                        @if($vehiculo->estatus_id == 3)
-                                            <span class="badge bg-info">{{ $vehiculo->estatus }} </span>
-                                        @elseif ($vehiculo->estatus_id == 4)
-                                            <span class="badge bg-success">{{ $vehiculo->estatus }} </span>
-                                        @elseif ($vehiculo->estatus_id == 5)
-                                            <span class="badge bg-warning">{{ $vehiculo->estatus }} </span><br>
-                                            <a href="{{ route('pay.checkout.vehicle', ['id' => $vehiculo->id]) }}"><span class="badge bg-info"> Pagar </span></a>
-                                            {{--  <button type="button" class="btn btn-soft-secondary col-sm-1 waves-effect waves-light"><i class="bx bx-dollar-circle text-primary"></i>  --}}
-                                            </button>
-                                        @elseif ($vehiculo->estatus_id == 6)
-                                            <span class="badge bg-danger">{{ $vehiculo->estatus }}</span><br>
-                                            <small class="text-danger">{{ $vehiculo->motivo }}</small>
-                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -97,7 +84,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title mb-5"> Ordenes </h4>
+                    <h4 class="card-title mb-2"> Ordenes </h4>
                     <div class="table-responsive">
                         <table class="table align-middle table-nowrap dt-responsive nowrap w-100 table-check"
                             id="order-list">
@@ -112,7 +99,9 @@
                                     {{--  <th class="align-middle"> Núm </th>  --}}
                                     <th class="align-middle"> Fecha </th>
                                     <th class="align-middle"> Estatus </th>
+                                    <th class="align-middle"> Motivo </th>
                                     <th class="align-middle"> Metodo de Pago </th>
+                                    <th class="align-middle"> Fecha de Pago </th>
                                     <th class="align-middle"> Total </th>
                                     <th class="align-middle"> Acción </th>
                                 </tr>
@@ -120,25 +109,30 @@
                             <tbody align="center">
                                 @foreach ($ordenes as $orden)
                                     <tr>
-                                        <td> {{ Carbon\Carbon::parse($orden->updated_at)->format('d-m-Y H:i') }} </td>
+                                        <td> {{ Carbon\Carbon::parse($orden['updated_at'])->format('d-m-Y H:i') }} </td>
                                         <td> 
-                                            @if ($orden->estatus_id == 3)
-                                                <span class="badge bg-info">{{ $orden->estatus }}</span>
-                                            @elseif($orden->estatus_id == 4)
-                                                <span class="badge bg-success">{{ $orden->estatus }}</span>
-                                            @elseif($orden->estatus_id == 5)
-                                                <span class="badge bg-warning">{{ $orden->estatus }}</span>
+                                            @if ($orden['estatus_id'] == 3)
+                                                <span class="badge bg-info">{{ $orden['estatus'] }}</span>
+                                            @elseif($orden['estatus_id'] == 4)
+                                                <span class="badge bg-success">{{ $orden['estatus'] }}</span>
+                                            @elseif($orden['estatus_id'] == 5)
+                                                <span class="badge bg-warning">{{ $orden['estatus'] }}</span>
+                                            @elseif($orden['estatus_id'] == 6)
+                                                <span class="badge bg-danger">{{ $orden['estatus'] }}</span>
                                             @endif
                                         </td>
-                                        <td> @if ($orden->tipo_pago == 1) Efectivo @endif </td>
-                                        <td> ${{ $orden->total}} </td>
+                                        <td> @if ($orden['motivo'] == null) Sin Información  @else {{ $orden['motivo'] }} @endif </td>
+                                        <td> @if ($orden['tipo_pago'] == 1) Efectivo @else Sin Información  @endif </td>
+                                        <td> @if ($orden['fecha_pago'] == null) Sin información @else {{ Carbon\Carbon::parse($orden['fecha_pago'])->format('d-m-Y H:i') }} @endif</td>
+                                        <td> ${{ $orden['total'] }} </td>
                                         <td>
-                                            @if ($orden->estatus_id ==4)
-                                                <button type="button" class="btn btn-soft-secondary col-md-2 waves-effect waves-light"><i class="mdi mdi-eye font-size-19 text-primary align-middle me-2"></i></button>
-                                                <button type="button" class="btn btn-soft-secondary col-md-2 waves-effect waves-light"><i class="bx bx-printer font-size-20 text-secondary align-middle me-2"></i></button>
+                                            @if ($orden['estatus_id'] == 5 && $orden['total'] > 0.0)
+                                                <a type="button" class="btn btn-info waves-effect waves-light" href="{{ route('pay.checkout.vehicle', ['id' => $vehiculo->id]) }}">Pagar</a>
+                                            @elseif ($orden['estatus_id'] != 5 && $orden['total'] == 0.0 || $orden['estatus_id'] == 5 && $orden['total'] == 0.0)
+                                                <button type="button" class="btn btn-info waves-effect waves-light pr-4" disabled> Pagar </a>
                                             @endif
+                                            <button type="button" class="btn btn-secondary waves-effect waves-light" style="margin-left: 10px;" @if ($orden['estatus_id'] != 4) disabled @endif> Imprimir </button>
                                         </td>
-                                        
                                     </tr>
                                 @endforeach
                             </tbody>

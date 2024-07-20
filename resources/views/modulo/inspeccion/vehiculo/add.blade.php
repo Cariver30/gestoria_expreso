@@ -7,14 +7,17 @@
             </div>
             <div class="modal-body">
                 <fieldset class="border p-2 row col-md-12">
-                    <div class="col-md-3 mb-3">
-                        <h5> Registro<small>(*)</small></h5>
-                        <select class="form-select form-select-sm" style="cursor: pointer;" id="tipo_registro" name="tipo_registro">
-                            <option value=""> Selecciona una opción </option>
-                            <option value="0"> Nuevo registro </option>
-                            <option value="1"> Agregar servicio </option>
-                        </select>
-                    </div>
+                    {{--  @dump($venta)  --}}
+                    @if ($venta == null)
+                        <div class="col-md-3 mb-3">
+                            <h5> Registro<small>(*)</small></h5>
+                            <select class="form-select form-select-sm" style="cursor: pointer;" id="tipo_registro" name="tipo_registro">
+                                <option value="99" disabled selected hidden> Selecciona una opción </option>
+                                <option value="0"> Nuevo registro </option>
+                                @if (count($listClientes) != 0) <option value="1"> Agregar servicio </option> @endif
+                            </select>
+                        </div>
+                    @endif
                     <div class="col-md-3 mb-3" style="display: none;" id="cliente_select_id">
                         <h5>Cliente</h5>
                         <select class="form-select form-select-sm buscarTablillaCliente" style="cursor: pointer;" id="getClientes" name="cliente_select_id">
@@ -65,7 +68,7 @@
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="tablilla" class="col-form-label"> Tablilla </label>
-                        <input type="text" class="form-control form-control-sm" name="tablilla" id="tablilla" @if (isset($vehiculo)) value="{{ $vehiculo->tablilla }}" @endif required>
+                        <input type="text" class="form-control form-control-sm" name="tablilla" id="tablilla" @if (isset($vehiculo)) value="{{ $vehiculo->tablilla }}" readonly @endif required>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="marca" class="col-form-label"> Marca </label>

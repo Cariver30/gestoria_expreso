@@ -218,15 +218,15 @@ class ServicioController extends Controller
         $entidades = \Helper::entidadUsuario();
 
         // Validar si hay un registro en curso
-        $vehiculo_id = \Helper::registroEnCurso();
+        $venta = \Helper::registroEnCurso();
+        // dd($venta_id);
+        // $venta = Venta::where('id', $venta_id)->first();
         $en_curso = 0;
-        
         //Si existe un registro en curso
-        if ($vehiculo_id != null) {
-            $cliente = \Helper::getCliente($vehiculo_id);
-            $vehiculo = \Helper::getVehiculo($vehiculo_id);
+        if ($venta != null) {
+            $cliente = \Helper::getCliente($venta->id);
+            $vehiculo = \Helper::getVehiculo($venta->id);
             $en_curso = 1;
-            $venta = Venta::where('vehiculo_id', $vehiculo_id)->first();
             // dd($venta);
             $total_checkout = $venta->total;
 
@@ -236,6 +236,7 @@ class ServicioController extends Controller
             if (is_null($total_checkout) || $total_checkout == 0) {
                 $total_checkout = 0;
             }
+            // dd($total_checkout);
 
             return view('modulo.inspeccion.index', compact(
                 'costosInspeccion',
@@ -249,18 +250,17 @@ class ServicioController extends Controller
                 'costo_servicios',
                 'venta_multas',
                 'entidades',
-                'vehiculo_id',
+                'venta',
                 'en_curso',
                 'cliente',
                 'vehiculo',
-                'venta',
                 'nextPago',
                 'accas',
                 'listClientes'
             ));
         } else {
             $total_checkout = 0;
-            
+            // dd($venta);
             return view('modulo.inspeccion.index', compact(
                 'costosInspeccion',
                 'marbetes',
@@ -273,7 +273,7 @@ class ServicioController extends Controller
                 'costo_servicios',
                 'venta_multas',
                 'entidades',
-                'vehiculo_id',
+                'venta',
                 'en_curso',
                 'accas',
                 'listClientes'
@@ -315,7 +315,7 @@ class ServicioController extends Controller
     }
 
     public function getSeguroSocial($numero) {
-        $data = Cliente::select('nombre', 'email', 'telefono')->where('seguro_social', $numero)->first();
+        $data = Cliente::select('nombre', 'email', 'telefono', 'identificacion')->where('seguro_social', $numero)->first();
         if ($data != null) {
             return response()->json(['code' => 200, 'data' => $data]);
         }

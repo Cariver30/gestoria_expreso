@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Venta;
 use App\Models\Cliente;
 use App\Models\ClienteVehiculo;
@@ -66,19 +67,13 @@ class VentaController extends Controller
     }
 
     public function cancelarVenta(Request $request) {
+        // dd($request->all());
 
-        $vehiculo = ClienteVehiculo::find($request->vehiculo_id);
-        if ($vehiculo) {
-            $vehiculo->estatus_id = 6;
-            $vehiculo->motivo = $request->motivo;
-            $vehiculo->save();
-
-            $cliente = Cliente::find($vehiculo->cliente_id);
-            $cliente->estatus_id = 1;
-            $cliente->save();
-
-            $venta = Venta::where('vehiculo_id', $request->vehiculo_id)->first();
-            $venta->estatus_id = 5;
+        $venta = Venta::where('id', $request->venta_id)->first();
+        
+        if ($venta) {
+            $venta->estatus_id = 6;
+            $venta->motivo =  \Helper::capitalizeFirst($request->motivo, "1");
             $venta->save();
 
             return response()->json(['code' => 200, 'msg' => 'Transacción cancelada!']);
@@ -88,17 +83,11 @@ class VentaController extends Controller
     }
 
     public function pendienteVenta(Request $request) {
+        
+        $venta = Venta::where('id', $request->venta_id)->where('estatus_id', 3)->first();
 
-        $vehiculo = ClienteVehiculo::find($request->vehiculo_id);
-        if ($vehiculo) {
-            $vehiculo->estatus_id = 5;
-            $vehiculo->save();
-
-            $cliente = Cliente::find($vehiculo->cliente_id);
-            $cliente->estatus_id = 5;
-            $cliente->save();
-
-            $venta = Venta::where('vehiculo_id', $request->vehiculo_id)->first();
+        if ($venta) {
+            
             $venta->estatus_id = 5;
             $venta->save();
 
@@ -110,15 +99,19 @@ class VentaController extends Controller
 
     public function finalizarVenta(Request $request) {
 
-        $vehiculo = Venta::where('vehiculo_id', $request->vehiculo_id)->where('estatus_id',3 )->first();
+        $venta = Venta::where('id', $request->venta_id)->first();
+        $cliente_id =  ClienteVehiculo::where('id', $venta->vehiculo_id)->select('cliente_id')->pluck('cliente_id')->first();
 
-        if ($vehiculo) {
-            $clienteVehiculo = ClienteVehiculo::where('id', $request->vehiculo_id)->update(array('estatus_id' => 4));
-            $venta = Venta::where('vehiculo_id', $request->vehiculo_id)->update(array('estatus_id' => 4, 'tipo_pago' => 1));
-            $cliente = \Helper::getCliente($request->vehiculo_id);
-            Cliente::where('id', $cliente->id)->update(array('estatus_id' => 4));
+        if ($venta) {
+            $date = Carbon::now();
+            $date = $date->format('Y-m-d');
 
-            return response()->json(['code' => 200, 'msg' => 'Transacción finalizada!', 'url' => route('clientes.edit', ['cliente' => $cliente->id ])]);
+            $venta->estatus_id = 4;
+            $venta->fecha_pago = $date;
+            $venta->tipo_pago = 1; //1= Efectivo
+            $venta->save();
+
+            return response()->json(['code' => 200, 'msg' => 'Transacción finalizada, recibo generado!', 'url' => route('clientes.edit', ['cliente' => $cliente_id ])]);
         } else {
             return response()->json(['code' => 404, 'msg' => 'Transacción no encontrada!']);
         }
