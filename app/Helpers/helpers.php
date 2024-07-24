@@ -42,7 +42,6 @@ class Helper {
         $venta = Venta::where('estatus_id', 3)->where('usuario_id', Auth::user()->id)->first();
 
         return $venta;
-        dd($venta);
     }
 
     public static function entidadUsuario() {
@@ -109,7 +108,7 @@ class Helper {
     }
 
     public static function getTotalCheckout($venta_id) {
-        // dd($vehiculo);
+        // dd($venta_id);
         $venta = Venta::where('id', $venta_id)->first();
 
          //Se va calculando el total
@@ -206,9 +205,12 @@ class Helper {
         // Seguros
         if ($venta->costo_seguro_id != null) {
             $costoSeguros = SubServicio::where('id', $venta->costo_seguro_id)->select('id', 'nombre', 'costo', 'servicio_id')->first()->toArray();
+            if ($costoSeguros['id'] == 1 || $costoSeguros['id'] == 2) {
+                $costoSeguros['costo'] = '-$'.$costoSeguros['costo'];
+            }
             array_push($array_servicios, $costoSeguros);
         }
-
+        // dd($array_servicios);
         return $array_servicios;
     }
 

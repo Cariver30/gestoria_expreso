@@ -14,15 +14,15 @@
                     @endforeach
                 </div>
                 <div class="row col-md-12">
-                    @if (Auth::user()->rol_id == 1 || Auth::user()->rol_id == 2)
-                    <div class="col-md-2">
-                        <div class="card bg-success text-white">
-                            <div class="card-header bg-transparent border-success">
-                                <label for="costo_marbete_admin"> Customizado </label>
-                                <input type="string" class="form-control form-control-sm" name="costo_marbete_admin" id="costo_marbete_admin">
+                    @if (Auth::user()->rol_id == 1)
+                        <div class="col-md-2">
+                            <div class="card bg-success text-white">
+                                <div class="card-header bg-transparent border-success">
+                                    <label for="costo_marbete_admin"> Customizado </label>
+                                    <input type="string" class="form-control form-control-sm" name="costo_marbete_admin" id="costo_marbete_admin">
+                                </div>
                             </div>
                         </div>
-                    </div>
                     @endif
                     <div class="col-md-2">
                         <div class="card bg-success text-white">

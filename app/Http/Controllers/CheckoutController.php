@@ -17,10 +17,10 @@ class CheckoutController extends Controller
 
         // Validar si hay un registro en curso
         $venta = \Helper::registroEnCurso();
-        // dd($venta->vehiculo_id);
+        // dd($venta);
         $servicios = \Helper::getServicioDesglose($venta->id);
         $total = \Helper::getTotalCheckout($venta->id);
-        // dd($servicios);
+        // dd($total);
 
         return view('modulo.checkout.index', compact('entidades', 'servicios', 'total', 'venta'));
     }

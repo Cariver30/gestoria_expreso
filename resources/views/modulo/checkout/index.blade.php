@@ -26,7 +26,7 @@
                             <tr>
                                 <th> {{ $servicio['nombre'] }} </th>
                                 {{--  <td> $ @if ($servicio['id'] == 1 || $servicio['id'] == 2 && $servicio['servicio_id'] == 3)-@endif{{$servicio['costo'] }} </td>  --}}
-                                <td> @if ($servicio['costo'] == null)  $0.00 @else ${{$servicio['costo'] }} @endif </td>
+                                <td> @if ($servicio['costo'] == null)  $0.00 @elseif($servicio['servicio_id'] == 3) {{$servicio['costo'] }} @else ${{$servicio['costo'] }} @endif </td>
                             </tr>
                         @endforeach
                         <tr>
@@ -39,11 +39,11 @@
                         </tr>
                         <tr>
                             <td colspan="1"><h6 class="m-0 text-end">Sub Total:</h6></td>
-                            <td> ${{ $total }} </td>
+                            <td> ${{ $total }}.00 </td>
                         </tr>
                         <tr>
                             <td colspan="1"><h6 class="m-0 text-end">Total:</h6></td>
-                            <td> ${{ $total }} </td>
+                            <td> ${{ $total }}.00 </td>
                         </tr>
                     </tbody>
                 </table>
