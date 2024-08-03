@@ -27,7 +27,7 @@ return new class extends Migration
             $table->decimal('derechos_anuales', 8,2)->nullable();
             $table->decimal('total', 8,2);
             $table->string('motivo')->nullable();
-            $table->date('fecha_pago')->nullable();
+            $table->datetime('fecha_pago')->nullable();
             $table->integer('tipo_pago')->nullable();
             $table->unsignedBigInteger("usuario_id")->nullable();
             $table->foreign("usuario_id")->references("id")->on("users");

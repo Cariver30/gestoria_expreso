@@ -44,6 +44,7 @@ Route::middleware(['auth'])->group(function () {
 
     //Checkout
     Route::get('pay/checkout/{id}', [App\Http\Controllers\CheckoutController::class, 'payCheckoutVehicle'])->name('pay.checkout.vehicle');
+    Route::get('ver/recibo/{id}', [App\Http\Controllers\CheckoutController::class, 'verRecibo'])->name('ver.recibo');
     
     Route::put('update/subservicio/{id}', [App\Http\Controllers\ServicioController::class, 'updateSubServicio']);
     Route::post('delete/subservicio/{id}', [App\Http\Controllers\ServicioController::class, 'destroySubservicio']);

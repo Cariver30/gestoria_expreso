@@ -7,14 +7,13 @@
             </div>
             <div class="modal-body">
                 <fieldset class="border p-2 row col-md-12">
-                    {{--  @dump($venta)  --}}
-                    @if ($venta == null)
+                    @if ($venta == null && (count($listClientes) != 0))
                         <div class="col-md-3 mb-3">
                             <h5> Registro<small>(*)</small></h5>
                             <select class="form-select form-select-sm" style="cursor: pointer;" id="tipo_registro" name="tipo_registro">
                                 <option value="99" disabled selected hidden> Selecciona una opción </option>
                                 <option value="0"> Nuevo registro </option>
-                                @if (count($listClientes) != 0) <option value="1"> Agregar servicio </option> @endif
+                                <option value="1"> Agregar servicio </option>
                             </select>
                         </div>
                     @endif
@@ -91,9 +90,18 @@
                     @if (count($costosInspeccion) != 0)
                         <div class="row col-md-12 mb-3">
                             <label for="costo_inspeccion" class="col-form-label"> Costo de Inspección </label>
-                            {{--  @if (count($costosInspeccion) == 0) <small class="text-danger">Debe registrar por lo menos un costo de inspección</small> @endif  --}}
                             @foreach ($costosInspeccion as $costo)
-                                <button type="button" class="btn btn-soft-success col-md-3 waves-effect waves-light btnCostoInspeccion" style="margin: 1px;" data-id="{{ $costo->id}}">{{ $costo->nombre}} - ${{ $costo->costo}} </button>
+                                {{--  <button type="button" class="btn btn-soft-success col-md-3 waves-effect waves-light btnCostoInspeccion" style="margin: 1px;" data-id="{{ $costo->id}}">{{ $costo->nombre}} - ${{ $costo->costo}} </button>  --}}
+                                <div class="col-md-3">
+                                    <div class="mb-3">
+                                        <label class="card-radio-label mb-2">
+                                            <input type="radio" name="valorInspeccion" value="{{ $costo->id}}" class="card-radio-input btnCostoInspeccion" @if (isset($venta) && $venta->costo_inspeccion_id == $costo->id) checked @endif>
+                                            <div class="card-radio">
+                                                <div><span>{{ $costo->nombre}} - ${{ $costo->costo}}</span></div>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
                             @endforeach
                         </div>
                     @endif
@@ -101,7 +109,7 @@
                         <div class="dropzone">
                             <div class="fallback">
                                 <label for="file_licencia" class="col-form-label"> Cargar Licencia </label>
-                                <input type="file" name="file_licencia" id="file_licencia" accept="image/*" onchange="validateFileType()"/>
+                                <input type="file" name="file_licencia" id="file_licencia" accept="image/*" capture="camera" onchange="validateFileType()"/>
                             </div>
                             <div class="dz-message needsclick">
                                 <div class="mb-3">

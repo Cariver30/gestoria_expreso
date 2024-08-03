@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use DB;
 use Session;
+use App\Models\Mes;
 use App\Models\User;
 use App\Models\Sede;
 use App\Models\Venta;
@@ -28,8 +29,9 @@ class ClienteController extends Controller
 
         $user = \Helper::getInfoUsuario();
         $entidades = \Helper::entidadUsuario();
+        $meses = Mes::select('id', 'nombre')->get();
 
-        return view('cliente.index', compact('clientes', 'user', 'entidades'));
+        return view('cliente.index', compact('clientes', 'user', 'entidades', 'meses'));
     }
 
     /**

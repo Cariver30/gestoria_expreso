@@ -95,7 +95,7 @@
     <!-- Form file upload init js -->
     <script src="{{ URL::asset('build/js/pages/form-file-upload.init.js') }}"></script>
     <script type="text/javascript">
-        function validateFileType(){
+        function validateFileType(){ // Se válida el formato de la imagen a subir
             var fileName = document.getElementById("file_licencia").value;
             var idxDot = fileName.lastIndexOf(".") + 1;
             var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
@@ -109,12 +109,8 @@
     <script>
         $(document).ready(function() {
 
-            $('input[type=number]').keypress(function(key) {
-                if(key.charCode < 48 || key.charCode > 57) return false;
-            });
-
+            // Función y expresión regular para validar un correo electrónico
             function validarEmail(email) {
-                // Expresión regular para validar un correo electrónico
                 const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
                 return regex.test(email);
             }
@@ -143,22 +139,29 @@
                 }
             }, false);
 
+            //Validación de tablilla existente
+            var elementTablilla = document.getElementById('tablilla');
+            elementTablilla.addEventListener("change", function (evt) {
+                var tablilla = $('#tablilla').val();
+                $.get('consulta/tablilla/' + tablilla, function (data) {
+                    console.log(data.code);
+                    if(data.code == 200){
+                        Swal.fire({
+                            title: data.msg,
+                            icon: "warning",
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                        $('#tablilla').val('');
+                    }
+                });
+            }, false);
+
             // Se deshabilita cuando ya se tiene una venta en curso.
             var total_checkout = {{$total_checkout}};
             if(total_checkout != 0){
                 $('#change_entidad').prop('disabled', true);
             }
-
-            {{--  if({{$en_curso}} == 1){
-                Swal.fire({
-                    title: 'Registro pendiente',
-                    icon: "warning",
-                    showConfirmButton: false
-                });
-                document.getElementById("inspeccionVehiculo").removeAttribute("id");
-            }  --}}
-
-
 
             //Sección para mostrar modales
             $("#inspeccionVehiculo").click(function() {
@@ -191,38 +194,10 @@
                     case '9':
                         $('#extra_venta_multa').modal('show')
                         break;
-                  }
+                }
             });
 
-            //Validación de tablilla existente
-            var elementTablilla = document.getElementById('tablilla');
-            elementTablilla.addEventListener("change", function (evt) {
-                var tablilla = $('#tablilla').val();
-                $.get('consulta/tablilla/' + tablilla, function (data) {
-                    console.log(data.code);
-                    if(data.code == 200){
-                        Swal.fire({
-                            title: data.msg,
-                            icon: "warning",
-                            showConfirmButton: false,
-                            timer: 2000
-                        });
-                        $('#tablilla').val('');
-                    }
-                });
-            }, false);
-            
-            //Se detecta el change para habilitar el input de núm de vaucher cuando es seguro privado
-            $("#seguro_id").on("change", function() {
-                var seguro_id = $(this).val();
-                if(seguro_id == 1){
-                    document.getElementById("opcion_vaucher").style.display = "initial";
-                }else{
-                    document.getElementById("opcion_vaucher").style.display = "none";
-               }
-            });
-
-             //Crear Cliente-vehículo
+            //Crear Cliente-vehículo
             $('#saveVehiculo').click(function () {
                 if($('#tipo_registro').val() == 0 && $('#tablilla').val() == '') {
                     Swal.fire({
@@ -266,7 +241,7 @@
                         anio: $('#anio').val(),
                         seguro_social: $('#seguro_social').val(),
                         mes_vencimiento: $('#mes_vencimiento').val(),
-                        costo_inspeccion: $('#costo_inspeccion_id').val(),
+                        costo_inspeccion: $("input[type=radio][name=valorInspeccion]:checked").val(),
                         identificacion: $('#identificacion').val(),
                         costo_inspeccion_admin: $('#costo_admin').val(),
                         venta_id: $('#venta_id').val(),
@@ -308,11 +283,22 @@
                     }
                 });
             });
+            
 
-            $('.btnCostoInspeccion').click(function () {
-                var id = $(this).attr('data-id');
-                $('#costo_inspeccion_id').val(id);
+
+
+            //------------------------------------------------------- SEGUROS --------------------------------------------------------------
+            //Se detecta el change para habilitar el input de núm de vaucher cuando es seguro privado
+            $("#seguro_id").on("change", function() {
+                var seguro_id = $(this).val();
+                if(seguro_id == 1){
+                    document.getElementById("opcion_vaucher").style.display = "initial";
+                }else{
+                    document.getElementById("opcion_vaucher").style.display = "none";
+               }
             });
+
+            
 
             $('.btnInspeccionMarbete').click(function () {
                 var id = $(this).attr('data-id');

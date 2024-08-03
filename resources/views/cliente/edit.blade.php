@@ -69,7 +69,7 @@
                                         <span class="text-primary"> - {{ $vehiculo->tablilla}} </span><br>
                                         <span class="text-primary"> - {{ $vehiculo->compania }} </span><br>
                                         <span class="text-primary"> - {{ $vehiculo->marca }} </span><br>
-                                        <span class="text-primary"> {{ Carbon\Carbon::parse($vehiculo->created_at)->format('d-m-Y H:i') }} </span><br>
+                                        <span class="text-primary"> {{ Carbon\Carbon::parse($vehiculo->created_at)->format('d-m-Y H:i:s') }} </span><br>
                                     </div>
                                 </div>
                             </div>
@@ -131,7 +131,7 @@
                                             @elseif ($orden['estatus_id'] != 5 && $orden['total'] == 0.0 || $orden['estatus_id'] == 5 && $orden['total'] == 0.0)
                                                 <button type="button" class="btn btn-info waves-effect waves-light pr-4" disabled> Pagar </a>
                                             @endif
-                                            <button type="button" class="btn btn-secondary waves-effect waves-light" style="margin-left: 10px;" @if ($orden['estatus_id'] != 4) disabled @endif> Imprimir </button>
+                                            <a href="{{ route('ver.recibo', ['id' => $orden['id']])}}" type="button" class="btn btn-secondary waves-effect waves-light" style="margin-left: 10px;" @if ($orden['estatus_id'] != 4) disabled @endif> Ver recibo </a>
                                         </td>
                                     </tr>
                                 @endforeach

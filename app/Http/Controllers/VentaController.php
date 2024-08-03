@@ -104,7 +104,7 @@ class VentaController extends Controller
 
         if ($venta) {
             $date = Carbon::now();
-            $date = $date->format('Y-m-d');
+            $date = $date->format('Y-m-d H:i:s');
 
             $venta->estatus_id = 4;
             $venta->fecha_pago = $date;

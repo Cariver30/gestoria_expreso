@@ -18,6 +18,14 @@
                 <div class="col">
                     <input type="text" class="form-control form-control-md" name="search_tablilla" id="search_tablilla" placeholder="Ingrese tablilla">
                 </div>
+                <div class="col-md-3 mb-3">
+                    <select class="form-select" style="cursor: pointer;" id="mes_vencimiento" name="mes_vencimiento">
+                        <option value="" disabled selected hidden >Mes de Vencimiento</option>
+                        @foreach ($meses as $mes)
+                            <option value="{{$mes->id}}" @if (isset($vehiculo) && $mes->id == $vehiculo->mes_vencimiento_id) selected @endif>{{ $mes->nombre }}</option>
+                        @endforeach
+                    </select>
+                </div>
                 <div class="col">
                     <button type="button" class="btn btn-warning waves-effect waves-light">
                         <i class="bx bx-search font-size-16 align-middle me-2"></i> Buscar

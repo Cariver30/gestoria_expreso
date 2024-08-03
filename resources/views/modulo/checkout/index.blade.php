@@ -50,7 +50,7 @@
             </div>
             <div class="row mt-4">
                 <div class="col-sm-6">
-                    <a href="" class="btn text-muted d-none d-sm-inline-block btn-link">
+                    <a href="{{ route('modulo.inspeccion') }}" class="btn text-muted d-none d-sm-inline-block btn-link">
                         <i class="mdi mdi-arrow-left me-3"></i> Volver </a>
                 </div> <!-- end col -->
                 <div class="col-sm-6">
