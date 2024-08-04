@@ -123,7 +123,10 @@ class Helper {
         }
         if ($venta->costo_marbete_acaa_id != null) {
             $costoMarbeteAcaa = SubServicio::where('id', $venta->costo_marbete_acaa_id)->select('costo')->pluck('costo')->first();
+        } else {
+            $costoMarbeteAcaa = 0;
         }
+
         if ($venta->costo_seguro_id != null) {
             $costoSeguro = SubServicio::where('id', $venta->costo_seguro_id)->select('costo')->pluck('costo')->first();
         } else {
@@ -165,9 +168,7 @@ class Helper {
     }
 
     public static function getServicioDesglose($venta_id) {
-        // dd($vehiculo_id);
         $venta = Venta::where('id', $venta_id)->first();
-        // dd($venta);
         $array_servicios = [];
 
         //Se va obteniendo cada servicio registrado
@@ -199,6 +200,12 @@ class Helper {
                 'servicio_id' => 2
             ];
             array_push($array_servicios, $array_marbete);
+        }
+
+        //Marbete ACAA
+        if ($venta->costo_marbete_acaa_id != null) {
+            $marbete_acaa = SubServicio::where('id', $venta->costo_marbete_acaa_id)->select('id', 'nombre', 'costo', 'servicio_id')->first();
+            array_push($array_servicios, $marbete_acaa);
         }
 
         // Seguros
