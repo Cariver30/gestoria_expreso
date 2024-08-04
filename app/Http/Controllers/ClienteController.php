@@ -48,7 +48,6 @@ class ClienteController extends Controller
     public function store(Request $request)
     {
         // dd($request->all());
-        // dd($request->venta_id);
         if ($request->nombre == '' || $request->email == '' || $request->telefono == '' || $request->compania == '' || $request->vehiculo == '' || $request->tablilla == '' || $request->marca == '' || $request->anio == '' || $request->seguro_social == '' || $request->mes_vencimiento == '' || $request->identificacion == '') {
             return response()->json(['code' => 400, 'msg' => 'Hay campos vacíos']);
         }
@@ -150,15 +149,20 @@ class ClienteController extends Controller
                 $venta->costo_inspeccion_admin = ($request->costo_inspeccion_admin == null) ? null : $request->costo_inspeccion_admin;
                 //Se va calculando el total
                 if ($request->costo_inspeccion != 0) {
-                    $costoInspección = SubServicio::where('id', $request->costo_inspeccion)->select('costo')->pluck('costo')->first();
+                    $costoInspeccion = SubServicio::where('id', $request->costo_inspeccion)->select('costo')->pluck('costo')->first();
                 } else {
-                    $costoInspección = $request->costo_inspeccion_admin;
+                    $costoInspeccion = $request->costo_inspeccion_admin;
                 }
                 
-                $total = $costoInspección + $venta->costo_servicio_fijo;
-                $venta->total = $total;
+                // $total = $costoInspeccion + $venta->costo_servicio_fijo;
+                
+                // $venta->total = $total;
                 $venta->vehiculo_id = $clienteVehiculo->id;
                 $venta->save();
+
+                $total = \Helper::getTotalCheckout($venta->id);
+
+                DB::table('ventas')->where('id', $venta->id)->update(['total' => $total]);
                 
                 DB::commit();
                 
@@ -336,22 +340,16 @@ class ClienteController extends Controller
             DB::rollBack();
             return response()->json(['code' => 201, 'msg' => substr($e->getMessage(), 0, 150)]);
         }
-
-        dd($request->all());
-        
-        
-        DB::table('ventas')->where('id', $venta->id)->update(['total' => $total]);
-
-        return response()->json(['code' => 200, 'msg' => 'Marbete Acaa actualizado']);
     }
 
     Public function vehiculoSeguro(Request $request) {
 
-        $venta = \Helper::registroEnCurso();
+        // dd($request->all());
+        $venta = Venta::where('id', $request->venta_id)->first();
         $venta->costo_seguro_id = $request->seguro_id;
         $venta->save();
 
-        $total = \Helper::getTotalCheckout($venta->vehiculo_id);
+        $total = \Helper::getTotalCheckout($venta->id);
         
         DB::table('ventas')->where('id', $venta->id)->update(['total' => $total]);
 

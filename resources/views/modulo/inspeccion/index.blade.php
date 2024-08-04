@@ -473,7 +473,7 @@
 
             // Botón que guarda el seguro seleccionado en el modal del módulo de Inspección
             $('#saveInspeccionSeguro').click(function () {
-                if($('#seguro_id').val() == 0){
+                if($(".valorSeguro").is(':checked') == false){
                     Swal.fire({
                         title: '¡Debe seleccionar un seguro!',
                         icon: "warning",
@@ -487,7 +487,8 @@
                     url :"{{ route('vehiculo.seguro') }}",
                     data : { 
                         _token: "{{ csrf_token() }}",
-                        seguro_id: $('#seguro_id').val()
+                        venta_id: $('#venta_id').val(),
+                        seguro_id: $("input[type=radio][name=valorSeguro]:checked").val()
                     },
                     success: function (data) {
                         if (data.code == 200) {

@@ -13,7 +13,10 @@
                                 <label class="card-radio-label mb-2">
                                     <input type="radio" name="marbeteacaa" value="{{ $acaa->id}}" class="card-radio-input marbeteacaa" @if (isset($venta) && $venta->costo_marbete_acaa_id == $acaa->id) checked @endif>
                                     <div class="card-radio">
-                                        <div><span>{{ $acaa->nombre}} - ${{ $acaa->costo}}</span></div>
+                                        <div class="text-center">
+                                            <span>{{ $acaa->nombre}}</span><br>
+                                            <span> ${{ $acaa->costo}} </span>
+                                        </div>
                                     </div>
                                 </label>
                             </div>

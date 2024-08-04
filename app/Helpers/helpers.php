@@ -109,6 +109,7 @@ class Helper {
 
     public static function getTotalCheckout($venta_id) {
         $venta = Venta::where('id', $venta_id)->first();
+        $esResta = 0;
         
         //Se va calculando el total
         if ($venta->costo_inspeccion_id != null) {
@@ -129,12 +130,20 @@ class Helper {
 
         if ($venta->costo_seguro_id != null) {
             $costoSeguro = SubServicio::where('id', $venta->costo_seguro_id)->select('costo')->pluck('costo')->first();
+            if ($venta->costo_seguro_id == 1 || $venta->costo_seguro_id == 2) {
+                $esResta = 1;
+            }
         } else {
             $costoSeguro = 0;
         }
 
         $total_sin_seguro = $costoInspección + $costoMarbete + $venta->costo_servicio_fijo + $venta->derechos_anuales + $costoMarbeteAcaa;
-        $total = $total_sin_seguro - $costoSeguro;
+        if ($esResta == 0) {
+            $total = $total_sin_seguro + $costoSeguro;
+        } else {
+            $total = $total_sin_seguro - $costoSeguro;
+        }
+        
 
         return $total;
     }

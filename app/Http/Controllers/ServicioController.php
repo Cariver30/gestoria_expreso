@@ -228,7 +228,7 @@ class ServicioController extends Controller
             $vehiculo = \Helper::getVehiculo($venta->id);
             $en_curso = 1;
             // dd($venta);
-            $total_checkout = $venta->total;
+            $total_checkout = \Helper::getTotalCheckout($venta->id);
 
             //Se valida si ya existen los 3 requisitos para generar el pago (inspección, marbete y seguro)
             $nextPago = \Helper::validaBtnPago($venta->id);
