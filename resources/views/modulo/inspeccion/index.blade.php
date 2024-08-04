@@ -193,7 +193,7 @@
                         $('#extra_costo_servicio').modal('show')
                         break;
                     case '9':
-                        $('#extra_venta_multa').modal('show')
+                        $('#extra_venta_multas').modal('show')
                         break;
                 }
             });
