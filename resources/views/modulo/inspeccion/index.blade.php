@@ -631,7 +631,18 @@
             }else{
                 document.getElementById("cliente_select_id").style.display = "none";
                 document.getElementById("cliente_select_tablilla").style.display = "none";
-                $("#tablilla").attr("disabled", false);
+                $("#tablilla").attr("readOnly", false);
+                $('#seguro_social').val('');
+                $('#nombre').val('');
+                $('#email').val('');
+                $('#telefono').val('');
+                $('#identificacion').val('');
+                $('#compania').val('');
+                $('#vehiculo').val('');
+                $('#tablilla').val('');
+                $('#marca').val('');
+                $('#anio').val('');
+                $('#mes_vencimiento').val('');
            }
         });
 
