@@ -16,8 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger("costo_inspeccion_id")->nullable();
             $table->foreign("costo_inspeccion_id")->references("id")->on("sub_servicios")->onDelete('cascade');
             $table->decimal('costo_inspeccion_admin', 8,2)->nullable();
-            $table->unsignedBigInteger('costo_marbete_acca_id')->nullable();
-            $table->foreign("costo_marbete_acca_id")->references("id")->on("sub_servicios")->onDelete('cascade');
+            $table->unsignedBigInteger('costo_marbete_acaa_id')->nullable();
+            $table->foreign("costo_marbete_acaa_id")->references("id")->on("sub_servicios")->onDelete('cascade');
             $table->unsignedBigInteger("costo_marbete_id")->nullable();
             $table->foreign("costo_marbete_id")->references("id")->on("sub_servicios")->onDelete('cascade');
             $table->decimal('costo_marbete_admin', 8,2)->nullable();

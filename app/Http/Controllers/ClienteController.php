@@ -289,20 +289,20 @@ class ClienteController extends Controller
         try {
             $cliente_id = Cliente::where('estatus_id', 3)->where('usuario_id', Auth::user()->id)->select('id')->pluck('id')->first();
             $vehiculo_id = ClienteVehiculo::where('estatus_id', 3)->where('cliente_id', $cliente_id)->select('id')->pluck('id')->first();
-            $venta = Venta::where('vehiculo_id', $vehiculo_id)->where('estatus_id', 3)->first();
+            $venta = Venta::where('id', $request->venta_id)->first();
             if ($request->marbete_id != null) {
                 $venta->costo_marbete_id = $request->marbete_id;
             }
             if ($request->costo_marbete_admin != null) {
                 $venta->costo_marbete_admin = $request->costo_marbete_admin;
             }
-            $venta->costo_servicio_fijo = $request->marbete_five_id;
+            $venta->costo_servicio_fijo = ($request->marbete_five_id == 1) ? 5 : null ;
             $venta->derechos_anuales = $request->derecho_anual;
             $venta->save();
 
-            $total = \Helper::getTotalCheckout($vehiculo_id);
+            $total = \Helper::getTotalCheckout($venta->id);
 
-            DB::table('ventas')->where('vehiculo_id', $vehiculo_id)->update(['total' => $total]);
+            DB::table('ventas')->where('id', $venta->id)->update(['total' => $total]);
             
             DB::commit();
 
@@ -312,6 +312,37 @@ class ClienteController extends Controller
             DB::rollBack();
             return response()->json(['code' => 201, 'msg' => substr($e->getMessage(), 0, 150)]);
         }
+    }
+
+    Public function vehiculoMarbeteAcaa(Request $request) {
+        
+        DB::beginTransaction();
+
+        try {
+            
+            $venta = Venta::where('id', $request->venta_id)->first();
+            $venta->costo_marbete_acaa_id = $request->marbete_acaa_id;
+            $venta->save();
+
+            $total = \Helper::getTotalCheckout($venta->id);
+
+            DB::table('ventas')->where('id', $venta->id)->update(['total' => $total]);
+            
+            DB::commit();
+
+            return response()->json(['code' => 201, 'msg' => 'Marbete actualizado']);
+
+        }catch (\PDOException $e){
+            DB::rollBack();
+            return response()->json(['code' => 201, 'msg' => substr($e->getMessage(), 0, 150)]);
+        }
+
+        dd($request->all());
+        
+        
+        DB::table('ventas')->where('id', $venta->id)->update(['total' => $total]);
+
+        return response()->json(['code' => 200, 'msg' => 'Marbete Acaa actualizado']);
     }
 
     Public function vehiculoSeguro(Request $request) {

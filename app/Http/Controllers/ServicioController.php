@@ -211,7 +211,7 @@ class ServicioController extends Controller
         $notificaciones = SubServicio::where('servicio_id', 5)->get();
         $costo_servicios = SubServicio::where('servicio_id', 6)->get();
         $venta_multas = SubServicio::where('servicio_id', 9)->get();
-        $accas = SubServicio::where('servicio_id', 10)->get();
+        $acaas = SubServicio::where('servicio_id', 10)->where('estatus_id', 1)->select('id', 'nombre', 'costo')->get();
         $listClientes = Cliente::select('id', 'nombre', 'seguro_social', 'email', 'telefono')->get();
 
         //Entidades para selector
@@ -236,7 +236,7 @@ class ServicioController extends Controller
             if (is_null($total_checkout) || $total_checkout == 0) {
                 $total_checkout = 0;
             }
-            // dd($total_checkout);
+            // dd($acaas);
 
             return view('modulo.inspeccion.index', compact(
                 'costosInspeccion',
@@ -255,7 +255,7 @@ class ServicioController extends Controller
                 'cliente',
                 'vehiculo',
                 'nextPago',
-                'accas',
+                'acaas',
                 'listClientes'
             ));
         } else {
@@ -275,7 +275,7 @@ class ServicioController extends Controller
                 'entidades',
                 'venta',
                 'en_curso',
-                'accas',
+                'acaas',
                 'listClientes'
             ));
         }

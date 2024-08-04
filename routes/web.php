@@ -56,6 +56,7 @@ Route::middleware(['auth'])->group(function () {
     
     
     Route::get('consulta/seguro-social/{segurosocial}', [App\Http\Controllers\ServicioController::class, 'getSeguroSocial'])->name('consulta.seguro.social');
+    Route::post('clientes/marbete/acaa', [App\Http\Controllers\ClienteController::class, 'vehiculoMarbeteAcaa'])->name('vehiculo.marbete.acaa');
     Route::post('clientes/marbete', [App\Http\Controllers\ClienteController::class, 'vehiculoMarbete'])->name('vehiculo.marbete');
     Route::post('seguro/vehiculo', [App\Http\Controllers\ClienteController::class, 'vehiculoSeguro'])->name('vehiculo.seguro');
     Route::get('marcar/bienvenida', [App\Http\Controllers\UserController::class, 'marcarInicio'])->name('marcar.inicio');

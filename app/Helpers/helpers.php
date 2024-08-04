@@ -108,30 +108,29 @@ class Helper {
     }
 
     public static function getTotalCheckout($venta_id) {
-        // dd($venta_id);
         $venta = Venta::where('id', $venta_id)->first();
-
-         //Se va calculando el total
+        
+        //Se va calculando el total
         if ($venta->costo_inspeccion_id != null) {
             $costoInspección = SubServicio::where('id', $venta->costo_inspeccion_id)->select('costo')->pluck('costo')->first();
         } else {
             $costoInspección = $venta->costo_inspeccion_admin;
         }
-
         if ($venta->costo_marbete_id != null) {
             $costoMarbete = SubServicio::where('id', $venta->costo_marbete_id)->select('costo')->pluck('costo')->first();
         } else {
             $costoMarbete = $venta->costo_marbete_admin;
         }
-
-        // dd($venta->costo_seguro_id);
+        if ($venta->costo_marbete_acaa_id != null) {
+            $costoMarbeteAcaa = SubServicio::where('id', $venta->costo_marbete_acaa_id)->select('costo')->pluck('costo')->first();
+        }
         if ($venta->costo_seguro_id != null) {
             $costoSeguro = SubServicio::where('id', $venta->costo_seguro_id)->select('costo')->pluck('costo')->first();
         } else {
             $costoSeguro = 0;
         }
 
-        $total_sin_seguro = $costoInspección + $costoMarbete + $venta->costo_servicio_fijo + $venta->derechos_anuales;
+        $total_sin_seguro = $costoInspección + $costoMarbete + $venta->costo_servicio_fijo + $venta->derechos_anuales + $costoMarbeteAcaa;
         $total = $total_sin_seguro - $costoSeguro;
 
         return $total;

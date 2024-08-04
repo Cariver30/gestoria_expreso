@@ -6,11 +6,18 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="row modal-body">
-                <input type="hidden" name="marbete_id" id="marbete_id">
-                <input type="hidden" name="marbete_five_id" id="marbete_five_id" @if (isset($vehiculo)) value="{{ $venta->costo_servicio_fijo}}" @else value="0" @endif>
                 <div class="row col-md-12 mb-3">
                     @foreach ($marbetes as $marbete)
-                        <button type="button" class="btn btn-soft-success col-md-3 waves-effect waves-light btnInspeccionMarbete" style="margin: 1px;" data-id="{{ $marbete->id}}">{{ $marbete->nombre}} - ${{ $marbete->costo}} </button>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="card-radio-label mb-2">
+                                    <input type="radio" name="valorMarbete" value="{{ $marbete->id}}" class="card-radio-input btnValorMarbete" @if (isset($venta) && $venta->costo_marbete_id == $marbete->id) checked @endif>
+                                    <div class="card-radio">
+                                        <div><span>{{ $marbete->nombre}} - ${{ $marbete->costo}}</span></div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
                     @endforeach
                 </div>
                 <div class="row col-md-12">
@@ -28,22 +35,24 @@
                         <div class="card bg-success text-white">
                             <div class="card-header bg-transparent border-success">
                                 <label for="">Derechos Anuales</label>
-                                <input type="text" class="form-control form-control-sm" id="derecho_anual">
+                                <input type="text" class="form-control form-control-sm" id="derecho_anual" @if (isset($venta) && $venta->derechos_anuales != null) value="{{ $venta->derechos_anuales}}" @endif>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <button type="button" class="btn btn-info col-md-12 waves-effect waves-light btnInspeccionMarbeteACAA" @if (count($accas) == 0) disabled @endif > ACCA </button>
+                        <button type="button" class="btn btn-info col-md-12 waves-effect waves-light" data-bs-target="#marbete_acaa" data-bs-toggle="modal" data-bs-dismiss="modal" @if (count($acaas) == 0) disabled @endif > ACCA </button>
                     </div>
-                    <div class="col-md-3 mb-4 costoServicioObligatorio" style="cursor: pointer;">
-                        <div class="card border border-success cardMain">
-                            <div class="card-header bg-transparent border-success">
-                                <h5 class="my-0 text-success">$5 Costo de Servicio</h5>
-                            </div>
+                    <div class="col-md-3 mb-4" style="cursor: pointer;">
+                        <div class="mb-3">
+                            <label class="card-radio-label mb-2">
+                                <input type="radio" name="costoServicio" id="costoServicio" value="1" class="card-radio-input" @if (isset($venta) && $venta->costo_servicio_fijo != null) checked @endif>
+                                <div class="card-radio">
+                                    <div><span>$5 Costo de Servicio</span></div>
+                                </div>
+                            </label>
                         </div>
                     </div>
                 </div>
-                {{--  <button type="button" class="btn btn-soft-success col-md-3 waves-effect waves-light btnFiveMarbete" style="margin: 1px;"> $5 </button>  --}}
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     <button type="button" class="btn btn-primary" id="saveInspeccionMarbete">Guardar</button>

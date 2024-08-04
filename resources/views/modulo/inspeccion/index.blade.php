@@ -85,6 +85,7 @@
 @include('modulo.inspeccion.extras.notificacion')
 @include('modulo.inspeccion.extras.costo_servicio')
 @include('modulo.inspeccion.extras.venta_multa')
+@include('modulo.inspeccion.marbete.marbeteacaa')
 @endsection
 
 @section('script')
@@ -318,7 +319,7 @@
 
             // Botón que guarda el marbete seleccionado en el modal del módulo de Inspección
             $('#saveInspeccionMarbete').click(function () {
-                if($('#marbete_five_id').val() == 0){
+                if($('#costoServicio').prop('checked') == false){
                     Swal.fire({
                         title: '¡Debe seleccionar el costo de servicio!',
                         icon: "warning",
@@ -327,8 +328,8 @@
                     });
                     return false;
                 }
-                
-                if($('#marbete_id').val() == '' && $('#costo_marbete_admin').val() == ''){
+                {{--  console.log($(".btnValorMarbete").is(':checked'));  --}}
+                if($(".btnValorMarbete").is(':checked') == false && $('#costo_marbete_admin').val() == ''){
                     Swal.fire({
                         title: '¿El administrador ingresará el costo de marbete?',
                         icon: 'info',
@@ -345,9 +346,11 @@
                                 url :"{{ route('vehiculo.marbete') }}",
                                 data : { 
                                     _token: "{{ csrf_token() }}",
-                                    marbete_id: $('#marbete_id').val(),
+                                    marbete_id: $("input[type=radio][name=valorMarbete]:checked").val(),
                                     costo_marbete_admin: $('#costo_marbete_admin').val(),
-                                    marbete_five_id : $('#marbete_five_id').val()
+                                    marbete_five_id : $("input[type=radio][name=costoServicio]:checked").val(),
+                                    derecho_anual : $('#derecho_anual').val(),
+                                    venta_id: $('#venta_id').val()
                                 },
                                 success: function (data) {
                                     if (data.code == 201) {
@@ -386,10 +389,11 @@
                         url :"{{ route('vehiculo.marbete') }}",
                         data : { 
                             _token: "{{ csrf_token() }}",
-                            marbete_id: $('#marbete_id').val(),
+                            marbete_id: $("input[type=radio][name=valorMarbete]:checked").val(),
                             costo_marbete_admin: $('#costo_marbete_admin').val(),
-                            marbete_five_id : $('#marbete_five_id').val(),
-                            derecho_anual : $('#derecho_anual').val()
+                            marbete_five_id : $("input[type=radio][name=costoServicio]:checked").val(),
+                            derecho_anual : $('#derecho_anual').val(),
+                            venta_id: $('#venta_id').val()
                         },
                         success: function (data) {
                             if (data.code == 201) {
@@ -419,6 +423,53 @@
                     }); 
                 }
             });
+
+            // Botón que guarda el marbete ACAA seleccionado
+            $('#saveMarbeteAcaa').click(function () {
+                if($(".marbeteacaa").is(':checked') == false){
+                    Swal.fire({
+                        title: '¡Debe seleccionar un marbete acaa!',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                $.ajax({
+                    type : 'POST',
+                    url :"{{ route('vehiculo.marbete.acaa') }}",
+                    data : { 
+                        _token: "{{ csrf_token() }}",
+                        venta_id: $('#venta_id').val(),
+                        marbete_acaa_id: $("input[type=radio][name=marbeteacaa]:checked").val()
+                    },
+                    success: function (data) {
+                        if (data.code == 201) {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            $('#select_marbete').modal('hide');
+                            setTimeout(function(){
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "warning",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                        }
+
+                    },
+                    error: function (data) {
+                        // console.log(data);
+                    }
+                });      
+            });      
 
             // Botón que guarda el seguro seleccionado en el modal del módulo de Inspección
             $('#saveInspeccionSeguro').click(function () {
