@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use DB;
 use App\Models\User;
 use App\Models\Sede;
+use App\Models\Cliente;
 use App\Models\Gestoria;
 use Illuminate\Http\Request;
 use App\Models\GestoriaServicio;
@@ -27,7 +28,11 @@ class GestoriaController extends Controller
         $licencias = GestoriaServicio::where('gestoria_id', 2)->where('estatus_id', 1)->select('id', 'nombre')->get();
         $vehiculos = GestoriaServicio::where('gestoria_id', 3)->where('estatus_id', 1)->select('id', 'nombre')->get();
 
-        return view('modulo.gestoria.index', compact('user', 'entidades', 'gestorias', 'transacciones', 'licencias', 'vehiculos'));
+        $cliente = Cliente::where('estatus_id', 3)->where('usuario_id', Auth::user()->id)->first();
+        $total_checkout = 0;
+        // dd($cliente);
+
+        return view('modulo.gestoria.index', compact('user', 'entidades', 'gestorias', 'transacciones', 'licencias', 'vehiculos', 'cliente', 'total_checkout'));
     }
 
     /**
@@ -193,8 +198,39 @@ class GestoriaController extends Controller
 
         }catch (\PDOException $e){
             DB::rollBack();
-            dd($e);
             return back()->withErrors(['Error' => substr($e->getMessage(), 0, 150)]);
+        }
+    }
+
+    public function crearCliente(Request $request) {
+
+        if ($request->nombre == '' || $request->email == '' || $request->telefono == '' || $request->seguro_social == '' || $request->identificacion == '') {
+            return response()->json(['code' => 400, 'msg' => 'Hay campos vacíos']);
+        }
+
+        DB::beginTransaction();
+
+        try {
+                
+            //Se crea el cliente
+            $cliente = new Cliente();
+            $cliente->nombre = \Helper::capitalizeFirst($request->nombre, "1");
+            $cliente->email = $request->email;
+            $cliente->telefono = $request->telefono;
+            $cliente->seguro_social = $request->seguro_social;
+            $cliente->identificacion = $request->identificacion;
+            $cliente->img_licencia = 'N/A';
+            $cliente->usuario_id = Auth::user()->id;
+            $cliente->estatus_id = 3;
+            $cliente->save();
+                
+            DB::commit();
+            
+            return response()->json(['code' => 201, 'msg' => 'Transacción iniciada', 'id' => $cliente->id]);
+
+        }catch (\PDOException $e){
+            DB::rollBack();
+            return response()->json(['code' => 201, 'msg' => substr($e->getMessage(), 0, 150)]);
         }
     }
 }

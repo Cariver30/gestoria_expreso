@@ -85,11 +85,16 @@ class VentaController extends Controller
     public function pendienteVenta(Request $request) {
         
         $venta = Venta::where('id', $request->venta_id)->where('estatus_id', 3)->first();
-
+        
         if ($venta) {
             
             $venta->estatus_id = 5;
             $venta->save();
+            
+            $cliente_id =  ClienteVehiculo::where('id', $venta->vehiculo_id)->select('cliente_id')->pluck('cliente_id')->first();
+            $cliente = Cliente::find($cliente_id);
+            $cliente->estatus_id = 5;
+            $cliente->save();
 
             return response()->json(['code' => 200, 'msg' => 'Transacción pendiente de pago!']);
         } else {

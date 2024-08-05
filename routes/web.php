@@ -22,6 +22,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('extraer/data/pdf', [App\Http\Controllers\HomeController::class, 'getDataPdf'])->name('pdf.data'); //cambiar para subir licencia imagen
 
+    // --------------------------------------------------- Gestoría ------------------------------------------------------------------
+    Route::post('gestoria/cliente', [App\Http\Controllers\GestoriaController::class, 'crearCliente'])->name('gestoria.cliente');
+
     //Cancelar venta de servicio a vehículo
     Route::post('cancelar/venta/vehiculo', [App\Http\Controllers\VentaController::class, 'cancelarVenta'])->name('cancelar.venta');
     // Pendiente por pagar venta de servicio a vehículo

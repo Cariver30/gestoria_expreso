@@ -170,7 +170,6 @@ class ClienteController extends Controller
             }
         }catch (\PDOException $e){
             DB::rollBack();
-            dd($e);
             return response()->json(['code' => 201, 'msg' => substr($e->getMessage(), 0, 150)]);
         }
     }
