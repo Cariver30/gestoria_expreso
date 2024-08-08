@@ -19,19 +19,18 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <address>
-                                <strong>Billed To:</strong><br>
+                                <strong>Facturado a:</strong><br>
                                 {{ $cliente->nombre }}<br>
-                                {{ $cliente->telefono }}<br>
+                                +{{ $cliente->telefono }}<br>
                                 {{ $cliente->email}} <br>
                             </address>
                         </div>
                         <div class="col-sm-6 text-sm-end">
                             <address class="mt-2 mt-sm-0">
-                                <strong>Shipped To:</strong><br>
-                                Kenny Rigdon<br>
-                                1234 Main<br>
-                                Apt. 4B<br>
-                                Springfield, ST 54321
+                                <strong>Facturado por:</strong><br>
+                                El Expreso<br>
+                                PO Box 1663<br> 
+                                Ciales PR, 00638
                             </address>
                         </div>
                     </div>
@@ -40,7 +39,6 @@
                             <address>
                                 <strong>Metodo de Pago:</strong><br>
                                 Efectivo<br>
-                                {{ $cliente->email }}
                             </address>
                         </div>
                         <div class="col-sm-6 mt-3 text-sm-end">
@@ -57,8 +55,8 @@
                         <table class="table table-nowrap">
                             <thead>
                                 <tr>
-                                    <th>Servicio</th>
-                                    <th class="text-end">Price</th>
+                                    <th><strong> Servicio </strong></th>
+                                    <th class="text-end"><strong> Costo </strong></th>
                                 </tr>
                             </thead>
                             <tbody>

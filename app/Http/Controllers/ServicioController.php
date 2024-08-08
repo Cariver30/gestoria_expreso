@@ -210,8 +210,7 @@ class ServicioController extends Controller
         $licencias = SubServicio::where('servicio_id', 4)->get();
         $notificaciones = SubServicio::where('servicio_id', 5)->get();
         $costo_servicios = SubServicio::where('servicio_id', 6)->get();
-        $venta_multas = SubServicio::where('servicio_id', 7)->where('estatus_id', 1)->get();
-        // dd($venta_multas);
+        $multas = SubServicio::where('servicio_id', 9)->where('estatus_id', 1)->get();
         $acaas = SubServicio::where('servicio_id', 10)->where('estatus_id', 1)->select('id', 'nombre', 'costo')->get();
         $listClientes = Cliente::select('id', 'nombre', 'seguro_social', 'email', 'telefono')->get();
 
@@ -249,7 +248,7 @@ class ServicioController extends Controller
                 'licencias',
                 'notificaciones',
                 'costo_servicios',
-                'venta_multas',
+                'multas',
                 'entidades',
                 'venta',
                 'en_curso',
@@ -272,7 +271,7 @@ class ServicioController extends Controller
                 'licencias',
                 'notificaciones',
                 'costo_servicios',
-                'venta_multas',
+                'multas',
                 'entidades',
                 'venta',
                 'en_curso',

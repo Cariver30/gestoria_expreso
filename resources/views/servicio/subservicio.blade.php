@@ -85,6 +85,7 @@
                     },
                     success: function (data) {
                         if (data.code == 201) {
+                            $('#add_sub_servicio').modal('hide');
                             Swal.fire({
                                 title: data.msg,
                                 icon: "success",

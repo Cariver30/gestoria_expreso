@@ -31,7 +31,11 @@ class ClienteController extends Controller
         $entidades = \Helper::entidadUsuario();
         $meses = Mes::select('id', 'nombre')->get();
 
-        return view('cliente.index', compact('clientes', 'user', 'entidades', 'meses'));
+        $seguros_sociales = Cliente::select('id', 'seguro_social')->get();
+        $tablillas = ClienteVehiculo::select('id', 'tablilla')->get();
+        // dd($tablillas);
+
+        return view('cliente.index', compact('clientes', 'user', 'entidades', 'meses', 'seguros_sociales', 'tablillas'));
     }
 
     /**
@@ -301,6 +305,7 @@ class ClienteController extends Controller
             }
             $venta->costo_servicio_fijo = ($request->marbete_five_id == 1) ? 5 : null ;
             $venta->derechos_anuales = $request->derecho_anual;
+            $venta->costo_marbete_acaa_id = $request->marbete_acaa_id;
             $venta->save();
 
             $total = \Helper::getTotalCheckout($venta->id);

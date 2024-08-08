@@ -7,15 +7,15 @@
             </div>
             <div class="modal-body row col-md-12">
                 <div class="row col-md-12 mb-3">
-                    @foreach ($venta_multas as $venta_multa)
+                    @foreach ($multas as $multa)
                         <div class="col-md-3">
                             <div class="mb-3">
                                 <label class="card-radio-label mb-2">
-                                    <input type="radio" name="valorSeguro" value="{{ $venta_multa->id}}" class="card-radio-input">
+                                    <input type="radio" name="valorMulta" value="{{ $multa->id}}" class="card-radio-input">
                                     <div class="card-radio">
                                         <div class="text-center">
-                                            <span>{{ $venta_multa->nombre}}</span><br>
-                                            <span> ${{ $venta_multa->costo}} </span>
+                                            <span>{{ $multa->nombre}}</span><br>
+                                            <span> ${{ $multa->costo}} </span>
                                         </div>
                                     </div>
                                 </label>
@@ -25,7 +25,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="saveInspeccionSeguro">Guardar</button>
+                    <button type="button" class="btn btn-primary" id="saveInspeccionMulta">Guardar</button>
                 </div>
             </div>
         </div>

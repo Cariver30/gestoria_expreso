@@ -9,14 +9,71 @@
 @endsection
 
 @section('content')
-    <div class="card">
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card job-filter">
+            <div class="card-body p-3">
+                <form action="javascript:void(0);">
+                    <div class="row g-3">
+                        <div class="col-xxl-4 col-lg-3">
+                            <div class="position-relative">
+                                <select class="form-select" style="cursor: pointer;" id="search_seguro_social" name="search_seguro_social">
+                                    <option value="" disabled selected hidden>Seguro Social </option>
+                                    @foreach ($seguros_sociales as $seguros_social)
+                                        <option value="{{$seguros_social->id}}">{{ $seguros_social->seguro_social }}</option>
+                                    @endforeach
+                                </select>
+                                {{--  <input type="text" class="form-control" autocomplete="off" name="search_seguro_social" id="search_seguro_social" placeholder="Seguro social">  --}}
+                            </div>
+                        </div>
+                        <!--end col-->
+                        <div class="col-xxl-2 col-lg-3">
+                            <div class="position-relative">
+                                <select class="form-select" style="cursor: pointer;" id="search_tablilla" name="search_tablilla">
+                                    <option value="" disabled selected hidden> Tablilla </option>
+                                    @foreach ($tablillas as $tablilla)
+                                        <option value="{{$tablilla->id}}">{{ $tablilla->tablilla }}</option>
+                                    @endforeach
+                                </select>
+                                {{--  <input type="text" class="form-control" autocomplete="off" name="search_tablilla" id="search_tablilla" placeholder="Tablilla">  --}}
+                            </div>
+                        </div>
+                        <!--end col-->
+                        <div class="col-xxl-2 col-lg-3">
+                            <div class="position-relative">
+                                <select class="form-select" style="cursor: pointer;" id="mes_vencimiento" name="mes_vencimiento">
+                                    <option value="" disabled selected hidden >Mes de Vencimiento</option>
+                                    @foreach ($meses as $mes)
+                                        <option value="{{$mes->id}}" @if (isset($vehiculo) && $mes->id == $vehiculo->mes_vencimiento_id) selected @endif>{{ $mes->nombre }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <!--end col-->
+
+                        <div class="col-xxl-2 col-lg-3">
+                            <div class="position-relative h-100 hstack gap-3">
+                                <button type="submit" class="btn btn-primary h-100 w-100" onclick="filterData();"><i
+                                        class="bx bx-search-alt align-middle"></i> Ver Todos </button>
+                            </div>
+                        </div>
+                        <!--end col-->
+                    </div>
+                    <!--end row-->
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--end col-->
+</div>
+    {{--  <div class="card">
         <div class="card-body text-center">
             <div class="row col-md-12">
                 <div class="col">
-                    <input type="text" class="form-control form-control-md" name="search_seguro_social" id="search_seguro_social" placeholder="Ingrese seguro social">
+                    <input type="text" class="form-control form-control-md" name="search_seguro_social" id="search_seguro_social" placeholder="Seguro social">
                 </div>
                 <div class="col">
-                    <input type="text" class="form-control form-control-md" name="search_tablilla" id="search_tablilla" placeholder="Ingrese tablilla">
+                    <input type="text" class="form-control form-control-md" name="search_tablilla" id="search_tablilla" placeholder="Tablilla">
                 </div>
                 <div class="col-md-3 mb-3">
                     <select class="form-select" style="cursor: pointer;" id="mes_vencimiento" name="mes_vencimiento">
@@ -38,7 +95,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>  --}}
     <div class="row col-md-12">
         @if (count($clientes) == 0)
             <div class="card">

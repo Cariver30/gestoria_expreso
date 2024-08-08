@@ -24,8 +24,8 @@
                     @endforeach
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="saveMarbeteAcaa">Guardar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-target="#select_marbete" data-bs-toggle="modal" data-bs-dismiss="modal">regresar</button>
+                    {{--  <button type="button" class="btn btn-primary" id="saveMarbeteAcaa">Guardar</button>  --}}
                 </div>
             </div>
         </div>

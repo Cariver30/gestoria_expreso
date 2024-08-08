@@ -350,6 +350,7 @@
                                     costo_marbete_admin: $('#costo_marbete_admin').val(),
                                     marbete_five_id : $("input[type=radio][name=costoServicio]:checked").val(),
                                     derecho_anual : $('#derecho_anual').val(),
+                                    marbete_acaa_id: $("input[type=radio][name=marbeteacaa]:checked").val(),
                                     venta_id: $('#venta_id').val()
                                 },
                                 success: function (data) {
@@ -393,6 +394,7 @@
                             costo_marbete_admin: $('#costo_marbete_admin').val(),
                             marbete_five_id : $("input[type=radio][name=costoServicio]:checked").val(),
                             derecho_anual : $('#derecho_anual').val(),
+                            marbete_acaa_id: $("input[type=radio][name=marbeteacaa]:checked").val(),
                             venta_id: $('#venta_id').val()
                         },
                         success: function (data) {
