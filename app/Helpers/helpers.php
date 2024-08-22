@@ -137,14 +137,35 @@ class Helper {
             $costoSeguro = 0;
         }
 
-        $total_sin_seguro = $costoInspección + $costoMarbete + $venta->costo_servicio_fijo + $venta->derechos_anuales + $costoMarbeteAcaa;
+        //Campo de licencia de extras
+        if ($venta->extra_licencia_id != null) {
+            $costoExtraLicencia = SubServicio::where('id', $venta->extra_licencia_id)->select('costo')->pluck('costo')->first();
+        } else {
+            $costoExtraLicencia = 0;
+        }
+
+        //Campo de notificaciones de extras
+        if ($venta->extra_notificacion_id != null) {
+            $costoExtraNotificacion = SubServicio::where('id', $venta->extra_notificacion_id)->select('costo')->pluck('costo')->first();
+        } else {
+            $costoExtraNotificacion = 0;
+        }
+
+        //Campo de multas de extras
+        if ($venta->extra_multa_id != null) {
+            $costoExtraMulta = SubServicio::where('id', $venta->extra_multa_id)->select('costo')->pluck('costo')->first();
+        } else {
+            $costoExtraMulta = 0;
+        }
+
+        $total_sin_seguro = $costoInspección + $costoMarbete + $venta->costo_servicio_fijo + $venta->derechos_anuales + $costoMarbeteAcaa + $costoExtraLicencia + $costoExtraNotificacion + $costoExtraMulta;
+        
         if ($esResta == 0) {
             $total = $total_sin_seguro + $costoSeguro;
         } else {
             $total = $total_sin_seguro - $costoSeguro;
         }
         
-
         return $total;
     }
 

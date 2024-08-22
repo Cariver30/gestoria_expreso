@@ -58,6 +58,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('consulta/cliente/tablilla/vehiculo', [App\Http\Controllers\ClienteController::class, 'getTablillaVehiculoCliente'])->name('cliente.tablilla.vehiculo');
     
     
+    Route::post('vehiculo/extras/licencia', [App\Http\Controllers\ClienteController::class, 'vehiculoExtraLicencia'])->name('vehiculo.extras.licencia');
+    Route::post('vehiculo/extras/notificacion', [App\Http\Controllers\ClienteController::class, 'vehiculoExtraNotificacion'])->name('vehiculo.extras.notificacion');
+    Route::post('vehiculo/extras/multa', [App\Http\Controllers\ClienteController::class, 'vehiculoExtraMulta'])->name('vehiculo.extras.multa');
     Route::get('consulta/seguro-social/{segurosocial}', [App\Http\Controllers\ServicioController::class, 'getSeguroSocial'])->name('consulta.seguro.social');
     Route::post('clientes/marbete/acaa', [App\Http\Controllers\ClienteController::class, 'vehiculoMarbeteAcaa'])->name('vehiculo.marbete.acaa');
     Route::post('clientes/marbete', [App\Http\Controllers\ClienteController::class, 'vehiculoMarbete'])->name('vehiculo.marbete');

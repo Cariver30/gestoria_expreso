@@ -360,6 +360,42 @@ class ClienteController extends Controller
         return response()->json(['code' => 200, 'msg' => 'Seguro actualizado']);
     }
 
+    public function vehiculoExtraLicencia(Request $request) {
+        $venta = Venta::where('id', $request->venta_id)->first();
+        $venta->extra_licencia_id = $request->licencia_id;
+        $venta->save();
+
+        $total = \Helper::getTotalCheckout($venta->id);
+        
+        DB::table('ventas')->where('id', $venta->id)->update(['total' => $total]);
+
+        return response()->json(['code' => 200, 'msg' => 'Servicio extra actualizado']);
+    }
+
+    public function vehiculoExtraNotificacion(Request $request) {
+        $venta = Venta::where('id', $request->venta_id)->first();
+        $venta->extra_notificacion_id = $request->notificacion_id;
+        $venta->save();
+
+        $total = \Helper::getTotalCheckout($venta->id);
+        
+        DB::table('ventas')->where('id', $venta->id)->update(['total' => $total]);
+
+        return response()->json(['code' => 200, 'msg' => 'Servicio extra actualizado']);
+    }
+
+    public function vehiculoExtraMulta(Request $request) {
+        $venta = Venta::where('id', $request->venta_id)->first();
+        $venta->extra_multa_id = $request->multa_id;
+        $venta->save();
+
+        $total = \Helper::getTotalCheckout($venta->id);
+        
+        DB::table('ventas')->where('id', $venta->id)->update(['total' => $total]);
+
+        return response()->json(['code' => 200, 'msg' => 'Servicio extra actualizado']);
+    }
+
     public function getTablillaCliente(Request $request) {
 
         $cliente = Cliente::where('id', $request->idCliente)->select('id', 'nombre', 'seguro_social', 'email', 'telefono', 'identificacion')->first();

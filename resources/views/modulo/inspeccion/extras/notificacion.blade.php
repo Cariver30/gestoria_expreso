@@ -7,25 +7,33 @@
             </div>
             <div class="modal-body row col-md-12">
                 <div class="row col-md-12 mb-3">
-                    @foreach ($notificaciones as $notificacion)
-                        <div class="col-md-3">
-                            <div class="mb-3">
-                                <label class="card-radio-label mb-2">
-                                    <input type="radio" name="valorSeguro" value="{{ $notificacion->id}}" class="card-radio-input">
-                                    <div class="card-radio">
-                                        <div class="text-center">
-                                            <span>{{ $notificacion->nombre}}</span><br>
-                                            <span> ${{ $notificacion->costo}} </span>
+                    @if (count($notificaciones) != 0)
+                        @foreach ($notificaciones as $notificacion)
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label class="card-radio-label mb-2">
+                                        <input type="radio" name="valorExtraNotificacion" value="{{ $notificacion->id}}" class="card-radio-input valorExtraNotificacion" @if (isset($venta) && $venta->extra_notificacion_id == $notificacion->id) checked @endif>
+                                        <div class="card-radio">
+                                            <div class="text-center">
+                                                <span>{{ $notificacion->nombre}}</span><br>
+                                                <span> ${{ $notificacion->costo}} </span>
+                                            </div>
                                         </div>
-                                    </div>
-                                </label>
+                                    </label>
+                                </div>
                             </div>
+                        @endforeach
+                    @else
+                        <div class="col-md-12 text-center">
+                            <span> ¡Sin Notificaciones disponibles, debe registrar al menos una el Administrador!</span>
                         </div>
-                    @endforeach
+                    @endif
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary" id="saveInspeccionSeguro">Guardar</button>
+                    @if (count($notificaciones) != 0)
+                        <button type="button" class="btn btn-primary" id="saveExtraNotificacion">Guardar</button>
+                    @endif
                 </div>
             </div>
         </div>

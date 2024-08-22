@@ -17,7 +17,7 @@
                     <div class="row g-3">
                         <div class="col-xxl-4 col-lg-3">
                             <div class="position-relative">
-                                <select class="form-select" style="cursor: pointer;" id="search_seguro_social" name="search_seguro_social">
+                                <select class="form-select" style="cursor: pointer;" id="search_seguro_social" name="search_seguro_social" @if (count($seguros_sociales) == 0) disabled @endif>
                                     <option value="" disabled selected hidden>Seguro Social </option>
                                     @foreach ($seguros_sociales as $seguros_social)
                                         <option value="{{$seguros_social->id}}">{{ $seguros_social->seguro_social }}</option>
@@ -29,7 +29,7 @@
                         <!--end col-->
                         <div class="col-xxl-2 col-lg-3">
                             <div class="position-relative">
-                                <select class="form-select" style="cursor: pointer;" id="search_tablilla" name="search_tablilla">
+                                <select class="form-select" style="cursor: pointer;" id="search_tablilla" name="search_tablilla" @if (count($tablillas) == 0) disabled @endif>
                                     <option value="" disabled selected hidden> Tablilla </option>
                                     @foreach ($tablillas as $tablilla)
                                         <option value="{{$tablilla->id}}">{{ $tablilla->tablilla }}</option>
@@ -41,7 +41,7 @@
                         <!--end col-->
                         <div class="col-xxl-2 col-lg-3">
                             <div class="position-relative">
-                                <select class="form-select" style="cursor: pointer;" id="mes_vencimiento" name="mes_vencimiento">
+                                <select class="form-select" style="cursor: pointer;" id="mes_vencimiento" name="mes_vencimiento" @if (count($tablillas) == 0) disabled @endif>
                                     <option value="" disabled selected hidden >Mes de Vencimiento</option>
                                     @foreach ($meses as $mes)
                                         <option value="{{$mes->id}}" @if (isset($vehiculo) && $mes->id == $vehiculo->mes_vencimiento_id) selected @endif>{{ $mes->nombre }}</option>
@@ -53,8 +53,7 @@
 
                         <div class="col-xxl-2 col-lg-3">
                             <div class="position-relative h-100 hstack gap-3">
-                                <button type="submit" class="btn btn-primary h-100 w-100" onclick="filterData();"><i
-                                        class="bx bx-search-alt align-middle"></i> Ver Todos </button>
+                                <button type="submit" class="btn btn-primary h-100 w-100" onclick="filterData();" @if (count($seguros_sociales) == 0) disabled @endif><i class="bx bx-search-alt align-middle"></i> Ver Todos </button>
                             </div>
                         </div>
                         <!--end col-->

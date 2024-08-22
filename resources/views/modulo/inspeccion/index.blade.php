@@ -230,6 +230,7 @@
                 $.ajax({
                     type : 'POST',
                     url :"{{ route('clientes.store') }}",
+                    enctype: 'multipart/form-data',
                     data : { 
                         _token: "{{ csrf_token() }}",
                         nombre: $('#nombre').val(),
@@ -246,7 +247,8 @@
                         identificacion: $('#identificacion').val(),
                         costo_inspeccion_admin: $('#costo_admin').val(),
                         venta_id: $('#venta_id').val(),
-                        tipo_registro: $('#tipo_registro').val()
+                        tipo_registro: $('#tipo_registro').val(),
+                        licencia: $('#file_licencia').val()
                     },
                     success: function (data) {
                         if (data.code == 201) {
@@ -502,6 +504,148 @@
                                 timer: 2000
                             });
                             $('#select_marbete').modal('hide');
+                            setTimeout(function(){
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "warning",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                        }
+
+                    },
+                    error: function (data) {
+                        // console.log(data);
+                    }
+                }); 
+            });
+
+            // Botón que guarda en servicios extra - Licencia
+            $('#saveExtraLicencia').click(function () {
+                if($(".valorExtraLicencia").is(':checked') == false){
+                    Swal.fire({
+                        title: '¡Debe seleccionar un tipo de licencia!',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                $.ajax({
+                    type : 'POST',
+                    url :"{{ route('vehiculo.extras.licencia') }}",
+                    data : { 
+                        _token: "{{ csrf_token() }}",
+                        venta_id: $('#venta_id').val(),
+                        licencia_id: $("input[type=radio][name=valorExtraLicencia]:checked").val()
+                    },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            $('#extra_licencia').modal('hide');
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            $('#select_marbete').modal('hide');
+                            setTimeout(function(){
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "warning",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                        }
+
+                    },
+                    error: function (data) {
+                        // console.log(data);
+                    }
+                }); 
+            });
+
+            // Botón que guarda en servicios extra - Notificaciones
+            $('#saveExtraNotificacion').click(function () {
+                if($(".valorExtraNotificacion").is(':checked') == false){
+                    Swal.fire({
+                        title: '¡Debe seleccionar un tipo de notificación!',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                $.ajax({
+                    type : 'POST',
+                    url :"{{ route('vehiculo.extras.notificacion') }}",
+                    data : { 
+                        _token: "{{ csrf_token() }}",
+                        venta_id: $('#venta_id').val(),
+                        notificacion_id: $("input[type=radio][name=valorExtraNotificacion]:checked").val()
+                    },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            $('#extra_notificacion').modal('hide');
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            setTimeout(function(){
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "warning",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                        }
+
+                    },
+                    error: function (data) {
+                        // console.log(data);
+                    }
+                }); 
+            });
+
+             // Botón que guarda en servicios extra - Multas de Ley
+             $('#saveExtraMulta').click(function () {
+                if($(".valorExtraMulta").is(':checked') == false){
+                    Swal.fire({
+                        title: '¡Debe seleccionar un tipo de multa de ley!',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                $.ajax({
+                    type : 'POST',
+                    url :"{{ route('vehiculo.extras.multa') }}",
+                    data : { 
+                        _token: "{{ csrf_token() }}",
+                        venta_id: $('#venta_id').val(),
+                        multa_id: $("input[type=radio][name=valorExtraMulta]:checked").val()
+                    },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            $('#extra_venta_multas').modal('hide');
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
                             setTimeout(function(){
                                 window.location.reload();
                             }, 1000);

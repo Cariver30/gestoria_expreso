@@ -236,7 +236,7 @@ class ServicioController extends Controller
             if (is_null($total_checkout) || $total_checkout == 0) {
                 $total_checkout = 0;
             }
-            // dd($acaas);
+            // dd($venta);
 
             return view('modulo.inspeccion.index', compact(
                 'costosInspeccion',

@@ -26,7 +26,7 @@
                             <div class="card bg-success text-white">
                                 <div class="card-header bg-transparent border-success">
                                     <label for="costo_marbete_admin"> Customizado </label>
-                                    <input type="string" class="form-control form-control-sm" name="costo_marbete_admin" id="costo_marbete_admin">
+                                    <input type="string" class="form-control form-control-sm" name="costo_marbete_admin" id="costo_marbete_admin" @if (isset($venta)) value="{{ $venta->costo_marbete_admin }}" @endif>
                                 </div>
                             </div>
                         </div>

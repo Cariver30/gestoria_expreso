@@ -109,7 +109,7 @@
                         <div class="dropzone">
                             <div class="fallback">
                                 <label for="file_licencia" class="col-form-label"> Cargar Licencia </label>
-                                <input type="file" name="file_licencia" id="file_licencia" accept="image/*" capture="camera" onchange="validateFileType()"/>
+                                <input type="file" name="file_licencia" id="file_licencia" accept="image/*" onchange="validateFileType()"/>
                             </div>
                             <div class="dz-message needsclick">
                                 <div class="mb-3">
