@@ -127,7 +127,7 @@
                                         <td> ${{ $orden['total'] }} </td>
                                         <td>
                                             @if ($orden['estatus_id'] == 5 && $orden['total'] > 0.0)
-                                                <a type="button" class="btn btn-info waves-effect waves-light" href="{{ route('pay.checkout.vehicle', ['id' => $vehiculo->id]) }}">Pagar</a>
+                                                <a type="button" class="btn btn-info waves-effect waves-light" href="{{ route('pay.checkout.vehicle', ['id' => $orden['id']]) }}">Pagar</a>
                                             @elseif ($orden['estatus_id'] != 5 && $orden['total'] == 0.0 || $orden['estatus_id'] == 5 && $orden['total'] == 0.0)
                                                 <button type="button" class="btn btn-info waves-effect waves-light pr-4" disabled> Pagar </a>
                                             @endif

@@ -99,6 +99,8 @@ class VentaController extends Controller
                 $cliente->estatus_id = 5;
                 $cliente->save();
 
+                DB::commit();
+
                 return response()->json(['code' => 200, 'msg' => 'Transacción pendiente de pago!']);
             
             }catch (\PDOException $e){

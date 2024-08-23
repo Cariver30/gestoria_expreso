@@ -84,7 +84,7 @@
                         url :"{{ route('finalizar.venta') }}",
                         data : { 
                             _token: "{{ csrf_token() }}",
-                            vehiculo_id: id,
+                            venta_id: id,
                         },
                         success: function (data) {
                             if (data.code == 200) {
