@@ -68,16 +68,34 @@ class VentaController extends Controller
     }
 
     public function cancelarVenta(Request $request) {
-        // dd($request->all());
 
         $venta = Venta::where('id', $request->venta_id)->first();
         
         if ($venta) {
-            $venta->estatus_id = 6;
-            $venta->motivo =  \Helper::capitalizeFirst($request->motivo, "1");
-            $venta->save();
 
-            return response()->json(['code' => 200, 'msg' => 'Transacción cancelada!']);
+            DB::beginTransaction();
+
+            try {
+                $venta->estatus_id = 6;
+                $venta->motivo =  \Helper::capitalizeFirst($request->motivo, "1");
+                $venta->save();
+                
+                $clientVehiculo = ClienteVehiculo::where('id', $venta->vehiculo_id)->first();
+                $clientVehiculo->estatus_id = 4;
+                $clientVehiculo->save();
+
+                $cliente = Cliente::find($clientVehiculo->cliente_id);
+                $cliente->estatus_id = 4;
+                $cliente->save();
+
+                DB::commit();
+
+                return response()->json(['code' => 200, 'msg' => 'Transacción cancelada!']);
+            
+            }catch (\PDOException $e){
+                DB::rollBack();
+                return back()->withErrors(['Error' => substr($e->getMessage(), 0, 150)]);
+            }
         } else {
             return response()->json(['code' => 404, 'msg' => 'Transacción no encontrada!']);
         }
