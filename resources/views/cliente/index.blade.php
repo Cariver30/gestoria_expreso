@@ -6,96 +6,65 @@
 
 @section('css')
     <link href="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ URL::asset('build/libs/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
-<div class="row">
-    <div class="col-lg-12">
-        <div class="card job-filter">
-            <div class="card-body p-3">
-                <form action="javascript:void(0);">
-                    <div class="row g-3">
-                        <div class="col-xxl-4 col-lg-3">
-                            <div class="position-relative">
-                                <select class="form-select" style="cursor: pointer;" id="search_seguro_social" name="search_seguro_social" @if (count($seguros_sociales) == 0) disabled @endif>
-                                    <option value="" disabled selected hidden>Seguro Social </option>
-                                    @foreach ($seguros_sociales as $seguros_social)
-                                        <option value="{{$seguros_social->id}}">{{ $seguros_social->seguro_social }}</option>
-                                    @endforeach
-                                </select>
-                                {{--  <input type="text" class="form-control" autocomplete="off" name="search_seguro_social" id="search_seguro_social" placeholder="Seguro social">  --}}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card job-filter">
+                <div class="card-body p-3">
+                    <form action="javascript:void(0);">
+                        <div class="row g-3">
+                            <div class="col-xxl-3 col-lg-3">
+                                <div class="position-relative">
+                                    <select class="form-select select2 search_seguro_social" style="cursor: pointer;" id="search_seguro_social" @if (count($seguros_sociales) == 0) disabled @endif>
+                                        <option value="" disabled selected hidden>Seguro Social </option>
+                                        @foreach ($seguros_sociales as $seguros_social)
+                                            <option value="{{$seguros_social->seguro_social }}">{{ $seguros_social->seguro_social }} - {{ $seguros_social->nombre }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <!--end col-->
-                        <div class="col-xxl-2 col-lg-3">
-                            <div class="position-relative">
-                                <select class="form-select" style="cursor: pointer;" id="search_tablilla" name="search_tablilla" @if (count($tablillas) == 0) disabled @endif>
-                                    <option value="" disabled selected hidden> Tablilla </option>
-                                    @foreach ($tablillas as $tablilla)
-                                        <option value="{{$tablilla->id}}">{{ $tablilla->tablilla }}</option>
-                                    @endforeach
-                                </select>
-                                {{--  <input type="text" class="form-control" autocomplete="off" name="search_tablilla" id="search_tablilla" placeholder="Tablilla">  --}}
+                            <!--end col-->
+                            <div class="col-xxl-3 col-lg-3">
+                                <div class="position-relative">
+                                    <select class="form-select select2 search_tablilla" style="cursor: pointer;" @if (count($tablillas) == 0) disabled @endif>
+                                        <option value="" disabled selected hidden> Tablilla </option>
+                                        @foreach ($tablillas as $tablilla)
+                                            <option value="{{$tablilla->tablilla}}">{{ $tablilla->tablilla }} - {{ $tablilla->vehiculo }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <!--end col-->
-                        <div class="col-xxl-2 col-lg-3">
-                            <div class="position-relative">
-                                <select class="form-select" style="cursor: pointer;" id="mes_vencimiento" name="mes_vencimiento" @if (count($tablillas) == 0) disabled @endif>
-                                    <option value="" disabled selected hidden >Mes de Vencimiento</option>
-                                    @foreach ($meses as $mes)
-                                        <option value="{{$mes->id}}" @if (isset($vehiculo) && $mes->id == $vehiculo->mes_vencimiento_id) selected @endif>{{ $mes->nombre }}</option>
-                                    @endforeach
-                                </select>
+                            <!--end col-->
+                            <div class="col-xxl-3 col-lg-3">
+                                <div class="position-relative">
+                                    <select class="form-select select2 search_mes_vencimiento" style="cursor: pointer;" @if (count($tablillas) == 0) disabled @endif>
+                                        <option value="" disabled selected hidden >Mes de Vencimiento</option>
+                                        @foreach ($meses as $mes)
+                                            <option value="{{$mes->id}}" @if (isset($vehiculo) && $mes->id == $vehiculo->mes_vencimiento_id) selected @endif>{{ $mes->nombre }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
-                        </div>
-                        <!--end col-->
+                            <!--end col-->
 
-                        <div class="col-xxl-2 col-lg-3">
-                            <div class="position-relative h-100 hstack gap-3">
-                                <button type="submit" class="btn btn-primary h-100 w-100" onclick="filterData();" @if (count($seguros_sociales) == 0) disabled @endif><i class="bx bx-search-alt align-middle"></i> Ver Todos </button>
+                            <div class="col-xxl-3 col-lg-3">
+                                <div class="position-relative h-100 hstack gap-3">
+                                    <button type="submit" class="btn btn-primary h-100 w-100" onclick="verTodos();" @if (count($seguros_sociales) == 0) disabled @endif><i class="bx bx-search-alt align-middle"></i> Ver Todos </button>
+                                </div>
                             </div>
+                            <!--end col-->
                         </div>
-                        <!--end col-->
-                    </div>
-                    <!--end row-->
-                </form>
+                        <!--end row-->
+                    </form>
+                </div>
             </div>
         </div>
+        <!--end col-->
     </div>
-    <!--end col-->
-</div>
-    {{--  <div class="card">
-        <div class="card-body text-center">
-            <div class="row col-md-12">
-                <div class="col">
-                    <input type="text" class="form-control form-control-md" name="search_seguro_social" id="search_seguro_social" placeholder="Seguro social">
-                </div>
-                <div class="col">
-                    <input type="text" class="form-control form-control-md" name="search_tablilla" id="search_tablilla" placeholder="Tablilla">
-                </div>
-                <div class="col-md-3 mb-3">
-                    <select class="form-select" style="cursor: pointer;" id="mes_vencimiento" name="mes_vencimiento">
-                        <option value="" disabled selected hidden >Mes de Vencimiento</option>
-                        @foreach ($meses as $mes)
-                            <option value="{{$mes->id}}" @if (isset($vehiculo) && $mes->id == $vehiculo->mes_vencimiento_id) selected @endif>{{ $mes->nombre }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col">
-                    <button type="button" class="btn btn-warning waves-effect waves-light">
-                        <i class="bx bx-search font-size-16 align-middle me-2"></i> Buscar
-                    </button>
-                </div>
-                <div class="col">
-                    <button type="button" class="btn btn-warning waves-effect waves-light">
-                        <i class="bx bx-user font-size-16 align-middle me-2"></i> Ver todos
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>  --}}
-    <div class="row col-md-12">
+    {{--  <div class="row col-md-12" id="clientes-list">
         @if (count($clientes) == 0)
             <div class="card">
                 <div class="card-body text-center">
@@ -118,7 +87,6 @@
                                 <span class="badge bg-warning">{{ $cliente->estatus }}</span>
                             @endif
                             <div class="mt-4">
-                                {{--  <a class="btn btn-soft-success waves-effect waves-light" style="margin-right: 10px;" data-id="{{ $cliente->id }}"><i class="mdi mdi-pencil font-size-16 me-1"></i> Editar </a></li>  --}}
                                 <a class="btn btn-soft-info waves-effect waves-light" style="margin-right: 1px;" href="{{ route('clientes.edit', $cliente->id)}}"><i class="mdi mdi-eye-outline font-size-16 me-1"></i>Ver detalle</a>
                             </div>
                         </div>
@@ -126,13 +94,19 @@
                 </div>
             @endforeach
         @endif
+    </div>  --}}
+    <div class="row" id="client-list">
+        
     </div>
-    {{--  @include('cliente.edit')  --}}
 @endsection
 
 @section('script')
     <!-- Sweet Alerts js -->
     <script src="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.js') }}"></script>
+    <script src="{{ URL::asset('build/libs/select2/js/select2.min.js') }}"></script>
+    <script src="{{ URL::asset('build/js/pages/form-advanced.init.js') }}"></script>
+    <!-- cliente-list js -->
+    <script src="{{ URL::asset('build/js/pages/client-list.init.js') }}"></script>
     <script>
         $(document).ready(function() {
 
@@ -162,20 +136,6 @@
                     });
                 </script>
             @endif
-
-            //Modal para editar cliente
-            {{--  $(document).on('click','.editCliente',function(){
-                var id = $(this).attr('data-id');
-                $.get('clientes/' + id, function (data) {
-                    $('#up_id').val(data.data.id);
-                    $('#up_nombre').val(data.data.nombre);
-                    $('#up_email').val(data.data.email);
-                    $('#up_telefono').val(data.data.telefono);
-                    $('#up_seguro_social').val(data.data.seguro_social);
-                    $('#up_identificacion').val(data.data.identificacion);
-                    $('#update_cliente').modal('show');
-                })
-            });  --}}
         });
     </script>
 @endsection

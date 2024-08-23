@@ -31,9 +31,8 @@ class ClienteController extends Controller
         $entidades = \Helper::entidadUsuario();
         $meses = Mes::select('id', 'nombre')->get();
 
-        $seguros_sociales = Cliente::select('id', 'seguro_social')->get();
-        $tablillas = ClienteVehiculo::select('id', 'tablilla')->get();
-        // dd($tablillas);
+        $seguros_sociales = Cliente::select('id', 'nombre', 'seguro_social')->get();
+        $tablillas = ClienteVehiculo::select('id', 'vehiculo', 'tablilla')->get();
 
         return view('cliente.index', compact('clientes', 'user', 'entidades', 'meses', 'seguros_sociales', 'tablillas'));
     }
@@ -408,7 +407,6 @@ class ClienteController extends Controller
         }
     }
     public function getTablillaVehiculoCliente(Request $request) {
-        // dd($request->all());
         
         $vehiculo = ClienteVehiculo::where('tablilla', $request->getDataTablilla)->select('id', 'compania', 'vehiculo', 'marca', 'anio', 'mes_vencimiento_id', 'tablilla')->get();
 
@@ -419,4 +417,37 @@ class ClienteController extends Controller
             return response()->json(['code' => 400, 'msg' => 'Vehículo no existente']);
         }
     }
+
+    Public function getClientes() {
+        
+        $clientes = Cliente::leftJoin('estatus', 'clientes.estatus_id', 'estatus.id')
+                            ->select('clientes.id', 'clientes.nombre', 'clientes.estatus_id', 'estatus.nombre as estatus', 'clientes.seguro_social' )
+                            ->get();
+
+                            // dd($clientes);
+
+        return response()->json($clientes);
+    }
+
+    public function getClientesFilter($valor) {
+        // dd($valor);
+
+        //Seguro social
+        $cliente = Cliente::where('seguro_social', $valor)->select('clientes.id', 'clientes.nombre', 'clientes.estatus_id', 'clientes.seguro_social' )->get();
+
+        if (count($cliente) == 0) {
+            $cliente_id = ClienteVehiculo::where('tablilla', $valor)->select('cliente_id')->pluck('cliente_id')->first();
+            $cliente = Cliente::where('id', $cliente_id)->select('clientes.id', 'clientes.nombre', 'clientes.estatus_id', 'clientes.seguro_social' )->get();
+            
+
+            if (count($cliente) == 0) {
+                $cliente_id = ClienteVehiculo::where('mes_vencimiento_id', $valor)->select('cliente_id')->pluck('cliente_id')->first();
+                $cliente = Cliente::where('id', $cliente_id)->select('clientes.id', 'clientes.nombre', 'clientes.estatus_id', 'clientes.seguro_social' )->get();
+            }
+        }
+
+        return response()->json($cliente);
+    }
 }
+
+

@@ -57,7 +57,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('consulta/cliente/tablilla', [App\Http\Controllers\ClienteController::class, 'getTablillaCliente'])->name('cliente.tablillas');
     Route::get('consulta/cliente/tablilla/vehiculo', [App\Http\Controllers\ClienteController::class, 'getTablillaVehiculoCliente'])->name('cliente.tablilla.vehiculo');
     
-    
+    // Sección de filtro en clientes
+    Route::get('get/data/clientes', [App\Http\Controllers\ClienteController::class, 'getClientes'])->name('cliente.get.data');
+    Route::get('get/data/clientes/search/{valor}', [App\Http\Controllers\ClienteController::class, 'getClientesFilter']);
+    // Termina sección de filtro en clientes
     Route::post('vehiculo/extras/licencia', [App\Http\Controllers\ClienteController::class, 'vehiculoExtraLicencia'])->name('vehiculo.extras.licencia');
     Route::post('vehiculo/extras/notificacion', [App\Http\Controllers\ClienteController::class, 'vehiculoExtraNotificacion'])->name('vehiculo.extras.notificacion');
     Route::post('vehiculo/extras/multa', [App\Http\Controllers\ClienteController::class, 'vehiculoExtraMulta'])->name('vehiculo.extras.multa');

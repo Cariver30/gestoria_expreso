@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use Carbon\Carbon;
 use App\Models\Venta;
 use App\Models\Cliente;
@@ -87,16 +88,23 @@ class VentaController extends Controller
         $venta = Venta::where('id', $request->venta_id)->where('estatus_id', 3)->first();
         
         if ($venta) {
-            
-            $venta->estatus_id = 5;
-            $venta->save();
-            
-            $cliente_id =  ClienteVehiculo::where('id', $venta->vehiculo_id)->select('cliente_id')->pluck('cliente_id')->first();
-            $cliente = Cliente::find($cliente_id);
-            $cliente->estatus_id = 5;
-            $cliente->save();
+            DB::beginTransaction();
 
-            return response()->json(['code' => 200, 'msg' => 'Transacción pendiente de pago!']);
+            try {
+                $venta->estatus_id = 5;
+                $venta->save();
+                
+                $cliente_id =  ClienteVehiculo::where('id', $venta->vehiculo_id)->select('cliente_id')->pluck('cliente_id')->first();
+                $cliente = Cliente::find($cliente_id);
+                $cliente->estatus_id = 5;
+                $cliente->save();
+
+                return response()->json(['code' => 200, 'msg' => 'Transacción pendiente de pago!']);
+            
+            }catch (\PDOException $e){
+                DB::rollBack();
+                return back()->withErrors(['Error' => substr($e->getMessage(), 0, 150)]);
+            }
         } else {
             return response()->json(['code' => 404, 'msg' => 'Transacción no encontrada!']);
         }
@@ -105,18 +113,37 @@ class VentaController extends Controller
     public function finalizarVenta(Request $request) {
 
         $venta = Venta::where('id', $request->venta_id)->first();
-        $cliente_id =  ClienteVehiculo::where('id', $venta->vehiculo_id)->select('cliente_id')->pluck('cliente_id')->first();
-
+        
         if ($venta) {
-            $date = Carbon::now();
-            $date = $date->format('Y-m-d H:i:s');
 
-            $venta->estatus_id = 4;
-            $venta->fecha_pago = $date;
-            $venta->tipo_pago = 1; //1= Efectivo
-            $venta->save();
+            DB::beginTransaction();
 
-            return response()->json(['code' => 200, 'msg' => 'Transacción finalizada, recibo generado!', 'url' => route('clientes.edit', ['cliente' => $cliente_id ])]);
+            try {
+
+                $date = Carbon::now();
+                $date = $date->format('Y-m-d H:i:s');
+                
+                $venta->estatus_id = 4;
+                $venta->fecha_pago = $date;
+                $venta->tipo_pago = 1; //1= Efectivo
+                $venta->save();
+                
+                $clientVehiculo = ClienteVehiculo::where('id', $venta->vehiculo_id)->first();
+                $clientVehiculo->estatus_id = 4;
+                $clientVehiculo->save();
+
+                $cliente = Cliente::find($clientVehiculo->cliente_id);
+                $cliente->estatus_id = 4;
+                $cliente->save();
+
+                DB::commit();
+
+                return response()->json(['code' => 200, 'msg' => 'Transacción finalizada, recibo generado!', 'url' => route('clientes.edit', ['cliente' => $cliente->id ])]);
+            
+            }catch (\PDOException $e){
+                DB::rollBack();
+                return back()->withErrors(['Error' => substr($e->getMessage(), 0, 150)]);
+            }
         } else {
             return response()->json(['code' => 404, 'msg' => 'Transacción no encontrada!']);
         }
