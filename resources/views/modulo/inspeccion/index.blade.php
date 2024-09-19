@@ -66,7 +66,7 @@
     <div class="row col-sm-12 text-center">
         @if ($total_checkout != 0)
             <div class="col-sm-4 col-sm-2">
-                <a type="button" href="{{ route('checkout.index')}}" class="btn btn-soft-info col-md-8 waves-effect waves-light btn-lg"> CONTINUAR A PAGAR </a>
+                <a type="button" href="{{ route('checkout.index')}}" class="btn btn-soft-info col-md-8 waves-effect waves-light btn-lg"> PAGAR </a>
             </div>
         @endif
         <div class="col-sm-4 col-sm-2">

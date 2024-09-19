@@ -30,9 +30,11 @@ class GestoriaController extends Controller
 
         $cliente = Cliente::where('estatus_id', 3)->where('usuario_id', Auth::user()->id)->first();
         $total_checkout = 0;
+        // Validar si hay un registro en curso
+        $venta = \Helper::registroEnCurso();
         // dd($cliente);
 
-        return view('modulo.gestoria.index', compact('user', 'entidades', 'gestorias', 'transacciones', 'licencias', 'vehiculos', 'cliente', 'total_checkout'));
+        return view('modulo.gestoria.index', compact('user', 'entidades', 'gestorias', 'transacciones', 'licencias', 'vehiculos', 'cliente', 'total_checkout', 'venta'));
     }
 
     /**
@@ -211,23 +213,36 @@ class GestoriaController extends Controller
         DB::beginTransaction();
 
         try {
-                
-            //Se crea el cliente
-            $cliente = new Cliente();
-            $cliente->nombre = \Helper::capitalizeFirst($request->nombre, "1");
-            $cliente->email = $request->email;
-            $cliente->telefono = $request->telefono;
-            $cliente->seguro_social = $request->seguro_social;
-            $cliente->identificacion = $request->identificacion;
-            $cliente->img_licencia = 'N/A';
-            $cliente->usuario_id = Auth::user()->id;
-            $cliente->estatus_id = 3;
-            $cliente->save();
-                
-            DB::commit();
-            
-            return response()->json(['code' => 201, 'msg' => 'Transacción iniciada', 'id' => $cliente->id]);
 
+            $cliente = Cliente::where('seguro_social', $request->seguro_social)->first();
+
+            if ($cliente) {
+                $cliente->nombre = \Helper::capitalizeFirst($request->nombre, "1");
+                $cliente->email = $request->email;
+                $cliente->telefono = $request->telefono;
+                $cliente->identificacion = $request->identificacion;
+                $cliente->save();
+
+                DB::commit();
+
+                return response()->json(['code' => 200, 'msg' => 'Datos actualizados', 'id' => $cliente->id]);
+            } else {
+                //Se crea el cliente
+                $cliente = new Cliente();
+                $cliente->nombre = \Helper::capitalizeFirst($request->nombre, "1");
+                $cliente->email = $request->email;
+                $cliente->telefono = $request->telefono;
+                $cliente->seguro_social = $request->seguro_social;
+                $cliente->identificacion = $request->identificacion;
+                $cliente->img_licencia = 'N/A';
+                $cliente->usuario_id = Auth::user()->id;
+                $cliente->estatus_id = 3;
+                $cliente->save();
+                    
+                DB::commit();
+
+                return response()->json(['code' => 201, 'msg' => 'Transacción iniciada', 'id' => $cliente->id]);
+            }
         }catch (\PDOException $e){
             DB::rollBack();
             return response()->json(['code' => 201, 'msg' => substr($e->getMessage(), 0, 150)]);

@@ -9,7 +9,19 @@
 @endsection
 
 @section('content')
-    <div class="col-md-12">
+    <div class="row col-sm-12 text-center" style="margin-left: 41%;">
+        <div class="col-sm-2 col-sm-2">
+            <label class="card-radio-label mb-3">
+                <input type="radio" name="suma_total" id="suma_total" class="card-radio-input" checked="">
+                <div class="card-radio">
+                    @if (isset($cliente)) <small> {{ $cliente->nombre }} </small><br>@endif
+                    <input type="hidden" name="venta_id" id="venta_id" @if (isset($venta)) value="{{ $venta->id }}" @endif>
+                    <i class="bx bx-cart font-size-24 text-primary align-middle me-2"></i><span>Total: {{$total_checkout}}</span>
+                </div>
+            </label>
+        </div>
+    </div>
+    {{--  <div class="col-md-12">
         <div class="card">
             <div class="card-body">
             <h4 class="card-title"> Datos del cliente </h4>
@@ -48,20 +60,28 @@
                             </div>
                         @endif
                         <div class="col-sm-4 col-sm-2">
-                            <button type="button" class="btn btn-soft-warning col-md-8 waves-effect waves-light btn-lg" data-id="{{ $cliente->id }}"> PENDIENTE </button>
+                            <button type="button" class="btn btn-soft-warning col-md-8 waves-effect waves-light btn-lg" data-id="{{ $venta->id }}"> PENDIENTE </button>
                         </div>
                         <div class="col-sm-3 col-sm-2">
-                            <button type="button" class="btn btn-soft-danger col-md-8 waves-effect waves-light btn-lg " data-id="{{ $cliente->id }}"> CANCELAR </button>
+                            <button type="button" class="btn btn-soft-danger col-md-8 waves-effect waves-light btn-lg " data-id="{{ $venta->id }}"> CANCELAR </button>
                         </div>
                     </div>
                     
                 </div>
             </div>
         </div>
-    </div>
+    </div>  --}}
     <div class="row col-md-12">
+        <div class="col-lg-3 servicioGestoria" data-id="00" id="serviciosGestoria">
+            <div class="card bg-success text-white-50">
+                <div class="card-body text-center">
+                    <i class="mdi mdi-car me-3 text-white" style="font-size: 100px;"></i>
+                    <h1 class="mt-0 mb-4 text-white"> Registro </h1>
+                </div>
+            </div>
+        </div>
         @foreach ($gestorias as $gestoria)
-            <div class="col-lg-4 servicioGestoria" data-id="{{ $gestoria->id }}" id="serviciosGestoria">
+            <div class="col-lg-3 servicioGestoria" data-id="{{ $gestoria->id }}" id="serviciosGestoria">
                 <div class="card bg-success text-white-50">
                     <div class="card-body text-center">
                         <i class="mdi mdi-car me-3 text-white" style="font-size: 100px;"></i>
@@ -71,6 +91,7 @@
             </div>
         @endforeach
     </div>
+    @include('modulo.gestoria.servicio.registro')
     @include('modulo.gestoria.servicio.transaccion')
     @include('modulo.gestoria.servicio.licencia')
     @include('modulo.gestoria.servicio.vehiculo')
@@ -96,6 +117,9 @@
                         break;
                     case '3':
                         $('#vehiculos').modal('show')
+                        break;
+                    case '00':
+                        $('#add_vehiculo_gestoria').modal('show')
                         break;
                 }
             });
@@ -160,7 +184,7 @@
                         identificacion: $('#identificacion').val()
                     },
                     success: function (data) {
-                        if (data.code == 201) {
+                        if (data.code == 200 || data.code == 201) {
                             Swal.fire({
                                 title: data.msg,
                                 icon: "success",
