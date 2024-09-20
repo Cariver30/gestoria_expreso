@@ -26,6 +26,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('gestoria/cliente', [App\Http\Controllers\GestoriaController::class, 'crearCliente'])->name('gestoria.cliente');
     Route::post('gestoria/cliente/transaccion', [App\Http\Controllers\GestoriaController::class, 'addTransaccion'])->name('gestoria.transaccion');
     Route::post('gestoria/cliente/titulo', [App\Http\Controllers\GestoriaController::class, 'addTitulo'])->name('gestoria.titulo');
+    Route::post('gestoria/cliente/renovacion', [App\Http\Controllers\GestoriaController::class, 'addRenovacion'])->name('gestoria.renovacion');
+    Route::post('gestoria/cliente/aprendizaje', [App\Http\Controllers\GestoriaController::class, 'addAprendizaje'])->name('gestoria.aprendizaje');
+    
+    
+
     Route::post('gestoria/cliente/pagar', [App\Http\Controllers\GestoriaController::class, 'pagar'])->name('gestoria.pagar');
     Route::post('gestoria/cliente/pendiente', [App\Http\Controllers\GestoriaController::class, 'pendiente'])->name('gestoria.pendiente');
     Route::post('gestoria/cliente/cancelar', [App\Http\Controllers\GestoriaController::class, 'cancelar'])->name('gestoria.cancelar');

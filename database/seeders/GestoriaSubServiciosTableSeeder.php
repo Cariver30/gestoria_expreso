@@ -27,11 +27,12 @@ class GestoriaSubServiciosTableSeeder extends Seeder
             ['nombre' => 'Duplicado de Licencia', 'costo' => 80, 'gestoria_servicio_id' => 3, 'estatus_id' => 1, 'created_at' => now()],
             ['nombre' => 'Duplicado de Licencia REAL ID', 'costo' => 100, 'gestoria_servicio_id' => 3, 'estatus_id' => 1, 'created_at' => now()],
             ['nombre' => 'Récord Choferil', 'costo' => 30, 'gestoria_servicio_id' => 3, 'estatus_id' => 1, 'created_at' => now()],
-            
-            
-            // ['nombre' => 'Nuevo (18 ó más)', 'costo' => 120, 'costo_real' => 140, 'gestoria_servicio_id' => 4, 'estatus_id' => 1, 'created_at' => now()],
-            // ['nombre' => 'Nuevo (16/17 años)', 'costo' => 140, 'costo_real' => 0, 'gestoria_servicio_id' => 3, 'estatus_id' => 1, 'created_at' => now()],
-            // ['nombre' => 'Aprendizaje (Subir categoría)', 'costo' => 170, 'costo_real' => 190, 'gestoria_servicio_id' => 3, 'estatus_id' => 1, 'created_at' => now()]
+            ['nombre' => 'Nuevo (18 ó más)', 'costo' => 120, 'gestoria_servicio_id' => 4, 'estatus_id' => 1, 'created_at' => now()],
+            ['nombre' => 'Nuevo (18 ó más) REAL ID', 'costo' => 140, 'gestoria_servicio_id' => 4, 'estatus_id' => 1, 'created_at' => now()],
+            ['nombre' => 'Nuevo (16/17 años)', 'costo' => 140, 'gestoria_servicio_id' => 4, 'estatus_id' => 1, 'created_at' => now()],
+            ['nombre' => 'Nuevo (16/17 años) REAL ID', 'costo' => 0, 'gestoria_servicio_id' => 4, 'estatus_id' => 1, 'created_at' => now()],
+            ['nombre' => 'Aprendizaje (Subir categoría)', 'costo' => 150, 'gestoria_servicio_id' => 4, 'estatus_id' => 1, 'created_at' => now()],
+            ['nombre' => 'Aprendizaje (Subir categoría) REAL ID', 'costo' => 170, 'gestoria_servicio_id' => 4, 'estatus_id' => 1, 'created_at' => now()]
         ]);
     }
 }

@@ -41,15 +41,15 @@
             </div>
             <div class="row mt-4">
                 <div class="col-sm-6">
-                    <a href="{{ route('modulo.inspeccion') }}" class="btn text-muted d-none d-sm-inline-block btn-link">
+                    <a href="{{ url()->previous() }}" class="btn text-muted d-none d-sm-inline-block btn-link">
                         <i class="mdi mdi-arrow-left me-3"></i> Volver </a>
-                </div> <!-- end col -->
+                </div>
                 <div class="col-sm-6">
                     <div class="text-end">
                         <button class="btn btn-success mostrar_tipo_pago" data-id="{{ $venta->id }}">
                             <i class="mdi mdi-truck-fast me-1"></i> Proceder al pago  </button>
                     </div>
-                </div> <!-- end col -->
+                </div>
             </div>
         </div>
     </div>

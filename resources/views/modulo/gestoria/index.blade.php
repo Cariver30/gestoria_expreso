@@ -119,6 +119,8 @@
 
     @include('modulo.gestoria.subservicio.subtransaccion')
     @include('modulo.gestoria.subservicio.subRotulo')
+    @include('modulo.gestoria.subservicio.subRenovacion')
+    @include('modulo.gestoria.subservicio.subAprendizaje')
 @endsection
 
 @section('script')
@@ -154,6 +156,26 @@
                 if (id == 2) {
                     $('#subRotulo').modal('show');
                 }
+            });
+
+            //Mostra el modal acorde al servicio en el modal de licencias
+            $(".btnGestoriaLicencia").click(function() {
+                var id = $(this).attr('data-id');
+                switch (id) {
+                    case '3':
+                        $('#subRenovacion').modal('show');
+                        break;
+                    case '4':
+                        $('#subAprendizaje').modal('show')
+                        break;
+                    case '5':
+                        $('#vehiculos').modal('show')
+                        break;
+                    case '6':
+                        $('#add_vehiculo_gestoria').modal('show')
+                        break;
+                }
+                
             });
 
             //Función que guarda y crea al cliente para iniciar la transacción
@@ -222,7 +244,7 @@
                 return regex.test(email);
             }
 
-            //Función que guarda el servicio seleccionado en el modal de transacciones (primer modal)
+            //Función que guarda el servicio seleccionado en el modal de transacciones (segundo modal - primera opción)
             $('#saveGestoriaTransaccion').click(function () {
                 if($(".btnValorTransaccion").is(':checked') == false){
                     Swal.fire({
@@ -268,7 +290,7 @@
                 });
             });
 
-            //Función que guarda el servicio seleccionado en el modal de Título removible (segundo modal)
+            //Función que guarda el servicio seleccionado en el modal de Título removible (segundo modal - segunda opción)
             $('#saveGestoriaTitulo').click(function () {
                 if($(".btnValorTitulo").is(':checked') == false){
                     Swal.fire({
@@ -285,6 +307,98 @@
                     data : { 
                         _token: "{{ csrf_token() }}",
                         titulo_id: $("input[type=radio][name=valorTitulo]:checked").val(),
+                        venta_id: $('#venta_id').val()
+                    },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            setTimeout(function(){
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "warning",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                        }
+
+                    },
+                    error: function (data) {
+                        // console.log(data);
+                    }
+                });
+            });
+
+            //Función que guarda el servicio seleccionado en el modal de Título removible (Tercer modal - primera opción)
+            $('#saveGestoriaRenovacion').click(function () {
+                if($(".btnValorRenovacion").is(':checked') == false){
+                    Swal.fire({
+                        title: 'Debe seleccionar una opción',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                $.ajax({
+                    type : 'POST',
+                    url :"{{ route('gestoria.renovacion') }}",
+                    data : { 
+                        _token: "{{ csrf_token() }}",
+                        renovacion_id: $("input[type=radio][name=valorRenovacion]:checked").val(),
+                        venta_id: $('#venta_id').val()
+                    },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            setTimeout(function(){
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "warning",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                        }
+
+                    },
+                    error: function (data) {
+                        // console.log(data);
+                    }
+                });
+            });
+
+            //Función que guarda el servicio seleccionado en el modal de aprendizaje (Tercer modal - segunda opción)
+            $('#saveGestoriaAprendizaje').click(function () {
+                if($(".btnValorAprendizaje").is(':checked') == false){
+                    Swal.fire({
+                        title: 'Debe seleccionar una opción',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                $.ajax({
+                    type : 'POST',
+                    url :"{{ route('gestoria.aprendizaje') }}",
+                    data : { 
+                        _token: "{{ csrf_token() }}",
+                        aprendizaje_id: $("input[type=radio][name=valorAprendizaje]:checked").val(),
                         venta_id: $('#venta_id').val()
                     },
                     success: function (data) {
