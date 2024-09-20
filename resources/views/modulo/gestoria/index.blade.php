@@ -123,6 +123,9 @@
     @include('modulo.gestoria.subservicio.subAprendizaje')
     @include('modulo.gestoria.subservicio.subConducir')
     @include('modulo.gestoria.subservicio.subDireccion')
+    @include('modulo.gestoria.subservicio.subTraspaso')
+    @include('modulo.gestoria.subservicio.subVentaCondicional')
+    @include('modulo.gestoria.subservicio.subGravamenes')
 @endsection
 
 @section('script')
@@ -172,6 +175,26 @@
                         break;
                     case '5':
                         $('#subConducir').modal('show')
+                        break;
+                    case '6':
+                        $('#subDireccion').modal('show')
+                        break;
+                }
+                
+            });
+
+            //Mostra el modal acorde al servicio en el modal de licencias
+            $(".btnGestoriaVehiculo").click(function() {
+                var id = $(this).attr('data-id');
+                switch (id) {
+                    case '7':
+                        $('#subTraspaso').modal('show');
+                        break;
+                    case '8':
+                        $('#subVentaCondicional').modal('show')
+                        break;
+                    case '9':
+                        $('#subGravamenes').modal('show')
                         break;
                     case '6':
                         $('#subDireccion').modal('show')
@@ -476,7 +499,7 @@
                 });
             });
 
-            //Función que guarda el servicio seleccionado en el modal de aprendizaje (Tercer modal - tercera opción)
+            //Función que guarda el servicio seleccionado en el modal de aprendizaje (Tercer modal - cuarta opción)
             $('#saveGestoriaDireccion').click(function () {
                 if($(".btnValorDireccion").is(':checked') == false){
                     Swal.fire({
@@ -493,6 +516,144 @@
                     data : { 
                         _token: "{{ csrf_token() }}",
                         direccion_id: $("input[type=radio][name=valorDireccion]:checked").val(),
+                        venta_id: $('#venta_id').val()
+                    },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            setTimeout(function(){
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "warning",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                        }
+
+                    },
+                    error: function (data) {
+                        // console.log(data);
+                    }
+                });
+            });
+
+            //Función que guarda el servicio seleccionado en el modal de vehículo (Cuarto modal - primera opción)
+            $('#saveGestoriaTraspaso').click(function () {
+                if($(".btnValorTraspaso").is(':checked') == false){
+                    Swal.fire({
+                        title: 'Debe seleccionar una opción',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                $.ajax({
+                    type : 'POST',
+                    url :"{{ route('gestoria.traspaso') }}",
+                    data : { 
+                        _token: "{{ csrf_token() }}",
+                        traspaso_id: $("input[type=radio][name=valorTraspaso]:checked").val(),
+                        venta_id: $('#venta_id').val()
+                    },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            setTimeout(function(){
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "warning",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                        }
+
+                    },
+                    error: function (data) {
+                        // console.log(data);
+                    }
+                });
+            });
+
+            //Función que guarda el servicio seleccionado en el modal de vehículo (Cuarto modal - segunda opción)
+            $('#saveGestoriaVentaCondicional').click(function () {
+                if($(".btnValorVentaCondicional").is(':checked') == false){
+                    Swal.fire({
+                        title: 'Debe seleccionar una opción',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                $.ajax({
+                    type : 'POST',
+                    url :"{{ route('gestoria.venta.condicional') }}",
+                    data : { 
+                        _token: "{{ csrf_token() }}",
+                        venta_condicional_id: $("input[type=radio][name=valorVentaCondicional]:checked").val(),
+                        venta_id: $('#venta_id').val()
+                    },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            setTimeout(function(){
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "warning",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                        }
+
+                    },
+                    error: function (data) {
+                        // console.log(data);
+                    }
+                });
+            });
+
+            //Función que guarda el servicio seleccionado en el modal de vehículo (Cuarto modal - tercera opción)
+            $('#saveGestoriaGravamen').click(function () {
+                if($(".btnValorGravamen").is(':checked') == false){
+                    Swal.fire({
+                        title: 'Debe seleccionar una opción',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                $.ajax({
+                    type : 'POST',
+                    url :"{{ route('gestoria.gravamen') }}",
+                    data : { 
+                        _token: "{{ csrf_token() }}",
+                        gravamen_id: $("input[type=radio][name=valorGravamen]:checked").val(),
                         venta_id: $('#venta_id').val()
                     },
                     success: function (data) {

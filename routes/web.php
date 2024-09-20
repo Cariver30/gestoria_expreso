@@ -30,6 +30,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('gestoria/cliente/aprendizaje', [App\Http\Controllers\GestoriaController::class, 'addAprendizaje'])->name('gestoria.aprendizaje');
     Route::post('gestoria/cliente/conducir', [App\Http\Controllers\GestoriaController::class, 'addConducir'])->name('gestoria.conducir');
     Route::post('gestoria/cliente/direccion', [App\Http\Controllers\GestoriaController::class, 'addDireccion'])->name('gestoria.direccion');
+    Route::post('gestoria/cliente/traspaso', [App\Http\Controllers\GestoriaController::class, 'addTraspaso'])->name('gestoria.traspaso');
+    Route::post('gestoria/cliente/venta-condicional', [App\Http\Controllers\GestoriaController::class, 'addVentaCondicional'])->name('gestoria.venta.condicional');
+    Route::post('gestoria/cliente/gravamen', [App\Http\Controllers\GestoriaController::class, 'addGravamen'])->name('gestoria.gravamen');
     
     
 
