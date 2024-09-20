@@ -14,7 +14,7 @@ class GestoriaServiciosTableSeeder extends Seeder
     {
         \DB::table('gestoria_servicios')->insert([
             ['nombre' => 'Identificación', 'gestoria_id' => 1, 'estatus_id' => 1, 'created_at' => now()],
-            ['nombre' => 'Rotulo Removible', 'gestoria_id' => 1, 'estatus_id' => 1, 'created_at' => now()],
+            ['nombre' => 'Título Removible', 'gestoria_id' => 1, 'estatus_id' => 1, 'created_at' => now()],
             ['nombre' => 'Renovación', 'gestoria_id' => 2, 'estatus_id' => 1, 'created_at' => now()],
             ['nombre' => 'Aprendizaje', 'gestoria_id' => 2, 'estatus_id' => 1, 'created_at' => now()],
             ['nombre' => 'Escuela de conducir', 'gestoria_id' => 2, 'estatus_id' => 1, 'created_at' => now()],

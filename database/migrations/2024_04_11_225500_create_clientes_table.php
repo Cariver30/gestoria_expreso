@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('clientes', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
+            $table->integer('tipo_cliente');  //Si es cliente inspección=1, si es tipo gestoría=2
             $table->string('email');
             $table->string('telefono');
             $table->string('seguro_social');

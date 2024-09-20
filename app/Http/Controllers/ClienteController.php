@@ -11,9 +11,11 @@ use App\Models\Venta;
 use App\Models\Cliente;
 use App\Models\SubServicio;
 use Illuminate\Http\Request;
+use App\Models\DetalleVenta;
 use App\Models\ClienteVehiculo;
 use App\Models\VehiculoMarbete;
 use Illuminate\Support\Facades\Auth;
+use App\Models\DetalleVentaGestoria;
 use Illuminate\Support\Facades\Validator;
 
 class ClienteController extends Controller
@@ -193,37 +195,66 @@ class ClienteController extends Controller
     public function edit(Cliente $cliente)
     {
         $entidades = \Helper::entidadUsuario();
-        $cliente = Cliente::select('id', 'nombre', 'email', 'telefono', 'seguro_social', 'identificacion')->where('id', $cliente->id)->first();
-        $vehiculos = ClienteVehiculo::leftJoin('estatus', 'cliente_vehiculos.estatus_id', 'estatus.id')
-                                        ->where('cliente_id', $cliente->id)
-                                        ->select(
-                                            'cliente_vehiculos.id',
-                                            'cliente_vehiculos.compania',
-                                            'cliente_vehiculos.vehiculo',
-                                            'cliente_vehiculos.tablilla',
-                                            'cliente_vehiculos.marca',
-                                            'cliente_vehiculos.anio',
-                                            'cliente_vehiculos.estatus_id',
-                                            'cliente_vehiculos.created_at',
-                                            'estatus.nombre as estatus'
-                                        )->get();
-                                        // dd($vehiculos);
+        $cliente = Cliente::select('id', 'nombre', 'email', 'telefono', 'seguro_social', 'identificacion', 'tipo_cliente')->where('id', $cliente->id)->first();
+        if ($cliente->tipo_cliente == 1) {
+            $vehiculos = ClienteVehiculo::leftJoin('estatus', 'cliente_vehiculos.estatus_id', 'estatus.id')
+                                            ->where('cliente_id', $cliente->id)
+                                            ->select(
+                                                'cliente_vehiculos.id',
+                                                'cliente_vehiculos.compania',
+                                                'cliente_vehiculos.vehiculo',
+                                                'cliente_vehiculos.tablilla',
+                                                'cliente_vehiculos.marca',
+                                                'cliente_vehiculos.anio',
+                                                'cliente_vehiculos.estatus_id',
+                                                'cliente_vehiculos.created_at',
+                                                'estatus.nombre as estatus'
+                                            )->get();
+                                            // dd($vehiculos);
+    
+            $ordenes = array();
+            foreach ($vehiculos as $vehiculo) {
+                $ventas = Venta::leftJoin('estatus', 'ventas.estatus_id', 'estatus.id')
+                                ->where('vehiculo_id', $vehiculo->id)
+                                ->select('ventas.id', 'ventas.total', 'ventas.fecha_pago', 'ventas.tipo_pago', 'estatus.id as estatus_id', 'estatus.nombre as estatus', 'ventas.updated_at', 'ventas.motivo')
+                                ->get()->toArray();
+                                foreach ($ventas as $venta) {
+                                    array_push($ordenes, $venta);
+                                }
+            }
+            return view('cliente.edit', compact('entidades', 'cliente', 'vehiculos', 'ordenes'));
 
-        $ordenes = array();
-        foreach ($vehiculos as $vehiculo) {
-            $ventas = Venta::leftJoin('estatus', 'ventas.estatus_id', 'estatus.id')
-                            ->where('vehiculo_id', $vehiculo->id)
-                            ->select('ventas.id', 'ventas.total', 'ventas.fecha_pago', 'ventas.tipo_pago', 'estatus.id as estatus_id', 'estatus.nombre as estatus', 'ventas.updated_at', 'ventas.motivo')
-                            ->get()->toArray();
-                            // dd($ventas);
-                            foreach ($ventas as $venta) {
-                                // dd($venta);
-                                array_push($ordenes, $venta);
-                            }
-        } 
-        // dd($ordenes);
+        } else {
+            $data = 1;
+            $ordenes = Venta::leftJoin('estatus', 'ventas.estatus_id', 'estatus.id')
+                                ->where('cliente_id', $cliente->id)
+                                ->select('ventas.id', 'ventas.total', 'ventas.fecha_pago', 'ventas.tipo_pago', 'estatus.id as estatus_id', 'estatus.nombre as estatus', 'ventas.updated_at', 'ventas.motivo')
+                                ->get();
+            
+                                // dd($ordenes);
+            
+            $servicios = array();
+            if (count($ordenes) == 1 && $ordenes[0]->estatus_id == 6){
+                $data = 0;
+            } else {
+                foreach ($ordenes as $orden) {
+                    // dd($orden);
+                    $detalles = DetalleVentaGestoria::leftJoin('gestoria_sub_servicios', 'detalle_venta_gestorias.subservicio_id', 'gestoria_sub_servicios.id')
+                                        ->where('venta_id', $orden->id)
+                                        ->select('gestoria_sub_servicios.nombre as nombre', 'gestoria_sub_servicios.costo as costo', 'gestoria_sub_servicios.created_at')
+                                        ->get()->toArray();
 
-        return view('cliente.edit', compact('entidades', 'cliente', 'vehiculos', 'ordenes'));
+                    foreach ($detalles as $detalle) {
+                        array_push($servicios, $detalle);
+                    }
+                }
+                $data = 2;
+            }
+
+            // dd($servicios);
+            return view('cliente.edit', compact('entidades', 'cliente', 'ordenes', 'data', 'servicios'));
+        }
+
     }
 
     /**

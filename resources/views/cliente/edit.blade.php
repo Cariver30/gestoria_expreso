@@ -51,33 +51,65 @@
     </form>
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title mb-3"> Vehículos </h4>
-            <div class="">
-                <ul class="verti-timeline list-unstyled">
-                    @foreach ($vehiculos as $vehiculo)
-                        <li class="event-list active">
-                            <div class="event-timeline-dot">
-                                <i class="bx bx-right-arrow-circle bx-fade-right"></i>
-                            </div>
-                            <div class="d-flex">
-                                <div class="flex-shrink-0 me-3">
-                                    <i class="bx bx-car h4 text-primary"></i>
+            @if ($cliente->tipo_cliente == 1)
+                <h4 class="card-title mb-3"> Vehículos </h4>
+                <div class="">
+                    <ul class="verti-timeline list-unstyled">
+                        @foreach ($vehiculos as $vehiculo)
+                            <li class="event-list active">
+                                <div class="event-timeline-dot">
+                                    <i class="bx bx-right-arrow-circle bx-fade-right"></i>
                                 </div>
-                                <div class="flex-grow-1">
-                                    <div>
-                                        <h5 class="font-size-15"><a href="javascript: void(0);" class="text-dark"> {{ $vehiculo->vehiculo }}</a></h5></span>
-                                        <span class="text-primary"> - {{ $vehiculo->tablilla}} </span><br>
-                                        <span class="text-primary"> - {{ $vehiculo->compania }} </span><br>
-                                        <span class="text-primary"> - {{ $vehiculo->marca }} </span><br>
-                                        <span class="text-primary"> {{ Carbon\Carbon::parse($vehiculo->created_at)->format('d-m-Y H:i:s') }} </span><br>
+                                <div class="d-flex">
+                                    <div class="flex-shrink-0 me-3">
+                                        <i class="bx bx-car h4 text-primary"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div>
+                                            <h5 class="font-size-15"><a href="javascript: void(0);" class="text-dark"> {{ $vehiculo->vehiculo }}</a></h5></span>
+                                            <span class="text-primary"> - {{ $vehiculo->tablilla}} </span><br>
+                                            <span class="text-primary"> - {{ $vehiculo->compania }} </span><br>
+                                            <span class="text-primary"> - {{ $vehiculo->marca }} </span><br>
+                                            <span class="text-primary"> {{ Carbon\Carbon::parse($vehiculo->created_at)->format('d-m-Y H:i:s') }} </span><br>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
-
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            @else
+                <h4 class="card-title mb-3"> Servicios </h4>
+                <div class="">
+                    <ul class="verti-timeline list-unstyled">
+                        @if ($data == 0)
+                            <span class="text-danger"> Sin servicios recepcionados </span>
+                        @elseif ($data == 1)
+                            <span class="text-success"> Transacción en curso </span>
+                        @else
+                            @foreach ($servicios as $servicio)
+                                <li class="event-list active">
+                                    <div class="event-timeline-dot">
+                                        <i class="bx bx-right-arrow-circle bx-fade-right"></i>
+                                    </div>
+                                    <div class="d-flex">
+                                        <div class="flex-shrink-0 me-3">
+                                            <i class="bx bx-person h4 text-primary"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div>
+                                                <h5 class="font-size-15"><a href="javascript: void(0);" class="text-dark"> {{ $servicio['nombre'] }}</a></h5></span>
+                                                <span class="text-primary"> Costo ${{ $servicio['costo']}} </span><br>
+                                                {{--  <span class="text-primary"> {{ Carbon\Carbon::parse($servicio['created_at'])->format('d-m-Y H:i:s') }} </span><br>  --}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            @endforeach
+                        @endif
+                    </ul>
+                </div>
+            @endif
         </div>
     </div>
     <div class="row">
@@ -90,13 +122,6 @@
                             id="order-list">
                             <thead class="table-light" align="center">
                                 <tr>
-                                    {{--  <th style="width: 20px;" class="align-middle">
-                                        <div class="form-check font-size-16">
-                                            <input class="form-check-input" type="checkbox" id="checkAll">
-                                            <label class="form-check-label" for="checkAll"></label>
-                                        </div>
-                                    </th>  --}}
-                                    {{--  <th class="align-middle"> Núm </th>  --}}
                                     <th class="align-middle"> Fecha </th>
                                     <th class="align-middle"> Estatus </th>
                                     <th class="align-middle"> Motivo </th>
@@ -109,29 +134,31 @@
                             <tbody align="center">
                                 @foreach ($ordenes as $orden)
                                     <tr>
-                                        <td> {{ Carbon\Carbon::parse($orden['updated_at'])->format('d-m-Y H:i') }} </td>
+                                        <td> {{ Carbon\Carbon::parse($orden->updated_at)->format('d-m-Y H:i') }} </td>
                                         <td> 
                                             @if ($orden['estatus_id'] == 3)
-                                                <span class="badge bg-info">{{ $orden['estatus'] }}</span>
+                                                <span class="badge bg-info">{{ $orden->estatus }}</span>
                                             @elseif($orden['estatus_id'] == 4)
-                                                <span class="badge bg-success">{{ $orden['estatus'] }}</span>
+                                                <span class="badge bg-success">{{ $orden->estatus }}</span>
                                             @elseif($orden['estatus_id'] == 5)
-                                                <span class="badge bg-warning">{{ $orden['estatus'] }}</span>
+                                                <span class="badge bg-warning">{{ $orden->estatus }}</span>
                                             @elseif($orden['estatus_id'] == 6)
-                                                <span class="badge bg-danger">{{ $orden['estatus'] }}</span>
+                                                <span class="badge bg-danger">{{ $orden->estatus }}</span>
                                             @endif
                                         </td>
-                                        <td> @if ($orden['motivo'] == null) Sin Información  @else {{ $orden['motivo'] }} @endif </td>
-                                        <td> @if ($orden['tipo_pago'] == 1) Efectivo @else Sin Información  @endif </td>
-                                        <td> @if ($orden['fecha_pago'] == null) Sin información @else {{ Carbon\Carbon::parse($orden['fecha_pago'])->format('d-m-Y H:i') }} @endif</td>
-                                        <td> ${{ $orden['total'] }} </td>
+                                        <td> @if ($orden->motivo == null) Sin Información  @else {{ $orden->motivo }} @endif </td>
+                                        <td> @if ($orden->tipo_pago == 1) Efectivo @else Sin Información  @endif </td>
+                                        <td> @if ($orden->fecha_pago == null) Sin información @else {{ Carbon\Carbon::parse($orden->fecha_pago)->format('d-m-Y H:i') }} @endif</td>
+                                        <td> ${{ $orden->total }} </td>
                                         <td>
-                                            @if ($orden['estatus_id'] == 5 && $orden['total'] > 0.0)
+                                            {{--  @if ($orden->estatus_id == 5)
                                                 <a type="button" class="btn btn-info waves-effect waves-light" href="{{ route('pay.checkout.vehicle', ['id' => $orden['id']]) }}">Pagar</a>
                                             @elseif ($orden['estatus_id'] != 5 && $orden['total'] == 0.0 || $orden['estatus_id'] == 5 && $orden['total'] == 0.0)
                                                 <button type="button" class="btn btn-info waves-effect waves-light pr-4" disabled> Pagar </a>
+                                            @endif  --}}
+                                            @if ($orden->estatus_id == 4 || $orden->estatus_id == 5 || $orden->estatus_id == 6)
+                                                <a href="{{ route('ver.recibo', ['id' => $orden->id]) }}" type="button" class="btn btn-secondary waves-effect waves-light" style="margin-left: 10px;"> Ver recibo </a>
                                             @endif
-                                            <a href="{{ route('ver.recibo', ['id' => $orden['id']])}}" type="button" class="btn btn-secondary waves-effect waves-light" style="margin-left: 10px;" @if ($orden['estatus_id'] != 4) disabled @endif> Ver recibo </a>
                                         </td>
                                     </tr>
                                 @endforeach

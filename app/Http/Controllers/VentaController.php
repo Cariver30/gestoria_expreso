@@ -133,6 +133,7 @@ class VentaController extends Controller
     public function finalizarVenta(Request $request) {
 
         $venta = Venta::where('id', $request->venta_id)->first();
+
         
         if ($venta) {
 
@@ -147,12 +148,14 @@ class VentaController extends Controller
                 $venta->fecha_pago = $date;
                 $venta->tipo_pago = 1; //1= Efectivo
                 $venta->save();
-                
-                $clientVehiculo = ClienteVehiculo::where('id', $venta->vehiculo_id)->first();
-                $clientVehiculo->estatus_id = 4;
-                $clientVehiculo->save();
 
-                $cliente = Cliente::find($clientVehiculo->cliente_id);
+                if ($venta->tipo_servicio == 1) {
+                    $clientVehiculo = ClienteVehiculo::where('id', $venta->vehiculo_id)->first();
+                    $clientVehiculo->estatus_id = 4;
+                    $clientVehiculo->save();
+                }
+                
+                $cliente = Cliente::find($venta->cliente_id);
                 $cliente->estatus_id = 4;
                 $cliente->save();
 

@@ -63,25 +63,16 @@
                                 @foreach ($servicios as $servicio)
                                     <tr>
                                         <th> {{ $servicio['nombre'] }} </th>
-                                        {{--  <td> $ @if ($servicio['id'] == 1 || $servicio['id'] == 2 && $servicio['servicio_id'] == 3)-@endif{{$servicio['costo'] }} </td>  --}}
                                         <td class="text-end"> @if ($servicio['costo'] == null)  $0.00 @elseif($servicio['servicio_id'] == 3) {{$servicio['costo'] }} @else ${{$servicio['costo'] }} @endif </td>
                                     </tr>
                                 @endforeach
-                                <tr>
-                                    <th> Derechos anuales</th>
-                                    <td class="text-end"> @if($venta->derechos_anuales ==null) $0.00 @else ${{ $venta->derechos_anuales }} @endif</td>
-                                </tr>
-                                <tr>
-                                    <th> Costo de Servicio: </th>
-                                    <td class="text-end"> @if($venta->costo_servicio_fijo ==null) $0.00 @else ${{ $venta->costo_servicio_fijo }} @endif</td>
-                                </tr>
                                 <tr class="text-end">
                                     <td colspan="1"><h6 class="m-0 text-end">Sub Total:</h6></td>
-                                    <td> ${{ $total }}.00 </td>
+                                    <td> ${{ $venta->total }} </td>
                                 </tr>
                                 <tr class="text-end">
                                     <td colspan="1"><h6 class="m-0 text-end">Total:</h6></td>
-                                    <td> ${{ $total }}.00 </td>
+                                    <td> ${{ $venta->total }} </td>
                                 </tr>
                             </tbody>
                         </table>

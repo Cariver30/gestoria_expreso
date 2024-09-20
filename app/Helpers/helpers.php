@@ -8,6 +8,7 @@
     use App\Models\Cliente;
     use App\Models\SubServicio;
     use App\Models\ClienteVehiculo;
+    use App\Models\DetalleVentaGestoria;
     use Illuminate\Support\Facades\Auth;
 
 
@@ -255,4 +256,25 @@ class Helper {
 
         return $vehiculo_id;
     }
+
+    //Obtener los servicios seleccionado
+    public static function getServicios($ventaId) {
+        $tipoServicio = Venta::where('id', $ventaId)->select('tipo_servicio')->pluck('tipo_servicio')->first(); 
+        if ($tipoServicio == 1) {
+            
+        } else {
+            $servicios = DetalleVentaGestoria::leftJoin('gestoria_sub_servicios', 'detalle_venta_gestorias.subservicio_id', 'gestoria_sub_servicios.id')
+            ->where('venta_id', $ventaId)
+            ->select('gestoria_sub_servicios.nombre as nombre', 'gestoria_sub_servicios.costo as costo')
+            ->get();
+        }
+        return $servicios;
+    }
+
+    public static function updateTotalVenta($ventaId) {
+        $venta = Venta::where('id', $ventaId)->first();
+        $venta->total = DetalleVentaGestoria::where('venta_id', $ventaId)->sum('precio');
+        $venta->save();
+    }
+
 }

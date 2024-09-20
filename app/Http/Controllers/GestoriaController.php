@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use DB;
 use App\Models\User;
+use App\Models\Venta;
 use App\Models\Sede;
 use App\Models\Cliente;
 use App\Models\Gestoria;
 use Illuminate\Http\Request;
 use App\Models\GestoriaServicio;
 use App\Models\GestoriaSubServicio;
+use App\Models\DetalleVentaGestoria;
 use Illuminate\Support\Facades\Auth;
 
 class GestoriaController extends Controller
@@ -29,12 +31,20 @@ class GestoriaController extends Controller
         $vehiculos = GestoriaServicio::where('gestoria_id', 3)->where('estatus_id', 1)->select('id', 'nombre')->get();
 
         $cliente = Cliente::where('estatus_id', 3)->where('usuario_id', Auth::user()->id)->first();
-        $total_checkout = 0;
         // Validar si hay un registro en curso
         $venta = \Helper::registroEnCurso();
-        // dd($cliente);
 
-        return view('modulo.gestoria.index', compact('user', 'entidades', 'gestorias', 'transacciones', 'licencias', 'vehiculos', 'cliente', 'total_checkout', 'venta'));
+        if ($venta) {
+            $total_checkout = DetalleVentaGestoria::where('venta_id', $venta->id)->sum('precio');
+        } else {
+            $total_checkout = 0;
+        }
+
+        //datos precargados de modales de subservicios
+        $subtransacciones = GestoriaSubServicio::where('gestoria_servicio_id', 1)->where('estatus_id', 1)->select('id', 'nombre', 'costo')->get();
+        $rotulosRemovibles = GestoriaSubServicio::where('gestoria_servicio_id', 2)->where('estatus_id', 1)->select('id', 'nombre', 'costo')->get();
+
+        return view('modulo.gestoria.index', compact('user', 'entidades', 'gestorias', 'transacciones', 'licencias', 'vehiculos', 'cliente', 'total_checkout', 'venta', 'subtransacciones', 'rotulosRemovibles'));
     }
 
     /**
@@ -237,7 +247,17 @@ class GestoriaController extends Controller
                 $cliente->img_licencia = 'N/A';
                 $cliente->usuario_id = Auth::user()->id;
                 $cliente->estatus_id = 3;
+                $cliente->tipo_cliente = 2;
                 $cliente->save();
+
+                //Se crea la venta
+                $venta = new Venta();
+                $venta->estatus_id = 3;
+                $venta->total = 0;
+                $venta->tipo_servicio = 2; //2 es gestoría
+                $venta->usuario_id = Auth::user()->id;
+                $venta->cliente_id = $cliente->id;
+                $venta->save();
                     
                 DB::commit();
 
@@ -246,6 +266,103 @@ class GestoriaController extends Controller
         }catch (\PDOException $e){
             DB::rollBack();
             return response()->json(['code' => 201, 'msg' => substr($e->getMessage(), 0, 150)]);
+        }
+    }
+
+    public function addTransaccion(Request $request) {
+
+        $detalleVentaGestoria = DetalleVentaGestoria::where('venta_id', $request->venta_id)->where('servicio_id', 1)->first();
+        $costo = GestoriaSubServicio::where('id', $request->transaccion_id)->select('costo')->pluck('costo')->first();
+
+        if ($detalleVentaGestoria == null) {
+            $detalleVentaGestoria = new DetalleVentaGestoria();
+            $detalleVentaGestoria->servicio_id = 1;
+        }
+
+        $detalleVentaGestoria->subservicio_id = $request->transaccion_id;
+        $detalleVentaGestoria->venta_id = $request->venta_id;
+        $detalleVentaGestoria->precio = $costo;
+        $detalleVentaGestoria->save();
+
+        \Helper::updateTotalVenta($request->venta_id);
+
+        return response()->json(['code' => 200, 'msg' => 'Registro actualizado']);
+    }
+
+    public function addTitulo(Request $request) {
+
+        $detalleVentaGestoria = DetalleVentaGestoria::where('venta_id', $request->venta_id)->where('servicio_id', 2)->first();
+        $costo = GestoriaSubServicio::where('id', $request->titulo_id)->select('costo')->pluck('costo')->first();
+
+        if ($detalleVentaGestoria == null) {
+            $detalleVentaGestoria = new DetalleVentaGestoria();
+            $detalleVentaGestoria->servicio_id = 2;
+        }
+
+        $detalleVentaGestoria->subservicio_id = $request->titulo_id;
+        $detalleVentaGestoria->venta_id = $request->venta_id;
+        $detalleVentaGestoria->precio = $costo;
+        $detalleVentaGestoria->save();
+
+        \Helper::updateTotalVenta($request->venta_id);
+
+        return response()->json(['code' => 200, 'msg' => 'Registro actualizado']);
+    }
+
+    public function pendiente(Request $request) {
+        $venta = Venta::where('id', $request->venta_id)->first();
+        
+        if ($venta) {
+
+            DB::beginTransaction();
+
+            try {
+                $venta->estatus_id = 5;
+                $venta->save();
+
+                $cliente = Cliente::find($venta->cliente_id);
+                $cliente->estatus_id = 5;
+                $cliente->save();
+
+                DB::commit();
+
+                return response()->json(['code' => 200, 'msg' => 'Transacción pendiente de pago!']);
+            
+            }catch (\PDOException $e){
+                DB::rollBack();
+                return back()->withErrors(['Error' => substr($e->getMessage(), 0, 150)]);
+            }
+        } else {
+            return response()->json(['code' => 404, 'msg' => 'Transacción no encontrada!']);
+        }
+    }
+
+    public function cancelar(Request $request) {
+        $venta = Venta::where('id', $request->venta_id)->first();
+        
+        if ($venta) {
+
+            DB::beginTransaction();
+
+            try {
+                $venta->estatus_id = 6;
+                $venta->motivo =  \Helper::capitalizeFirst($request->motivo, "1");
+                $venta->save();
+
+                $cliente = Cliente::find($venta->cliente_id);
+                $cliente->estatus_id = 4;
+                $cliente->save();
+
+                DB::commit();
+
+                return response()->json(['code' => 200, 'msg' => 'Transacción cancelada!']);
+            
+            }catch (\PDOException $e){
+                DB::rollBack();
+                return back()->withErrors(['Error' => substr($e->getMessage(), 0, 150)]);
+            }
+        } else {
+            return response()->json(['code' => 404, 'msg' => 'Transacción no encontrada!']);
         }
     }
 }

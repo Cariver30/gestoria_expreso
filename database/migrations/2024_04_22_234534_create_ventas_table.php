@@ -35,12 +35,15 @@ return new class extends Migration
             $table->string('motivo')->nullable();
             $table->datetime('fecha_pago')->nullable();
             $table->integer('tipo_pago')->nullable();
+            $table->integer('tipo_servicio'); //Si es Inspección=1, si es gestoría es 2
             $table->unsignedBigInteger("usuario_id")->nullable();
             $table->foreign("usuario_id")->references("id")->on("users");
             $table->unsignedBigInteger("estatus_id")->nullable();
             $table->foreign("estatus_id")->references("id")->on("estatus")->onDelete('cascade');
             $table->unsignedBigInteger("vehiculo_id")->nullable();
             $table->foreign("vehiculo_id")->references("id")->on("cliente_vehiculos")->onDelete('cascade');
+            $table->unsignedBigInteger("cliente_id")->nullable();
+            $table->foreign("cliente_id")->references("id")->on("clientes")->onDelete('cascade');
             $table->timestamps();
         });
     }

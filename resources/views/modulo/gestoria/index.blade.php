@@ -80,16 +80,37 @@
                 </div>
             </div>
         </div>
-        @foreach ($gestorias as $gestoria)
-            <div class="col-lg-3 servicioGestoria" data-id="{{ $gestoria->id }}" id="serviciosGestoria">
-                <div class="card bg-success text-white-50">
-                    <div class="card-body text-center">
-                        <i class="mdi mdi-car me-3 text-white" style="font-size: 100px;"></i>
-                        <h1 class="mt-0 mb-4 text-white"> {{ $gestoria->nombre }} </h1>
+        @if (isset($venta) && $venta->id != null)
+            @foreach ($gestorias as $gestoria)
+                <div class="col-lg-3 servicioGestoria" data-id="{{ $gestoria->id }}" id="serviciosGestoria">
+                    <div class="card bg-success text-white-50">
+                        <div class="card-body text-center">
+                            <i class="mdi mdi-car me-3 text-white" style="font-size: 100px;"></i>
+                            <h1 class="mt-0 mb-4 text-white"> {{ $gestoria->nombre }} </h1>
+                        </div>
                     </div>
                 </div>
+            @endforeach
+        @endif
+        <div class="col-md-12 text-center">
+                    
+            <div class="row col-sm-12 text-center">
+                @if ($total_checkout != 0)
+                    <div class="col-sm-4 col-sm-2">
+                        <a type="button" href="{{ route('checkout.index')}}" class="btn btn-soft-info col-md-8 waves-effect waves-light btn-lg"> PAGAR </a>
+                    </div>
+                    <div class="col-sm-4 col-sm-2">
+                        <button type="button" class="btn btn-soft-warning col-md-8 waves-effect waves-light btn-lg btnPendienteGestoria" data-id="{{ $venta->id }}"> PENDIENTE </button>
+                    </div>
+                @endif
+                @if (isset($venta) && $venta->id != null)
+                    <div class="col-sm-3 col-sm-2">
+                        <button type="button" class="btn btn-soft-danger col-md-8 waves-effect waves-light btn-lg btnCancelarGestoria" data-id="{{ $venta->id }}"> CANCELAR </button>
+                    </div>
+                @endif
             </div>
-        @endforeach
+            
+        </div>
     </div>
     @include('modulo.gestoria.servicio.registro')
     @include('modulo.gestoria.servicio.transaccion')
@@ -125,32 +146,17 @@
             });
 
             //Sección para cada modal
-            $(".btnTransaccionGestoria").click(function() {
+            $(".btnGestoriaTransaccion").click(function() {
                 var id = $(this).attr('data-id');
-                $.get('get/data/gestoria/subservicio/' + id, function (data) {
-                    if(data.code == 200){
-                        var listPrecios = document.getElementById("divGestoriaTransaccion");
-                        var precios = data.data;
-                        let html = '';
-                        if(id == 1) {
-                            for (const element of precios) { // You can use `let` instead of `const` if you like
-                                console.log(element);
-                                html = html + '<button type="button" class="btn btn-soft-success col-md-3 waves-effect waves-light" style="margin: 1px;" data-id="'+element.id+'"> '+ element.nombre +' $' + element.costo +' </button>'
-                            }
-                            $('#divGestoriaTransaccion').append(html);
-                            $('#subTransaccion').modal('show');
-                        } else if(id == 2) {
-                            for (const element of precios) { // You can use `let` instead of `const` if you like
-                                console.log(element);
-                                html = html + '<button type="button" class="btn btn-soft-success col-md-6 waves-effect waves-light" style="margin: 1px;" data-id="'+element.id+'"> '+ element.nombre +' $' + element.costo +' </button>'
-                            }
-                            $('#divGestoriaRotulo').append(html);
-                            $('#subRotulo').modal('show');
-                        }
-                    }
-                });
+                if (id == 1) {
+                    $('#subTransaccion').modal('show');
+                }
+                if (id == 2) {
+                    $('#subRotulo').modal('show');
+                }
             });
 
+            //Función que guarda y crea al cliente para iniciar la transacción
             $('#btnSaveClienteGestoria').click(function () {
                 if($('#nombre').val() == '' || $('#email').val() == '' || $('#telefono').val() == '' || $('#seguro_social').val() == '' || $('#identificacion').val() == ''){
                     Swal.fire({
@@ -215,6 +221,200 @@
                 const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
                 return regex.test(email);
             }
+
+            //Función que guarda el servicio seleccionado en el modal de transacciones (primer modal)
+            $('#saveGestoriaTransaccion').click(function () {
+                if($(".btnValorTransaccion").is(':checked') == false){
+                    Swal.fire({
+                        title: 'Debe seleccionar una opción',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                $.ajax({
+                    type : 'POST',
+                    url :"{{ route('gestoria.transaccion') }}",
+                    data : { 
+                        _token: "{{ csrf_token() }}",
+                        transaccion_id: $("input[type=radio][name=valorTransaccion]:checked").val(),
+                        venta_id: $('#venta_id').val()
+                    },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            setTimeout(function(){
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "warning",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                        }
+
+                    },
+                    error: function (data) {
+                        // console.log(data);
+                    }
+                });
+            });
+
+            //Función que guarda el servicio seleccionado en el modal de Título removible (segundo modal)
+            $('#saveGestoriaTitulo').click(function () {
+                if($(".btnValorTitulo").is(':checked') == false){
+                    Swal.fire({
+                        title: 'Debe seleccionar una opción',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                $.ajax({
+                    type : 'POST',
+                    url :"{{ route('gestoria.titulo') }}",
+                    data : { 
+                        _token: "{{ csrf_token() }}",
+                        titulo_id: $("input[type=radio][name=valorTitulo]:checked").val(),
+                        venta_id: $('#venta_id').val()
+                    },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            setTimeout(function(){
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "warning",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                        }
+
+                    },
+                    error: function (data) {
+                        // console.log(data);
+                    }
+                });
+            });
+
+            //Función para cancelar el registro actual
+            $('.btnCancelarGestoria').click(function () {
+                var id = $(this).attr('data-id');
+                Swal.fire({
+                    title: "Motivo",
+                    input: "text",
+                    inputAttributes: {
+                        autocapitalize: "on"
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: "Aceptar",
+                    cancelButtonText: 'Cancelar!',
+                    showLoaderOnConfirm: true,
+                    inputValidator: function (value) {
+                        return !value && 'Debe ingresar un motivo'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type : 'POST',
+                            url :"{{ route('gestoria.cancelar') }}",
+                            data : { 
+                                _token: "{{ csrf_token() }}",
+                                venta_id: id,
+                                motivo : result.value
+                            },
+                            success: function (data) {
+                                if (data.code == 200) {
+                                    Swal.fire({
+                                        title: data.msg,
+                                        icon: "success",
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                    setTimeout(function(){
+                                        window.location.reload();
+                                    }, 1000);
+                                } else {
+                                    Swal.fire({
+                                        title: data.msg,
+                                        icon: "warning",
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                }
+        
+                            },
+                            error: function (data) {
+                                // console.log(data);
+                            }
+                        }); 
+                    }
+                });
+            });
+
+            //Función para pasar a pendiente el registro actual
+            $('.btnPendienteGestoria').click(function () {
+                var id = $(this).attr('data-id');
+                Swal.fire({
+                    title: "La venta pasará a pendiente por pagar, ¿está seguro?",
+                    showCancelButton: true,
+                    confirmButtonText: "Aceptar",
+                    cancelButtonText: 'Cancelar!',
+                    showLoaderOnConfirm: true,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type : 'POST',
+                            url :"{{ route('gestoria.pendiente') }}",
+                            data : { 
+                                _token: "{{ csrf_token() }}",
+                                venta_id: id
+                            },
+                            success: function (data) {
+                                if (data.code == 200) {
+                                    Swal.fire({
+                                        title: data.msg,
+                                        icon: "success",
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                    setTimeout(function(){
+                                        window.location.reload();
+                                    }, 1000);
+                                } else {
+                                    Swal.fire({
+                                        title: data.msg,
+                                        icon: "warning",
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                }
+        
+                            },
+                            error: function (data) {
+                                // console.log(data);
+                            }
+                        }); 
+                    }
+                });
+            });
         });
     </script>
 @endsection

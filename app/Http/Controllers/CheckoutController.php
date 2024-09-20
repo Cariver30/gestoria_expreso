@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Venta;
 use App\Models\Cliente;
-use App\Models\ClienteVehiculo;
 use App\Models\Checkout;
 use Illuminate\Http\Request;
+use App\Models\ClienteVehiculo;
+use App\Models\DetalleVentaGestoria;
+use Illuminate\Support\Facades\Auth;
 
 class CheckoutController extends Controller
 {
@@ -15,13 +17,21 @@ class CheckoutController extends Controller
      */
     public function index()
     {
-        $entidades = \Helper::entidadUsuario();
-        // Validar si hay un registro en curso
-        $venta = \Helper::registroEnCurso();
-        $servicios = \Helper::getServicioDesglose($venta->id);
-        $total = \Helper::getTotalCheckout($venta->id);
+        // $entidades = \Helper::entidadUsuario();
+        // // Validar si hay un registro en curso
+        // $venta = \Helper::registroEnCurso();
+        // $servicios = \Helper::getServicioDesglose($venta->id);
+        // $total = \Helper::getTotalCheckout($venta->id);
 
-        return view('modulo.checkout.index', compact('entidades', 'servicios', 'total', 'venta'));
+        // return view('modulo.checkout.index', compact('entidades', 'servicios', 'total', 'venta'));
+        
+        
+        // Nueva versión
+        $entidades = \Helper::entidadUsuario();
+        $venta = Venta::where('estatus_id', 3)->where('usuario_id', Auth::user()->id)->first();
+        $servicios = \Helper::getServicios($venta->id);
+
+        return view('modulo.checkout.index', compact('entidades', 'servicios', 'venta'));
     }
 
     /**
@@ -86,13 +96,20 @@ class CheckoutController extends Controller
 
     public function verRecibo($id) {
 
+        // $entidades = \Helper::entidadUsuario();
+        // $venta = Venta::find($id);
+        // $vehiculo = ClienteVehiculo::where('id', $venta->vehiculo_id)->first();
+        // $cliente = Cliente::where('id', $vehiculo->cliente_id)->first();
+        // $servicios = \Helper::getServicioDesglose($id);
+        // $total = \Helper::getTotalCheckout($id);
+        
+        // return view('modulo.checkout.recibo', compact('venta', 'servicios', 'total', 'entidades', 'cliente'));
+
         $entidades = \Helper::entidadUsuario();
         $venta = Venta::find($id);
-        $vehiculo = ClienteVehiculo::where('id', $venta->vehiculo_id)->first();
-        $cliente = Cliente::where('id', $vehiculo->cliente_id)->first();
-        $servicios = \Helper::getServicioDesglose($id);
-        $total = \Helper::getTotalCheckout($id);
+        $cliente = Cliente::where('id', $venta->cliente_id)->first();
+        $servicios = \Helper::getServicios($venta->id);        
         
-        return view('modulo.checkout.recibo', compact('venta', 'servicios', 'total', 'entidades', 'cliente'));
+        return view('modulo.checkout.recibo', compact('entidades', 'venta', 'cliente', 'servicios'));
     }
 }
