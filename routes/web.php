@@ -28,6 +28,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('gestoria/cliente/titulo', [App\Http\Controllers\GestoriaController::class, 'addTitulo'])->name('gestoria.titulo');
     Route::post('gestoria/cliente/renovacion', [App\Http\Controllers\GestoriaController::class, 'addRenovacion'])->name('gestoria.renovacion');
     Route::post('gestoria/cliente/aprendizaje', [App\Http\Controllers\GestoriaController::class, 'addAprendizaje'])->name('gestoria.aprendizaje');
+    Route::post('gestoria/cliente/conducir', [App\Http\Controllers\GestoriaController::class, 'addConducir'])->name('gestoria.conducir');
+    Route::post('gestoria/cliente/direccion', [App\Http\Controllers\GestoriaController::class, 'addDireccion'])->name('gestoria.direccion');
     
     
 

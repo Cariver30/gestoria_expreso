@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('gestoria_sub_servicios', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
-            $table->integer('costo');
+            $table->decimal('costo', 8,2);
             $table->unsignedBigInteger("gestoria_servicio_id")->nullable();
             $table->foreign("gestoria_servicio_id")->references("id")->on("gestoria_servicios")->onDelete('cascade');
             $table->unsignedBigInteger("estatus_id")->nullable();

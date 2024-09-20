@@ -45,6 +45,8 @@ class GestoriaController extends Controller
         $rotulosRemovibles = GestoriaSubServicio::where('gestoria_servicio_id', 2)->where('estatus_id', 1)->select('id', 'nombre', 'costo')->get();
         $subRenovaciones = GestoriaSubServicio::where('gestoria_servicio_id', 3)->where('estatus_id', 1)->select('id', 'nombre', 'costo')->get();
         $subAprendizajes = GestoriaSubServicio::where('gestoria_servicio_id', 4)->where('estatus_id', 1)->select('id', 'nombre', 'costo')->get();
+        $subConducir = GestoriaSubServicio::where('gestoria_servicio_id', 5)->where('estatus_id', 1)->select('id', 'nombre', 'costo')->get();
+        $subDirecciones = GestoriaSubServicio::where('gestoria_servicio_id', 6)->where('estatus_id', 1)->select('id', 'nombre', 'costo')->get();
         // dd($subRenovaciones);
 
         return view('modulo.gestoria.index', compact(
@@ -60,7 +62,9 @@ class GestoriaController extends Controller
                                                     'subtransacciones',
                                                     'rotulosRemovibles',
                                                     'subRenovaciones',
-                                                    'subAprendizajes'
+                                                    'subAprendizajes',
+                                                    'subConducir',
+                                                    'subDirecciones'
                                                 ));
     }
 
@@ -357,6 +361,46 @@ class GestoriaController extends Controller
         }
 
         $detalleVentaGestoria->subservicio_id = $request->aprendizaje_id;
+        $detalleVentaGestoria->venta_id = $request->venta_id;
+        $detalleVentaGestoria->precio = $costo;
+        $detalleVentaGestoria->save();
+
+        \Helper::updateTotalVenta($request->venta_id);
+
+        return response()->json(['code' => 200, 'msg' => 'Registro actualizado']);
+    }
+
+    public function addConducir(Request $request) {
+
+        $detalleVentaGestoria = DetalleVentaGestoria::where('venta_id', $request->venta_id)->where('servicio_id', 5)->first();
+        $costo = GestoriaSubServicio::where('id', $request->conducir_id)->select('costo')->pluck('costo')->first();
+
+        if ($detalleVentaGestoria == null) {
+            $detalleVentaGestoria = new DetalleVentaGestoria();
+            $detalleVentaGestoria->servicio_id = 5;
+        }
+
+        $detalleVentaGestoria->subservicio_id = $request->conducir_id;
+        $detalleVentaGestoria->venta_id = $request->venta_id;
+        $detalleVentaGestoria->precio = $costo;
+        $detalleVentaGestoria->save();
+
+        \Helper::updateTotalVenta($request->venta_id);
+
+        return response()->json(['code' => 200, 'msg' => 'Registro actualizado']);
+    }
+
+    public function addDireccion(Request $request) {
+
+        $detalleVentaGestoria = DetalleVentaGestoria::where('venta_id', $request->venta_id)->where('servicio_id', 6)->first();
+        $costo = GestoriaSubServicio::where('id', $request->direccion_id)->select('costo')->pluck('costo')->first();
+
+        if ($detalleVentaGestoria == null) {
+            $detalleVentaGestoria = new DetalleVentaGestoria();
+            $detalleVentaGestoria->servicio_id = 6;
+        }
+
+        $detalleVentaGestoria->subservicio_id = $request->direccion_id;
         $detalleVentaGestoria->venta_id = $request->venta_id;
         $detalleVentaGestoria->precio = $costo;
         $detalleVentaGestoria->save();

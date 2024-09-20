@@ -121,6 +121,8 @@
     @include('modulo.gestoria.subservicio.subRotulo')
     @include('modulo.gestoria.subservicio.subRenovacion')
     @include('modulo.gestoria.subservicio.subAprendizaje')
+    @include('modulo.gestoria.subservicio.subConducir')
+    @include('modulo.gestoria.subservicio.subDireccion')
 @endsection
 
 @section('script')
@@ -169,10 +171,10 @@
                         $('#subAprendizaje').modal('show')
                         break;
                     case '5':
-                        $('#vehiculos').modal('show')
+                        $('#subConducir').modal('show')
                         break;
                     case '6':
-                        $('#add_vehiculo_gestoria').modal('show')
+                        $('#subDireccion').modal('show')
                         break;
                 }
                 
@@ -399,6 +401,98 @@
                     data : { 
                         _token: "{{ csrf_token() }}",
                         aprendizaje_id: $("input[type=radio][name=valorAprendizaje]:checked").val(),
+                        venta_id: $('#venta_id').val()
+                    },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            setTimeout(function(){
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "warning",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                        }
+
+                    },
+                    error: function (data) {
+                        // console.log(data);
+                    }
+                });
+            });
+
+            //Función que guarda el servicio seleccionado en el modal de aprendizaje (Tercer modal - tercera opción)
+            $('#saveGestoriaConducir').click(function () {
+                if($(".btnValorConducir").is(':checked') == false){
+                    Swal.fire({
+                        title: 'Debe seleccionar una opción',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                $.ajax({
+                    type : 'POST',
+                    url :"{{ route('gestoria.conducir') }}",
+                    data : { 
+                        _token: "{{ csrf_token() }}",
+                        conducir_id: $("input[type=radio][name=valorConducir]:checked").val(),
+                        venta_id: $('#venta_id').val()
+                    },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            setTimeout(function(){
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "warning",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                        }
+
+                    },
+                    error: function (data) {
+                        // console.log(data);
+                    }
+                });
+            });
+
+            //Función que guarda el servicio seleccionado en el modal de aprendizaje (Tercer modal - tercera opción)
+            $('#saveGestoriaDireccion').click(function () {
+                if($(".btnValorDireccion").is(':checked') == false){
+                    Swal.fire({
+                        title: 'Debe seleccionar una opción',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                $.ajax({
+                    type : 'POST',
+                    url :"{{ route('gestoria.direccion') }}",
+                    data : { 
+                        _token: "{{ csrf_token() }}",
+                        direccion_id: $("input[type=radio][name=valorDireccion]:checked").val(),
                         venta_id: $('#venta_id').val()
                     },
                     success: function (data) {
