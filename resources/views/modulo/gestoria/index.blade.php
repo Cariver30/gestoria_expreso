@@ -126,6 +126,8 @@
     @include('modulo.gestoria.subservicio.subTraspaso')
     @include('modulo.gestoria.subservicio.subVentaCondicional')
     @include('modulo.gestoria.subservicio.subGravamenes')
+    @include('modulo.gestoria.subservicio.subRegistro')
+    @include('modulo.gestoria.subservicio.subNotificacion')
 @endsection
 
 @section('script')
@@ -196,8 +198,11 @@
                     case '9':
                         $('#subGravamenes').modal('show')
                         break;
-                    case '6':
-                        $('#subDireccion').modal('show')
+                    case '10':
+                        $('#subRegistros').modal('show')
+                        break;
+                    case '11':
+                        $('#subNotificaciones').modal('show')
                         break;
                 }
                 
@@ -654,6 +659,98 @@
                     data : { 
                         _token: "{{ csrf_token() }}",
                         gravamen_id: $("input[type=radio][name=valorGravamen]:checked").val(),
+                        venta_id: $('#venta_id').val()
+                    },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            setTimeout(function(){
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "warning",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                        }
+
+                    },
+                    error: function (data) {
+                        // console.log(data);
+                    }
+                });
+            });
+
+            //Función que guarda el servicio seleccionado en el modal de vehículo (Cuarto modal - cuarta opción)
+            $('#saveGestoriaRegistro').click(function () {
+                if($(".btnValorRegistro").is(':checked') == false){
+                    Swal.fire({
+                        title: 'Debe seleccionar una opción',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                $.ajax({
+                    type : 'POST',
+                    url :"{{ route('gestoria.registro') }}",
+                    data : { 
+                        _token: "{{ csrf_token() }}",
+                        registro_id: $("input[type=radio][name=valorRegistro]:checked").val(),
+                        venta_id: $('#venta_id').val()
+                    },
+                    success: function (data) {
+                        if (data.code == 200) {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                            setTimeout(function(){
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "warning",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                        }
+
+                    },
+                    error: function (data) {
+                        // console.log(data);
+                    }
+                });
+            });
+
+            //Función que guarda el servicio seleccionado en el modal de vehículo (Cuarto modal - quinta opción)
+            $('#saveGestoriaNotificacion').click(function () {
+                if($(".btnValorNotificacion").is(':checked') == false){
+                    Swal.fire({
+                        title: 'Debe seleccionar una opción',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                $.ajax({
+                    type : 'POST',
+                    url :"{{ route('gestoria.notificacion') }}",
+                    data : { 
+                        _token: "{{ csrf_token() }}",
+                        notificacion_id: $("input[type=radio][name=valorNotificacion]:checked").val(),
                         venta_id: $('#venta_id').val()
                     },
                     success: function (data) {

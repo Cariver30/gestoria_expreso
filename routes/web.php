@@ -33,6 +33,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('gestoria/cliente/traspaso', [App\Http\Controllers\GestoriaController::class, 'addTraspaso'])->name('gestoria.traspaso');
     Route::post('gestoria/cliente/venta-condicional', [App\Http\Controllers\GestoriaController::class, 'addVentaCondicional'])->name('gestoria.venta.condicional');
     Route::post('gestoria/cliente/gravamen', [App\Http\Controllers\GestoriaController::class, 'addGravamen'])->name('gestoria.gravamen');
+    Route::post('gestoria/cliente/registro', [App\Http\Controllers\GestoriaController::class, 'addRegistro'])->name('gestoria.registro');
+    Route::post('gestoria/cliente/notificacion', [App\Http\Controllers\GestoriaController::class, 'addNotificacion'])->name('gestoria.notificacion');
     
     
 
