@@ -135,6 +135,38 @@
     <script src="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.js') }}"></script>
     <script>
         $(document).ready(function() {
+            //Se consulta el número social
+            var seguroSocial = document.getElementById('seguro_social');
+            seguroSocial.addEventListener("change", function (evt) {
+                var numSeguroSocial = $('#seguro_social').val();
+                if(numSeguroSocial.length == 4) {
+                    $.get('consulta/seguro-social/' + numSeguroSocial, function (data) {
+                        if(data.code == 200){
+                            Swal.fire({
+                                title: '¡La persona ya existe como cliente!',
+                                text: '¡Se ha cargado la información!',
+                                icon: "success",
+                                showConfirmButton: true,
+                            });
+                            $('#nombre').val(data.data.nombre);
+                            $('#email').val(data.data.email);
+                            $('#telefono').val(data.data.telefono);
+                            $('#identificacion').val(data.data.identificacion);
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'El seguro social debe de ser de 4 dígitos',
+                        icon: "warning",
+                        showConfirmButton: false
+                    });
+                    $('#seguro_social').val('');
+                    return false;
+                }
+            }, false);
+
+
+
             //Sección para mostrar modales principales
             $(".servicioGestoria").click(function() {
                 var id = $(this).attr('data-id');

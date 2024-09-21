@@ -52,7 +52,7 @@ class GestoriaController extends Controller
         $subGravamenes = GestoriaSubServicio::where('gestoria_servicio_id', 9)->where('estatus_id', 1)->select('id', 'nombre', 'costo')->get();
         $subRegistros = GestoriaSubServicio::where('gestoria_servicio_id', 10)->where('estatus_id', 1)->select('id', 'nombre', 'costo')->get();
         $subNotificaciones = GestoriaSubServicio::where('gestoria_servicio_id', 11)->where('estatus_id', 1)->select('id', 'nombre', 'costo')->get();
-        // dd($subRenovaciones);
+        // dd($cliente);
 
         return view('modulo.gestoria.index', compact(
                                                     'user',
@@ -256,13 +256,30 @@ class GestoriaController extends Controller
         try {
 
             $cliente = Cliente::where('seguro_social', $request->seguro_social)->first();
+            // dd($cliente);
 
             if ($cliente) {
                 $cliente->nombre = \Helper::capitalizeFirst($request->nombre, "1");
                 $cliente->email = $request->email;
                 $cliente->telefono = $request->telefono;
                 $cliente->identificacion = $request->identificacion;
+                if ($cliente->estatus_id == 4) {
+                    $cliente->estatus_id = 3;
+                }
                 $cliente->save();
+
+                $venta = Venta::where('cliente_id', $cliente->id)->where('estatus_id', 3)->first();
+
+                if ($venta == null) {
+                    //Se crea la venta
+                    $venta = new Venta();
+                    $venta->estatus_id = 3;
+                    $venta->total = 0;
+                    $venta->tipo_servicio = 2; //2 es gestoría
+                    $venta->usuario_id = Auth::user()->id;
+                    $venta->cliente_id = $cliente->id;
+                    $venta->save();
+                }
 
                 DB::commit();
 

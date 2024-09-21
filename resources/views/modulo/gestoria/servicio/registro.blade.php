@@ -8,6 +8,10 @@
             <div class="modal-body">
                 <div class="row col-md-12">
                     <div class="col-md-4">
+                        <label for="seguro_social" class="col-form-label"> Seguro Social </label>
+                        <input type="text" class="form-control form-control-md" name="seguro_social" minlength="1" maxlength="4" id="seguro_social" @if (isset($cliente)) value="{{ $cliente->seguro_social }}" @endif>
+                    </div>
+                    <div class="col-md-4">
                         <label for="nombre" class="col-form-label"> Nombre completo</label>
                         <input type="text" class="form-control form-control-md" name="nombre" id="nombre" @if (isset($cliente)) value="{{ $cliente->nombre }}" @endif>
                     </div>
@@ -18,10 +22,6 @@
                     <div class="col-md-4">
                         <label for="telefono" class="col-form-label"> Teléfono </label>
                         <input type="text" class="form-control form-control-md" name="telefono" id="telefono" @if (isset($cliente)) value="{{ $cliente->telefono }}" @endif>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="seguro_social" class="col-form-label"> Seguro Social </label>
-                        <input type="text" class="form-control form-control-md" name="seguro_social" id="seguro_social" @if (isset($cliente)) value="{{ $cliente->seguro_social }}" @endif>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="identificacion" class="col-form-label"> Licencia/Identificación </label>
