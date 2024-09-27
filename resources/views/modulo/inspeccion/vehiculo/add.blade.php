@@ -110,7 +110,7 @@
                             @endif
                             <div class="col-md-12 mb-3">
                                 <label for="fileInspeccion" class="form-label"> Cargar licencia </label>
-                                <input class="form-control" type="file" name="fileInspeccion" id="fileInspeccion" accept="image/*" required>
+                                <input class="form-control" type="file" name="fileInspeccion" id="fileInspeccion" accept="image/*" capture required>
                             </div>
                             @if (Auth::user()->rol_id == 1 || Auth::user()->rol_id == 2)
                                 <div class="col-md-2">
