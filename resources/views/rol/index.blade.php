@@ -25,11 +25,11 @@
                             <div class="favorite-icon">
                                 <a href="javascript:void(0)"><i class="uil uil-heart-alt fs-18"></i></a>
                             </div>
-                            <img src="{{ URL::asset('build/images/companies/adobe.svg') }}" alt="" height="50" class="mb-3">
+                            <img src="{{ URL::asset('images/expreso.jpeg') }}" alt="" height="50" class="mb-3">
                             <h5 class="fs-17 mb-2"><a href="job-details" class="text-dark">{{ $rol->nombre }} </a></h5>
                             <div class="mt-4">
                                 <button class="btn btn-soft-success editRol" data-id="{{ $rol->id }}"><i class="mdi mdi-pencil font-size-8 me-1"></i> Editar </a></li>
-                                <button class="btn btn-soft-danger waves-effect waves-light inActivarRol" data-id="{{ $rol->id }}" data-estatus="{{ $rol->estatus_id }}"><i class="mdi mdi-trash-can-outline font-size-16 text-danger me-1"></i>@if ($rol->estatus_id == 1) Desactivar @else Activar @endif</button>
+                                <button class="btn btn-soft-danger waves-effect waves-light inActivarRol" data-id="{{ $rol->id }}" data-estatus="{{ $rol->estatus_id }}"><i class="mdi mdi-trash-can-outline font-size-8 text-danger me-1"></i>@if ($rol->estatus_id == 1) Desactivar @else Activar @endif</button>
                             </div>
                         </div>
                     </div>

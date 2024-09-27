@@ -19,22 +19,22 @@
         </div>
         <div class="row col-md-12">
             @foreach ($sedes as $sede)
-                <div class="col-xl-3 col-md-6">
+                <div class="col-xl-3 col-md-4">
                     <div class="card">
                         <div class="card-body text-center">
                             <div class="favorite-icon">
                                 <a href="javascript:void(0)"><i class="uil uil-heart-alt fs-18"></i></a>
                             </div>
-                            <img src="{{ URL::asset('build/images/companies/adobe.svg') }}" alt="" height="50" class="mb-3">
+                            <img src="{{ URL::asset('images/expreso.jpeg') }}" alt="" height="50" class="mb-3">
                             <h5 class="fs-17 mb-2"><a href="job-details" class="text-dark">{{ $sede->nombre }}</a></h5>
                             <small>{{ $sede->rol }}</small>
                             <div class="mt-4">
                                 <button class="btn btn-soft-success editEntidad" data-id="{{ $sede->id }}"><i class="mdi mdi-pencil font-size-8 me-1"></i> Editar </button></li>
                                 
                                 @if ($sede->estatus_id == 1)
-                                    <button class="btn btn-soft-danger inActivarsede" data-id="{{ $sede->id }}" data-estatus="1"><i class="mdi mdi-account-convert font-size-16 text-danger me-1"></i>Deshabilitar</button>   
+                                    <button class="btn btn-soft-danger inActivarsede" data-id="{{ $sede->id }}" data-estatus="1"><i class="mdi mdi-account-convert font-size-8 text-danger me-1"></i>Deshabilitar</button>   
                                 @else
-                                    <button class="btn btn-soft-warning inActivarsede" data-id="{{ $sede->id }}" data-estatus="2"><i class="mdi mdi-account-convert font-size-16 text-warning me-1"></i>Activar</button>
+                                    <button class="btn btn-soft-warning inActivarsede" data-id="{{ $sede->id }}" data-estatus="2"><i class="mdi mdi-account-convert font-size-8 text-warning me-1"></i>Activar</button>
                                 @endif
                             </div>
                         </div>

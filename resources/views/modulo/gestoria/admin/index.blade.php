@@ -28,10 +28,10 @@
                             <img src="{{ URL::asset('build/images/companies/adobe.svg') }}" alt="" height="50" class="mb-3">
                             <h5 class="fs-17 mb-2"><a href="job-details" class="text-dark">{{ $gestoria->nombre }} </a></h5>
                             <div class="mt-4">
-                                <button class="btn btn-soft-success waves-effect waves-light editServicioGestoria" data-id="{{ $gestoria->id }}" data-nombre="{{ $gestoria->nombre }}"><i class="mdi mdi-pencil font-size-16 me-1"></i> Editar </a>
-                                {{--  <button class="btn btn-soft-danger waves-effect waves-light inActivarServicio" data-id="{{ $gestoria->id }}"><i class="mdi mdi-trash-can-outline font-size-16 text-danger me-1"></i></button>  --}}
+                                <button class="btn btn-soft-success waves-effect waves-light editServicioGestoria" data-id="{{ $gestoria->id }}" data-nombre="{{ $gestoria->nombre }}"><i class="mdi mdi-pencil font-size-8 me-1"></i> Editar </a>
+                                {{--  <button class="btn btn-soft-danger waves-effect waves-light inActivarServicio" data-id="{{ $gestoria->id }}"><i class="mdi mdi-trash-can-outline font-size-8 text-danger me-1"></i></button>  --}}
                             </div>
-                            <a href="{{ route('gestoria.edit', ['gestorium' => $gestoria->id])}}" class="btn btn-soft-info waves-effect waves-light"><i class="mdi mdi-plus font-size-16 text-info me-1"></i> Servicios </a>
+                            <a href="{{ route('gestoria.edit', ['gestorium' => $gestoria->id])}}" class="btn btn-soft-info waves-effect waves-light"><i class="mdi mdi-plus font-size-8 text-info me-1"></i> Servicios </a>
                         </div>
                     </div>
                 </div>

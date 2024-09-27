@@ -39,6 +39,16 @@ class UserController extends Controller
                             )->get();
         }
 
+        foreach ($usuarios as $usuario) {
+            $sucursales = array();
+            $sedes = DB::table('usuario_sedes')->select('sede_id')->where('usuario_id', $usuario->id)->get();
+            foreach ($sedes as $sede) {
+                $nombre = Sede::where('id', $sede->sede_id)->select('nombre')->pluck('nombre')->first();
+                array_push($sucursales, $nombre);
+            }
+            $usuario['sucursales'] = $sucursales;
+        }
+
         $roles = Role::select('id', 'nombre')->where('estatus_id', 1)->get();
         
         $entidades = \Helper::entidadUsuario();

@@ -41,7 +41,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-primary" data-id="{{ $rol->id }}" id="saveUsuario">Guardar</button>
+                        <button type="button" class="btn btn-primary" data-id="{{ $rol->id }}" id="saveUsuario" @if (count($entidades) == 1) disabled @endif>Guardar</button>
                     </div>
                 </form>
             </div>
