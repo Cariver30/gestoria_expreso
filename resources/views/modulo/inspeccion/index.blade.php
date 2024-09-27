@@ -10,8 +10,8 @@
 @endsection
 
 @section('content')
-    <div class="row col-sm-12 text-center" style="margin-left: 41%;">
-        <div class="col-sm-2 col-sm-2">
+    <div class="row col-sm-12 text-center" style="margin-left: 35%;">
+        <div class="col-sm-3 col-sm-2">
             <label class="card-radio-label mb-3">
                 <input type="radio" name="suma_total" id="suma_total" class="card-radio-input" checked="">
                 <div class="card-radio">

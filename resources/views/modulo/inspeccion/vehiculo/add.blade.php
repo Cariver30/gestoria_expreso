@@ -34,8 +34,9 @@
                     </div>
                     <h5 class="mb-4 pt-4"> Datos del Propietario </h5>
                     <div class="col-md-3 mb-4">
-                        <label for="seguro_social" class="col-form-label"> Últimos 4 dígitos de Seguro Social </label>
+                        <label for="seguro_social" class="col-form-label"> Seguro Social </label>
                         <input type="text" class="form-control form-control-sm" name="seguro_social" id="seguro_social" maxlength="4" @if (isset($cliente)) value="{{ $cliente->seguro_social }}" @endif required>
+                        <small>(Últimos 4 dígitos)</small>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="nombre" class="col-form-label"> Nombre completo</label>
@@ -105,7 +106,7 @@
                             @endforeach
                         </div>
                     @endif
-                    <div class="col-md-12 mb-4" style="height: 50% important;">
+                    {{--  <div class="col-md-12 mb-4" style="height: 50% important;">
                         <div class="dropzone">
                             <div class="fallback">
                                 <label for="file_licencia" class="col-form-label"> Cargar Licencia </label>
@@ -143,6 +144,10 @@
                                 </div>
                             </li>
                         </ul>
+                    </div>  --}}
+                    <div class="col-md-12 mb-3">
+                        <label for="formFile" class="form-label"> Cargar licencia </label>
+                        <input class="form-control" type="file" name="fileLicencia" id="formFile" accept="image/*" required>
                     </div>
                     @if (Auth::user()->rol_id == 1 || Auth::user()->rol_id == 2)
                         <div class="col-md-2">
