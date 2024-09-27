@@ -39,7 +39,7 @@
                     </div>
                     <div class="col-md-4 mb-3">
                         <label for="identificacion" class="col-form-label"> Licencia </label><br>
-                        <button type="button" class="btn btn-secondary btn-sm col-md-1 "><i class="bx bx-id-card font-size-20 text-light align-middle me-2"></i></button>
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#modalAmpliarImagen" class="btn btn-primary btn-sm btn-rounded waves-effect waves-light"><i class="mdi mdi-eye me-1"></i> Visualizar </button>
                     </div>
                 </div>
                 <div class="col-md-12 mb-3">
@@ -49,6 +49,22 @@
             </div>
         </div>
     </form>
+    <div class="modal fade" id="modalAmpliarImagen" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"> Licencia </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="{{ asset('licencias/'.$cliente->img_licencia) }}" alt="product-img" title="product-img" width="250"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="card">
         <div class="card-body">
             @if ($cliente->tipo_cliente == 1)

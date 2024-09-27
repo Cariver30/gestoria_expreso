@@ -13,6 +13,7 @@ use App\Models\GestoriaServicio;
 use App\Models\GestoriaSubServicio;
 use App\Models\DetalleVentaGestoria;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 
 class GestoriaController extends Controller
 {
@@ -251,13 +252,22 @@ class GestoriaController extends Controller
             return response()->json(['code' => 400, 'msg' => 'Hay campos vacíos']);
         }
 
+        if ($request->has('fileLicencia')) {
+            $file = $request->file('fileLicencia');
+            $extension = $file->getClientOriginalExtension();
+            $destino = public_path('licencias');
+            $filename = time().'.'.$extension;
+            $file->move($destino, $filename);
+        } else {
+            return response()->json(['code' => 400, 'msg' => 'Debe cargar la licencia']);
+        }
+
         DB::beginTransaction();
 
         try {
 
             $cliente = Cliente::where('seguro_social', $request->seguro_social)->first();
-            // dd($cliente);
-
+            
             if ($cliente) {
                 $cliente->nombre = \Helper::capitalizeFirst($request->nombre, "1");
                 $cliente->email = $request->email;
@@ -266,6 +276,11 @@ class GestoriaController extends Controller
                 if ($cliente->estatus_id == 4) {
                     $cliente->estatus_id = 3;
                 }
+                if (File::exists($cliente->img_licencia)) {
+                    File::delete($cliente->img_licencia);
+                    $cliente->img_licencia = $filename;
+                }
+
                 $cliente->save();
 
                 $venta = Venta::where('cliente_id', $cliente->id)->where('estatus_id', 3)->first();
@@ -292,7 +307,7 @@ class GestoriaController extends Controller
                 $cliente->telefono = $request->telefono;
                 $cliente->seguro_social = $request->seguro_social;
                 $cliente->identificacion = $request->identificacion;
-                $cliente->img_licencia = 'N/A';
+                $cliente->img_licencia = $filename;
                 $cliente->usuario_id = Auth::user()->id;
                 $cliente->estatus_id = 3;
                 $cliente->tipo_cliente = 2;

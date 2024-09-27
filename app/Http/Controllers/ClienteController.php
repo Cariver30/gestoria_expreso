@@ -195,7 +195,7 @@ class ClienteController extends Controller
     public function edit(Cliente $cliente)
     {
         $entidades = \Helper::entidadUsuario();
-        $cliente = Cliente::select('id', 'nombre', 'email', 'telefono', 'seguro_social', 'identificacion', 'tipo_cliente')->where('id', $cliente->id)->first();
+        $cliente = Cliente::select('id', 'nombre', 'email', 'telefono', 'seguro_social', 'identificacion', 'tipo_cliente', 'img_licencia')->where('id', $cliente->id)->first();
         if ($cliente->tipo_cliente == 1) {
             $vehiculos = ClienteVehiculo::leftJoin('estatus', 'cliente_vehiculos.estatus_id', 'estatus.id')
                                             ->where('cliente_id', $cliente->id)

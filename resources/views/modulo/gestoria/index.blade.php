@@ -241,7 +241,11 @@
             });
 
             //Función que guarda y crea al cliente para iniciar la transacción
-            $('#btnSaveClienteGestoria').click(function () {
+            $('#btnSaveClienteGestoria').click(function (e) {
+                e.preventDefault();
+                var formData = $("#formRegistro").submit(function (e) {
+                    return;
+                });
                 if($('#nombre').val() == '' || $('#email').val() == '' || $('#telefono').val() == '' || $('#seguro_social').val() == '' || $('#identificacion').val() == ''){
                     Swal.fire({
                         title: 'Hay campos vacíos',
@@ -261,18 +265,13 @@
                     });
                     return false;
                 }
-                
+                var formData = new FormData(formData[0]);
                 $.ajax({
                     type : 'POST',
                     url :"{{ route('gestoria.cliente') }}",
-                    data : { 
-                        _token: "{{ csrf_token() }}",
-                        nombre: $('#nombre').val(),
-                        email: $('#email').val(),
-                        telefono: $('#telefono').val(),
-                        seguro_social: $('#seguro_social').val(),
-                        identificacion: $('#identificacion').val()
-                    },
+
+                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    data: formData,
                     success: function (data) {
                         if (data.code == 200 || data.code == 201) {
                             Swal.fire({
@@ -294,6 +293,9 @@
                         }
 
                     },
+                    contentType: false,
+                    processData: false,
+                    cache: false,
                     error: function (data) {
                         // console.log(data);
                     }
