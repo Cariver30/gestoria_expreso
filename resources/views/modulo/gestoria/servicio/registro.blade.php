@@ -30,7 +30,7 @@
                         </div>
                         <div class="col-md-12 mb-3">
                             <label for="formFile" class="form-label"> Cargar licencia </label>
-                            <input class="form-control" type="file" name="fileLicencia" id="formFile" accept="image/*" required>
+                            <input class="form-control" type="file" name="fileLicencia" id="formFile" accept="image/*" capture required>
                         </div>
                         {{--  <div class="col-md-12 mb-4" style="height: 50% important;">
                             <div class="dropzone">
