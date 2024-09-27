@@ -148,7 +148,7 @@
                                 </tr>
                             </thead>
                             <tbody align="center">
-                                @foreach ($ordenes as $orden)
+                                {{--  @foreach ($ordenes as $orden)
                                     <tr>
                                         <td> {{ Carbon\Carbon::parse($orden->updated_at)->format('d-m-Y H:i') }} </td>
                                         <td> 
@@ -167,17 +167,12 @@
                                         <td> @if ($orden->fecha_pago == null) Sin información @else {{ Carbon\Carbon::parse($orden->fecha_pago)->format('d-m-Y H:i') }} @endif</td>
                                         <td> ${{ $orden->total }} </td>
                                         <td>
-                                            {{--  @if ($orden->estatus_id == 5)
-                                                <a type="button" class="btn btn-info waves-effect waves-light" href="{{ route('pay.checkout.vehicle', ['id' => $orden['id']]) }}">Pagar</a>
-                                            @elseif ($orden['estatus_id'] != 5 && $orden['total'] == 0.0 || $orden['estatus_id'] == 5 && $orden['total'] == 0.0)
-                                                <button type="button" class="btn btn-info waves-effect waves-light pr-4" disabled> Pagar </a>
-                                            @endif  --}}
                                             @if ($orden->estatus_id == 4 || $orden->estatus_id == 5 || $orden->estatus_id == 6)
                                                 <a href="{{ route('ver.recibo', ['id' => $orden->id]) }}" type="button" class="btn btn-secondary waves-effect waves-light" style="margin-left: 10px;"> Ver recibo </a>
                                             @endif
                                         </td>
                                     </tr>
-                                @endforeach
+                                @endforeach  --}}
                             </tbody>
                         </table>
                     </div>

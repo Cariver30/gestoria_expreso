@@ -11,6 +11,7 @@
                         <div class="col-md-4">
                             <label for="seguro_social" class="col-form-label"> Seguro Social </label>
                             <input type="text" class="form-control form-control-md" name="seguro_social" minlength="1" maxlength="4" id="seguro_social" @if (isset($cliente)) value="{{ $cliente->seguro_social }}" @endif>
+                            <small>(Últimos 4 dígitos)</small>
                         </div>
                         <div class="col-md-4">
                             <label for="nombre" class="col-form-label"> Nombre completo</label>

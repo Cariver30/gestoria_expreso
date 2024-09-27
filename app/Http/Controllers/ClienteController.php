@@ -16,6 +16,7 @@ use App\Models\ClienteVehiculo;
 use App\Models\VehiculoMarbete;
 use Illuminate\Support\Facades\Auth;
 use App\Models\DetalleVentaGestoria;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
 class ClienteController extends Controller
@@ -61,6 +62,17 @@ class ClienteController extends Controller
 
         try {
             if ($request->venta_id == null) {
+
+                //Validación de archivo de licencia
+                if ($request->has('fileInspeccion')) {
+                    $file = $request->file('fileInspeccion');
+                    $extension = $file->getClientOriginalExtension();
+                    $destino = public_path('licencias');
+                    $filename = time().'.'.$extension;
+                    $file->move($destino, $filename);
+                } else {
+                    return response()->json(['code' => 400, 'msg' => 'Debe cargar la licencia']);
+                }
             
                 //Se valida si el cliente existe para no crearlo
                 $data_cliente = Cliente::where('seguro_social', $request->seguro_social)->first();
@@ -76,7 +88,8 @@ class ClienteController extends Controller
                     $cliente->telefono = $request->telefono;
                     $cliente->seguro_social = $request->seguro_social;
                     $cliente->identificacion = $request->identificacion;
-                    $cliente->img_licencia = 'path/img_licencia';
+                    $cliente->img_licencia = $filename;
+                    $cliente->tipo_cliente = 1;
                     $cliente->usuario_id = Auth::user()->id;
                     $cliente->estatus_id = 3;
                     $cliente->save();
@@ -119,6 +132,7 @@ class ClienteController extends Controller
                 $venta->total = ($costoInspección == null) ? 0 : $costoInspección ;
                 $venta->estatus_id = 3;
                 $venta->usuario_id = Auth::user()->id;
+                $venta->tipo_servicio = 1; //1 es inspección
                 $venta->vehiculo_id = ($request->tipo_registro == 0) ? $clienteVehiculo->id : $vehiculoId->id ;
                 $venta->save();
                 
@@ -128,7 +142,15 @@ class ClienteController extends Controller
             } else {
                 
                 $vehiculo = \Helper::getVehiculo($request->venta_id);
-                // dd($vehiculo);
+                //Validación de archivo de licencia al actualizar
+                // dd($request->all());
+                if ($request->has('fileInspeccion')) {
+                    $file = $request->file('fileInspeccion');
+                    $extension = $file->getClientOriginalExtension();
+                    $destino = public_path('licencias');
+                    $filename = time().'.'.$extension;
+                    $file->move($destino, $filename);
+                }
 
                 //Se actualiza el cliente
                 $cliente = Cliente::find($vehiculo->cliente_id);
@@ -137,8 +159,13 @@ class ClienteController extends Controller
                 $cliente->telefono = $request->telefono;
                 $cliente->seguro_social = $request->seguro_social;
                 $cliente->identificacion = $request->identificacion;
+                //Se actualiza la licencia
+                if ($request->has('fileInspeccion')) {
+                    File::delete($cliente->img_licencia);
+                    $cliente->img_licencia = $filename;
+                }
                 $cliente->save();
-
+                
                 //Se actualiza el vehículo
                 $clienteVehiculo = ClienteVehiculo::find($vehiculo->id);
                 $clienteVehiculo->compania = \Helper::capitalizeFirst($request->compania, "1");
@@ -175,6 +202,7 @@ class ClienteController extends Controller
             }
         }catch (\PDOException $e){
             DB::rollBack();
+            dd($e);
             return response()->json(['code' => 201, 'msg' => substr($e->getMessage(), 0, 150)]);
         }
     }
@@ -222,7 +250,8 @@ class ClienteController extends Controller
                                     array_push($ordenes, $venta);
                                 }
             }
-            return view('cliente.edit', compact('entidades', 'cliente', 'vehiculos', 'ordenes'));
+            // dd($ordenes);
+            return view('cliente.edit', compact('entidades', 'cliente', 'vehiculos'));
 
         } else {
             $data = 1;

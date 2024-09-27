@@ -6,7 +6,6 @@
 
 @section('css')
     <link href="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ URL::asset('build/libs/dropzone/dropzone.css') }}" rel="stylesheet" type="text/css" />
 @endsection
 
 @section('content')
@@ -91,10 +90,6 @@
 @section('script')
     <!-- Sweet Alerts js -->
     <script src="{{ URL::asset('build/libs/sweetalert2/sweetalert2.min.js') }}"></script>
-    <script src="{{ URL::asset('build/libs/dropzone/dropzone-min.js') }}"></script>
-
-    <!-- Form file upload init js -->
-    <script src="{{ URL::asset('build/js/pages/form-file-upload.init.js') }}"></script>
     <script type="text/javascript">
         function validateFileType(){ // Se válida el formato de la imagen a subir
             var fileName = document.getElementById("file_licencia").value;
@@ -199,10 +194,14 @@
             });
 
             //Crear Cliente-vehículo
-            $('#saveVehiculo').click(function () {
-                if($('#tipo_registro').val() == 0 && $('#tablilla').val() == '') {
+            $('#saveVehiculo').click(function (e) {
+                e.preventDefault();
+                var formData = $("#RegistroInspeccion").submit(function (e) {
+                    return;
+                });
+                if($('#tablilla').val() == '') {
                     Swal.fire({
-                        title: 'La tablilla es requerida',
+                        title: '¡Debe ingresar la tablilla!',
                         icon: "warning",
                         showConfirmButton: false,
                         timer: 2000
@@ -217,39 +216,21 @@
                     });
                     return false;
                 }
-                
                 if (!validarEmail($('#email').val())) {
                     Swal.fire({
-                        title: 'Ingrese un correo válido',
+                        title: '¡Ingrese un correo válido!',
                         icon: "warning",
                         showConfirmButton: false,
                         timer: 2000
                     });
                     return false;
                 }
+                var formData = new FormData(formData[0]);
                 $.ajax({
                     type : 'POST',
                     url :"{{ route('clientes.store') }}",
-                    enctype: 'multipart/form-data',
-                    data : { 
-                        _token: "{{ csrf_token() }}",
-                        nombre: $('#nombre').val(),
-                        email: $('#email').val(),
-                        telefono: $('#telefono').val(),
-                        compania: $('#compania').val(),
-                        vehiculo: $('#vehiculo').val(),
-                        tablilla: $('#tablilla').val(),
-                        marca: $('#marca').val(),
-                        anio: $('#anio').val(),
-                        seguro_social: $('#seguro_social').val(),
-                        mes_vencimiento: $('#mes_vencimiento').val(),
-                        costo_inspeccion: $("input[type=radio][name=valorInspeccion]:checked").val(),
-                        identificacion: $('#identificacion').val(),
-                        costo_inspeccion_admin: $('#costo_admin').val(),
-                        venta_id: $('#venta_id').val(),
-                        tipo_registro: $('#tipo_registro').val(),
-                        licencia: $('#file_licencia').val()
-                    },
+                    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    data: formData,
                     success: function (data) {
                         if (data.code == 201) {
                             $('#add_vehiculo').modal('hide');
@@ -273,6 +254,13 @@
                             setTimeout(function(){
                                 window.location.reload();
                             }, 1000);
+                        } else if (data.code == 400) {
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "warning",
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
                         } else {
                             Swal.fire({
                                 title: data.msg,
@@ -282,6 +270,9 @@
                         }
 
                     },
+                    contentType: false,
+                    processData: false,
+                    cache: false,
                     error: function (data) {
                     }
                 });

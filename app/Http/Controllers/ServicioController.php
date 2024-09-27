@@ -219,7 +219,7 @@ class ServicioController extends Controller
 
         // Validar si hay un registro en curso
         $venta = \Helper::registroEnCurso();
-        // dd($venta_id);
+        // dd($venta);
         // $venta = Venta::where('id', $venta_id)->first();
         $en_curso = 0;
         //Si existe un registro en curso
@@ -259,8 +259,8 @@ class ServicioController extends Controller
                 'listClientes'
             ));
         } else {
-            $total_checkout = 0;
-            // dd($venta);
+            $total_checkout = 0.00;
+            // dd($total_checkout);
             return view('modulo.inspeccion.index', compact(
                 'costosInspeccion',
                 'marbetes',
