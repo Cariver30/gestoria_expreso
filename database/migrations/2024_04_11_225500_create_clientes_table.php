@@ -20,8 +20,6 @@ return new class extends Migration
             $table->string('seguro_social');
             $table->string('identificacion');
             $table->string('img_licencia');
-            $table->unsignedBigInteger("usuario_id")->nullable();
-            $table->foreign("usuario_id")->references("id")->on("users");
             $table->unsignedBigInteger("estatus_id")->nullable();
             $table->foreign("estatus_id")->references("id")->on("estatus")->onDelete('cascade');
             $table->timestamps();

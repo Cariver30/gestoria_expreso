@@ -13,22 +13,22 @@ return new class extends Migration
     {
         Schema::create('ventas', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger("costo_inspeccion_id")->nullable();
-            $table->foreign("costo_inspeccion_id")->references("id")->on("sub_servicios")->onDelete('cascade');
-            $table->decimal('costo_inspeccion_admin', 8,2)->nullable();
-            $table->unsignedBigInteger('costo_marbete_acaa_id')->nullable();
-            $table->foreign("costo_marbete_acaa_id")->references("id")->on("sub_servicios")->onDelete('cascade');
-            $table->unsignedBigInteger("costo_marbete_id")->nullable();
-            $table->foreign("costo_marbete_id")->references("id")->on("sub_servicios")->onDelete('cascade');
-            $table->decimal('costo_marbete_admin', 8,2)->nullable();
-            $table->unsignedBigInteger('costo_seguro_id')->nullable();
-            $table->foreign("costo_seguro_id")->references("id")->on("sub_servicios")->onDelete('cascade');
-            $table->unsignedBigInteger("extra_licencia_id")->nullable();
-            $table->foreign("extra_licencia_id")->references("id")->on("sub_servicios")->onDelete('cascade');
-            $table->unsignedBigInteger("extra_notificacion_id")->nullable();
-            $table->foreign("extra_notificacion_id")->references("id")->on("sub_servicios")->onDelete('cascade');
-            $table->unsignedBigInteger("extra_multa_id")->nullable();
-            $table->foreign("extra_multa_id")->references("id")->on("sub_servicios")->onDelete('cascade');
+            // $table->unsignedBigInteger("costo_inspeccion_id")->nullable();
+            // $table->foreign("costo_inspeccion_id")->references("id")->on("sub_servicios")->onDelete('cascade');
+            // $table->decimal('costo_inspeccion_admin', 8,2)->nullable();
+            // $table->unsignedBigInteger('costo_marbete_acaa_id')->nullable();
+            // $table->foreign("costo_marbete_acaa_id")->references("id")->on("sub_servicios")->onDelete('cascade');
+            // $table->unsignedBigInteger("costo_marbete_id")->nullable();
+            // $table->foreign("costo_marbete_id")->references("id")->on("sub_servicios")->onDelete('cascade');
+            // $table->decimal('costo_marbete_admin', 8,2)->nullable();
+            // $table->unsignedBigInteger('costo_seguro_id')->nullable();
+            // $table->foreign("costo_seguro_id")->references("id")->on("sub_servicios")->onDelete('cascade');
+            // $table->unsignedBigInteger("extra_licencia_id")->nullable();
+            // $table->foreign("extra_licencia_id")->references("id")->on("sub_servicios")->onDelete('cascade');
+            // $table->unsignedBigInteger("extra_notificacion_id")->nullable();
+            // $table->foreign("extra_notificacion_id")->references("id")->on("sub_servicios")->onDelete('cascade');
+            // $table->unsignedBigInteger("extra_multa_id")->nullable();
+            // $table->foreign("extra_multa_id")->references("id")->on("sub_servicios")->onDelete('cascade');
             $table->decimal('costo_servicio_fijo', 8,2)->nullable();
             $table->decimal('derechos_anuales', 8,2)->nullable();
             $table->decimal('total', 8,2);

@@ -148,7 +148,7 @@
                                 </tr>
                             </thead>
                             <tbody align="center">
-                                {{--  @foreach ($ordenes as $orden)
+                                @foreach ($ordenes as $orden)
                                     <tr>
                                         <td> {{ Carbon\Carbon::parse($orden->updated_at)->format('d-m-Y H:i') }} </td>
                                         <td> 
@@ -172,7 +172,7 @@
                                             @endif
                                         </td>
                                     </tr>
-                                @endforeach  --}}
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

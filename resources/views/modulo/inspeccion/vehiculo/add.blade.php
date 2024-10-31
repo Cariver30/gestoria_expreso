@@ -7,7 +7,7 @@
             </div>
             <div class="modal-body">
                 <form action="{{ route('gestoria.cliente') }}" method="post" id="RegistroInspeccion" enctype="multipart/form-data">
-                    <input type="hidden" name="venta_id" id="venta_id" @if (isset($cliente)) value="{{ $venta->id }}" @endif>
+                    {{--  <input type="hidden" name="venta_id" id="venta_id" @if (isset($cliente)) value="{{ $venta->id }}" @endif>  --}}
                     <fieldset class="border p-2 row col-md-12">
                         @if ($venta == null && (count($listClientes) != 0))
                             <div class="col-md-3 mb-3">
@@ -32,6 +32,7 @@
                             <h5> Tablilla </h5>
                             <select class="form-select form-select-sm select_tablilla_vehiculo" style="cursor: pointer;" name="cliente_select_tablilla">
                                 <option value="" selected>Selecciona un vehículo</option>
+                                <option value="01"> Sin tablilla </option>
                             </select>
                         </div>
                         <h5 class="mb-4 pt-4"> Datos del Propietario </h5>
@@ -89,16 +90,26 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <input type="hidden" name="costo_inspeccion_id" id="costo_inspeccion_id" value="0">
+                            <div class="col-md-9 mb-3">
+                                <label for="fileInspeccion" class="form-label"> Cargar licencia @if (isset($venta)) <small class="text-danger">(Sólo sí desea cambiarla)</small>@endif</label>
+                                <input class="form-control" type="file" name="fileInspeccion" id="fileInspeccion" accept="image/*" capture required>
+                            </div>
                             @if (count($costosInspeccion) != 0)
                                 <div class="row col-md-12 mb-3">
                                     <label for="costo_inspeccion" class="col-form-label"> Costo de Inspección </label>
+                                    <div class="row">
+                                        <div>
+                                            <input type="checkbox" id="switch1" switch="none" checked />
+                                            <label for="switch1" data-on-label="On" data-off-label="Off"></label>                
+                                        </div>
+                                    </div>
+                                    {{--  <h5> Costos de Inspección </h5>  --}}
                                     @foreach ($costosInspeccion as $costo)
                                         {{--  <button type="button" class="btn btn-soft-success col-md-3 waves-effect waves-light btnCostoInspeccion" style="margin: 1px;" data-id="{{ $costo->id}}">{{ $costo->nombre}} - ${{ $costo->costo}} </button>  --}}
                                         <div class="col-md-3">
                                             <div class="mb-3">
                                                 <label class="card-radio-label mb-2">
-                                                    <input type="radio" name="valorInspeccion" value="{{ $costo->id}}" class="card-radio-input btnCostoInspeccion" @if (isset($venta) && $venta->costo_inspeccion_id == $costo->id) checked @endif>
+                                                    <input type="radio" name="valorInspeccion" value="{{ $costo->id}}" class="card-radio-input btnCostoInspeccion" @if (isset($venta) && $venta->costo_inspeccion_id == $costo->id) checked @endif onClick="unCheckRadio(this)">
                                                     <div class="card-radio">
                                                         <div><span>{{ $costo->nombre}} - ${{ $costo->costo}}</span></div>
                                                     </div>
@@ -108,17 +119,13 @@
                                     @endforeach
                                 </div>
                             @endif
-                            <div class="col-md-12 mb-3">
-                                <label for="fileInspeccion" class="form-label"> Cargar licencia </label>
-                                <input class="form-control" type="file" name="fileInspeccion" id="fileInspeccion" accept="image/*" capture required>
-                            </div>
-                            @if (Auth::user()->rol_id == 1 || Auth::user()->rol_id == 2)
-                                <div class="col-md-2">
-                                    <label for="costo_admin" class="col-form-label"> Customizado </label>
-                                    <input type="string" class="form-control form-control-sm" name="costo_admin" id="costo_admin" @if (isset($venta)) value="{{ $venta->costo_inspeccion_admin }}" @endif>
-                                </div>
-                            @endif
                         </div>
+                        @if (Auth::user()->rol_id == 1 || Auth::user()->rol_id == 2)
+                            <div class="col-md-2">
+                                <label for="costo_admin" class="col-form-label"> Customizado </label>
+                                <input type="text" class="form-control form-control-sm" name="costo_admin" id="costo_admin" @if (isset($venta)) value="{{ $venta->costo_inspeccion_admin }}" @endif>
+                            </div>
+                        @endif
                     </fieldset>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

@@ -22,11 +22,6 @@
         </div>
     </div>
 <div class="row col-md-12">
-    {{--  <div class="col-sm-12">
-        <div class="text-sm-end">
-            <a type="button" href="{{ url()->previous() }}" class="btn btn-success btn-rounded waves-effect waves-light mb-2"><i class="mdi mdi-back me-1"></i> Volver </a>
-        </div>
-    </div>  --}}
     <div class="col-lg-3" id="inspeccionVehiculo">
         <div class="card bg-success text-white-50">
             <div class="card-body text-center">
@@ -61,16 +56,16 @@
         </div>
     </div>
 </div>
-@if ($en_curso == 1)
+@if (isset($venta) && $venta->estatus_id == 3)
     <div class="row col-sm-12 text-center">
         @if ($total_checkout != 0)
             <div class="col-sm-4 col-sm-2">
                 <a type="button" href="{{ route('checkout.index')}}" class="btn btn-soft-info col-md-8 waves-effect waves-light btn-lg"> PAGAR </a>
             </div>
+            <div class="col-sm-4 col-sm-2">
+                <button type="button" class="btn btn-soft-warning col-md-8 waves-effect waves-light btn-lg pendientePorPagar" data-id="{{ $venta->id }}"> PENDIENTE </button>
+            </div>
         @endif
-        <div class="col-sm-4 col-sm-2">
-            <button type="button" class="btn btn-soft-warning col-md-8 waves-effect waves-light btn-lg pendientePorPagar" data-id="{{ $venta->id }}"> PENDIENTE </button>
-        </div>
         <div class="col-sm-3 col-sm-2">
             <button type="button" class="btn btn-soft-danger col-md-8 waves-effect waves-light btn-lg finalizarProceso" data-id="{{ $venta->id }}"> CANCELAR </button>
         </div>
@@ -101,6 +96,10 @@
                 alert("Only jpg/jpeg and png files are allowed!");
             }   
         }
+
+        function unCheckRadio(rbutton) {
+            rbutton.checked=(rbutton.checked) ? false : true;
+        }
     </script>
     <script>
         $(document).ready(function() {
@@ -122,6 +121,11 @@
                             $('#email').val(data.data.email);
                             $('#telefono').val(data.data.telefono);
                             $('#identificacion').val(data.data.identificacion);
+                        } else if(data.code == 400){
+                            $('#nombre').val('');
+                            $('#email').val('');
+                            $('#telefono').val('');
+                            $('#identificacion').val('');
                         }
                     });
                 } else {
@@ -225,6 +229,9 @@
                     });
                     return false;
                 }
+
+                
+                alert($('.btnCostoInspeccion').val());
                 var formData = new FormData(formData[0]);
                 $.ajax({
                     type : 'POST',
@@ -800,7 +807,6 @@
                         console.log(data.cliente);
                         var fila = '';
                         for (let i = 0; i < data.vehiculos.length; i++) {
-                            {{--  console.log(data.vehiculos[i].tablilla);  --}}
                             fila += '<option value="'+data.vehiculos[i].tablilla+'">'+data.vehiculos[i].vehiculo+' - '+data.vehiculos[i].tablilla+'</option>';
                         }
                         $(".select_tablilla_vehiculo").append(fila)

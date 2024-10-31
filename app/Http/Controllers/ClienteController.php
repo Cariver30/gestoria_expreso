@@ -15,7 +15,7 @@ use App\Models\DetalleVenta;
 use App\Models\ClienteVehiculo;
 use App\Models\VehiculoMarbete;
 use Illuminate\Support\Facades\Auth;
-use App\Models\DetalleVentaGestoria;
+use App\Models\DetalleVentaInspeccion;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
@@ -61,145 +61,121 @@ class ClienteController extends Controller
         DB::beginTransaction();
 
         try {
-            if ($request->venta_id == null) {
 
+            //Se valida si el cliente existe para no crearlo
+            $cliente = Cliente::where('seguro_social', $request->seguro_social)->first();
+
+            //Si No existe el cliente lo crea
+            if (!$cliente) {
+                
                 //Validación de archivo de licencia
-                if ($request->has('fileInspeccion')) {
-                    $file = $request->file('fileInspeccion');
-                    $extension = $file->getClientOriginalExtension();
-                    $destino = public_path('licencias');
-                    $filename = time().'.'.$extension;
-                    $file->move($destino, $filename);
-                } else {
+                if (!$request->has('fileInspeccion')) {
                     return response()->json(['code' => 400, 'msg' => 'Debe cargar la licencia']);
                 }
-            
-                //Se valida si el cliente existe para no crearlo
-                $data_cliente = Cliente::where('seguro_social', $request->seguro_social)->first();
 
-                if ($data_cliente != null) {
-                    $num_cliente = $data_cliente->id;
-                    Cliente::where('id', $data_cliente->id)->update(['estatus_id' => 3]);
-                } else {
-                    //Se crea el cliente
-                    $cliente = new Cliente();
-                    $cliente->nombre = \Helper::capitalizeFirst($request->nombre, "1");
-                    $cliente->email = $request->email;
-                    $cliente->telefono = $request->telefono;
-                    $cliente->seguro_social = $request->seguro_social;
-                    $cliente->identificacion = $request->identificacion;
-                    $cliente->img_licencia = $filename;
-                    $cliente->tipo_cliente = 1;
-                    $cliente->usuario_id = Auth::user()->id;
-                    $cliente->estatus_id = 3;
-                    $cliente->save();
-
-                    $num_cliente = $cliente->id;
-                }
-
-                if ($request->tipo_registro == 0) {
-
-                    //Se crea el vehículo
-                    $clienteVehiculo = new ClienteVehiculo();
-                    $clienteVehiculo->compania = \Helper::capitalizeFirst($request->compania, "1");
-                    $clienteVehiculo->vehiculo = \Helper::capitalizeFirst($request->vehiculo, "1");
-                    $clienteVehiculo->tablilla = $request->tablilla;
-                    $clienteVehiculo->marca = \Helper::capitalizeFirst($request->marca, "1");
-                    $clienteVehiculo->anio = $request->anio;
-                    $clienteVehiculo->mes_vencimiento_id = $request->mes_vencimiento;
-                    $clienteVehiculo->cliente_id = $num_cliente;
-                    $clienteVehiculo->estatus_id = 3;
-                    $clienteVehiculo->save();
-                }
-
-                if ($request->tipo_registro == 1) {
-                    $vehiculoId = ClienteVehiculo::where('tablilla', $request->tablilla)->select('id')->first();
-                    ClienteVehiculo::where('tablilla', $request->tablilla)->update(['estatus_id' => 3]);
-                }
-            
-                //Se crea la venta
-                $venta = new Venta();
-                $venta->costo_inspeccion_id = ($request->costo_inspeccion == 0) ? null : $request->costo_inspeccion ;
-                $venta->costo_inspeccion_admin = ($request->costo_inspeccion_admin == null) ? 0 : $request->costo_inspeccion_admin;
-                
-                //Se va calculando el total
-                if ($request->costo_inspeccion != 0) {
-                    $costoInspección = SubServicio::where('id', $request->costo_inspeccion)->select('costo')->pluck('costo')->first();
-                } else {
-                    $costoInspección = $request->costo_inspeccion_admin;
-                }
-                // dd($costoInspección);
-                $venta->total = ($costoInspección == null) ? 0 : $costoInspección ;
-                $venta->estatus_id = 3;
-                $venta->usuario_id = Auth::user()->id;
-                $venta->tipo_servicio = 1; //1 es inspección
-                $venta->vehiculo_id = ($request->tipo_registro == 0) ? $clienteVehiculo->id : $vehiculoId->id ;
-                $venta->save();
-                
-                DB::commit();
-                
-                return response()->json(['code' => 201, 'msg' => 'Transacción iniciada', 'id' => $num_cliente]);
-            } else {
-                
-                $vehiculo = \Helper::getVehiculo($request->venta_id);
-                //Validación de archivo de licencia al actualizar
-                // dd($request->all());
-                if ($request->has('fileInspeccion')) {
-                    $file = $request->file('fileInspeccion');
-                    $extension = $file->getClientOriginalExtension();
-                    $destino = public_path('licencias');
-                    $filename = time().'.'.$extension;
-                    $file->move($destino, $filename);
-                }
-
-                //Se actualiza el cliente
-                $cliente = Cliente::find($vehiculo->cliente_id);
+                //Se crea el cliente
+                $cliente = new Cliente();
                 $cliente->nombre = \Helper::capitalizeFirst($request->nombre, "1");
                 $cliente->email = $request->email;
                 $cliente->telefono = $request->telefono;
                 $cliente->seguro_social = $request->seguro_social;
                 $cliente->identificacion = $request->identificacion;
-                //Se actualiza la licencia
-                if ($request->has('fileInspeccion')) {
-                    File::delete($cliente->img_licencia);
-                    $cliente->img_licencia = $filename;
-                }
+                //Se guarda la imagen de la licencia
+                $file = $request->file('fileInspeccion');
+                $extension = $file->getClientOriginalExtension();
+                $destino = public_path('licencias');
+                $filename = time().'.'.$extension;
+                $file->move($destino, $filename);
+                $cliente->img_licencia = $filename;
+                $cliente->tipo_cliente = 1;
+                $cliente->estatus_id = 3;
                 $cliente->save();
-                
-                //Se actualiza el vehículo
-                $clienteVehiculo = ClienteVehiculo::find($vehiculo->id);
+
+                //Se crea el vehículo
+                $clienteVehiculo = new ClienteVehiculo();
                 $clienteVehiculo->compania = \Helper::capitalizeFirst($request->compania, "1");
                 $clienteVehiculo->vehiculo = \Helper::capitalizeFirst($request->vehiculo, "1");
+                $clienteVehiculo->tablilla = $request->tablilla;
                 $clienteVehiculo->marca = \Helper::capitalizeFirst($request->marca, "1");
                 $clienteVehiculo->anio = $request->anio;
                 $clienteVehiculo->mes_vencimiento_id = $request->mes_vencimiento;
+                $clienteVehiculo->cliente_id = $cliente->id;
+                $clienteVehiculo->estatus_id = 1;
                 $clienteVehiculo->save();
-            
-                //Se actualiza la venta
-                $venta = Venta::where('id', $request->venta_id)->first();
-                $venta->costo_inspeccion_id = ($request->costo_inspeccion == 0) ? null : $request->costo_inspeccion ;
-                $venta->costo_inspeccion_admin = ($request->costo_inspeccion_admin == null) ? null : $request->costo_inspeccion_admin;
-                //Se va calculando el total
-                if ($request->costo_inspeccion != 0) {
-                    $costoInspeccion = SubServicio::where('id', $request->costo_inspeccion)->select('costo')->pluck('costo')->first();
-                } else {
-                    $costoInspeccion = $request->costo_inspeccion_admin;
-                }
-                
-                // $total = $costoInspeccion + $venta->costo_servicio_fijo;
-                
-                // $venta->total = $total;
+
+                //Se crea la venta
+                $venta = new Venta();
+                $venta->total = 0;
+                $venta->estatus_id = 3;
+                $venta->usuario_id = Auth::user()->id;
+                $venta->tipo_servicio = 1; //1 es inspección
                 $venta->vehiculo_id = $clienteVehiculo->id;
+                $venta->cliente_id = $cliente->id;
                 $venta->save();
 
-                $total = \Helper::getTotalCheckout($venta->id);
+                //Se valida para asignar la inspección
+                if (isset($request->valorInspeccion) && is_null($request->costo_admin)) {
 
-                DB::table('ventas')->where('id', $venta->id)->update(['total' => $total]);
+                    //Se obtiene el costo
+                    $costo = SubServicio::where('id', $request->valorInspeccion)->select('costo')->pluck('costo')->first();
+                    //Se crea el registro
+                    $detalleVentaInspeccion = new DetalleVentaInspeccion();
+                    $detalleVentaInspeccion->servicio_id = 1;
+
+                    $detalleVentaInspeccion->subservicio_id = $request->valorInspeccion;
+                    $detalleVentaInspeccion->venta_id = $venta->id;
+                    $detalleVentaInspeccion->precio = $costo;
+                    $detalleVentaInspeccion->save();
+
+                    \Helper::updateTotalVenta($venta->id);
+
+                } else if ($request->costo_admin != null && isset($request->valorInspeccion) && is_null()) {
+
+                    //Se obtiene el costo
+                    $costo = SubServicio::where('id', $request->valorInspeccion)->select('costo')->pluck('costo')->first();
+                    //Se crea el registro
+                    $detalleVentaInspeccion = new DetalleVentaInspeccion();
+                    $detalleVentaInspeccion->servicio_id = 1;
+
+                    $detalleVentaInspeccion->subservicio_id = $request->valorInspeccion;
+                    $detalleVentaInspeccion->venta_id = $venta->id;
+                    $detalleVentaInspeccion->precio = $costo;
+                    $detalleVentaInspeccion->save();
+
+                    \Helper::updateTotalVenta($venta->id);
+                }
+
+                $msg = 'Transacción iniciada';
+            }else {
                 
-                DB::commit();
-                
-                return response()->json(['code' => 200, 'msg' => 'Información actualizada', 'id' => $cliente->id]);
+                $cliente->nombre = \Helper::capitalizeFirst($request->nombre, "1");
+                $cliente->email = $request->email;
+                $cliente->telefono = $request->telefono;
+                $cliente->identificacion = $request->identificacion;
+                if ($request->has('fileInspeccion')) {
+                    // dd($request->all());
+                    $file = $request->file('fileInspeccion');
+                    $extension = $file->getClientOriginalExtension();
+                    $destino = public_path('licencias');
+                    $filename = time().'.'.$extension;
+                    $file->move($destino, $filename);
+                    //Se borra y se asigna
+                    if (File::exists('licencias/'.$cliente->img_licencia)) {
+                        File::delete('licencias/'.$cliente->img_licencia);
+                        $cliente->img_licencia = $filename;
+                    }
+                    
+                }
+                $cliente->save();
+
+                $msg = 'Registro actualizado';
             }
+
+            // DB::commit();
+                
+            return response()->json(['code' => 201, 'msg' => $msg]);
+
+            
         }catch (\PDOException $e){
             DB::rollBack();
             dd($e);
@@ -240,18 +216,13 @@ class ClienteController extends Controller
                                             )->get();
                                             // dd($vehiculos);
     
-            $ordenes = array();
-            foreach ($vehiculos as $vehiculo) {
-                $ventas = Venta::leftJoin('estatus', 'ventas.estatus_id', 'estatus.id')
-                                ->where('vehiculo_id', $vehiculo->id)
+            
+            $ordenes = Venta::leftJoin('estatus', 'ventas.estatus_id', 'estatus.id')
+                                ->where('cliente_id', $cliente->id)
                                 ->select('ventas.id', 'ventas.total', 'ventas.fecha_pago', 'ventas.tipo_pago', 'estatus.id as estatus_id', 'estatus.nombre as estatus', 'ventas.updated_at', 'ventas.motivo')
-                                ->get()->toArray();
-                                foreach ($ventas as $venta) {
-                                    array_push($ordenes, $venta);
-                                }
-            }
-            // dd($ordenes);
-            return view('cliente.edit', compact('entidades', 'cliente', 'vehiculos'));
+                                ->get();
+
+            return view('cliente.edit', compact('entidades', 'cliente', 'vehiculos', 'ordenes'));
 
         } else {
             $data = 1;

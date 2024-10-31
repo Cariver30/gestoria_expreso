@@ -31,14 +31,16 @@ class GestoriaController extends Controller
         $licencias = GestoriaServicio::where('gestoria_id', 2)->where('estatus_id', 1)->select('id', 'nombre')->get();
         $vehiculos = GestoriaServicio::where('gestoria_id', 3)->where('estatus_id', 1)->select('id', 'nombre')->get();
 
-        $cliente = Cliente::where('estatus_id', 3)->where('usuario_id', Auth::user()->id)->first();
+        // $cliente = Cliente::where('estatus_id', 3)->where('usuario_id', Auth::user()->id)->first();
         // Validar si hay un registro en curso
         $venta = \Helper::registroEnCurso();
-
+        
         if ($venta) {
             $total_checkout = DetalleVentaGestoria::where('venta_id', $venta->id)->sum('precio');
+            $cliente = Cliente::where('id', $venta->cliente_id)->first();
         } else {
             $total_checkout = 0;
+            $cliente = null;
         }
 
         //datos precargados de modales de subservicios
@@ -53,7 +55,6 @@ class GestoriaController extends Controller
         $subGravamenes = GestoriaSubServicio::where('gestoria_servicio_id', 9)->where('estatus_id', 1)->select('id', 'nombre', 'costo')->get();
         $subRegistros = GestoriaSubServicio::where('gestoria_servicio_id', 10)->where('estatus_id', 1)->select('id', 'nombre', 'costo')->get();
         $subNotificaciones = GestoriaSubServicio::where('gestoria_servicio_id', 11)->where('estatus_id', 1)->select('id', 'nombre', 'costo')->get();
-        // dd($cliente);
 
         return view('modulo.gestoria.index', compact(
                                                     'user',
@@ -308,7 +309,6 @@ class GestoriaController extends Controller
                 $cliente->seguro_social = $request->seguro_social;
                 $cliente->identificacion = $request->identificacion;
                 $cliente->img_licencia = $filename;
-                $cliente->usuario_id = Auth::user()->id;
                 $cliente->estatus_id = 3;
                 $cliente->tipo_cliente = 2;
                 $cliente->save();

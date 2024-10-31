@@ -108,94 +108,13 @@ class Helper {
         return $vehiculo;
     }
 
-    public static function getTotalCheckout($venta_id) {
-        $venta = Venta::where('id', $venta_id)->first();
-        $esResta = 0;
-        
-        //Se va calculando el total
-        if ($venta->costo_inspeccion_id != null) {
-            $costoInspección = SubServicio::where('id', $venta->costo_inspeccion_id)->select('costo')->pluck('costo')->first();
-        } else {
-            $costoInspección = $venta->costo_inspeccion_admin;
-        }
-        if ($venta->costo_marbete_id != null) {
-            $costoMarbete = SubServicio::where('id', $venta->costo_marbete_id)->select('costo')->pluck('costo')->first();
-        } else {
-            $costoMarbete = $venta->costo_marbete_admin;
-        }
-        if ($venta->costo_marbete_acaa_id != null) {
-            $costoMarbeteAcaa = SubServicio::where('id', $venta->costo_marbete_acaa_id)->select('costo')->pluck('costo')->first();
-        } else {
-            $costoMarbeteAcaa = 0;
-        }
-
-        if ($venta->costo_seguro_id != null) {
-            $costoSeguro = SubServicio::where('id', $venta->costo_seguro_id)->select('costo')->pluck('costo')->first();
-            if ($venta->costo_seguro_id == 1 || $venta->costo_seguro_id == 2) {
-                $esResta = 1;
-            }
-        } else {
-            $costoSeguro = 0;
-        }
-
-        //Campo de licencia de extras
-        if ($venta->extra_licencia_id != null) {
-            $costoExtraLicencia = SubServicio::where('id', $venta->extra_licencia_id)->select('costo')->pluck('costo')->first();
-        } else {
-            $costoExtraLicencia = 0;
-        }
-
-        //Campo de notificaciones de extras
-        if ($venta->extra_notificacion_id != null) {
-            $costoExtraNotificacion = SubServicio::where('id', $venta->extra_notificacion_id)->select('costo')->pluck('costo')->first();
-        } else {
-            $costoExtraNotificacion = 0;
-        }
-
-        //Campo de multas de extras
-        if ($venta->extra_multa_id != null) {
-            $costoExtraMulta = SubServicio::where('id', $venta->extra_multa_id)->select('costo')->pluck('costo')->first();
-        } else {
-            $costoExtraMulta = 0;
-        }
-
-        $total_sin_seguro = $costoInspección + $costoMarbete + $venta->costo_servicio_fijo + $venta->derechos_anuales + $costoMarbeteAcaa + $costoExtraLicencia + $costoExtraNotificacion + $costoExtraMulta;
-        
-        if ($esResta == 0) {
-            $total = $total_sin_seguro + $costoSeguro;
-        } else {
-            $total = $total_sin_seguro - $costoSeguro;
-        }
+    public static function getTotalCheckout($ventaId) {
+        $venta = Venta::where('id', $ventaId)->first();
+        $preTotal = DetalleVentaGestoria::where('venta_id', $ventaId)->sum('precio');
+        $posTotal = $preTotal + $venta->costo_servicio_fijo + $venta->derechos_anuales;
+        $total = $posTotal;
         
         return $total;
-    }
-
-    public static function validaBtnPago($venta) {
-
-        $venta = Venta::where('id', $venta)->first();
-        $flag = 0;
-
-        //Se va calculando el total
-        // if ($venta->costo_inspeccion_id != null || $venta->costo_inspeccion_admin != null) {
-        //     $flag += 1;
-        // }
-        
-        if ($venta->costo_marbete_id != null || $venta->costo_marbete_admin != null) {
-            $flag += 1;
-        }
-
-        if ($venta->costo_seguro_id != null) {
-            $flag += 1;
-        }
-
-        if ($flag == 1) {
-            $valida = 1;
-        } else {
-            $valida = 0;
-        }
-        // dd($valida);
-
-        return $valida;
     }
 
     public static function getServicioDesglose($venta_id) {
@@ -273,7 +192,14 @@ class Helper {
 
     public static function updateTotalVenta($ventaId) {
         $venta = Venta::where('id', $ventaId)->first();
-        $venta->total = DetalleVentaGestoria::where('venta_id', $ventaId)->sum('precio');
+        if ($venta->tipo_servicio == 1) {
+            $total = DetalleVentaGestoria::where('venta_id', $ventaId)->sum('precio');
+            $pos = $total + $venta->costo_servicio_fijo + $venta->derechos_anuales;
+            $venta->total = $pos;
+        } else {
+            $venta->total = DetalleVentaGestoria::where('venta_id', $ventaId)->sum('precio');
+        }
+        
         $venta->save();
     }
 

@@ -219,19 +219,13 @@ class ServicioController extends Controller
 
         // Validar si hay un registro en curso
         $venta = \Helper::registroEnCurso();
-        // dd($venta);
-        // $venta = Venta::where('id', $venta_id)->first();
-        $en_curso = 0;
+        
         //Si existe un registro en curso
         if ($venta != null) {
             $cliente = \Helper::getCliente($venta->id);
             $vehiculo = \Helper::getVehiculo($venta->id);
-            $en_curso = 1;
-            // dd($venta);
+        
             $total_checkout = \Helper::getTotalCheckout($venta->id);
-
-            //Se valida si ya existen los 3 requisitos para generar el pago (inspección, marbete y seguro)
-            $nextPago = \Helper::validaBtnPago($venta->id);
 
             if (is_null($total_checkout) || $total_checkout == 0) {
                 $total_checkout = 0;
@@ -251,10 +245,8 @@ class ServicioController extends Controller
                 'multas',
                 'entidades',
                 'venta',
-                'en_curso',
                 'cliente',
                 'vehiculo',
-                'nextPago',
                 'acaas',
                 'listClientes'
             ));
@@ -274,7 +266,6 @@ class ServicioController extends Controller
                 'multas',
                 'entidades',
                 'venta',
-                'en_curso',
                 'acaas',
                 'listClientes'
             ));
@@ -318,6 +309,8 @@ class ServicioController extends Controller
         $data = Cliente::select('nombre', 'email', 'telefono', 'identificacion')->where('seguro_social', $numero)->first();
         if ($data != null) {
             return response()->json(['code' => 200, 'data' => $data]);
+        } else {
+            return response()->json(['code' => 400]);
         }
     }
 

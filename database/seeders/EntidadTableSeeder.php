@@ -13,7 +13,9 @@ class EntidadTableSeeder extends Seeder
     public function run(): void
     {
         \DB::table('sedes')->insert([
-            ['nombre' => 'Todas', 'acceso_panel' => 3, 'estatus_id' => 1, 'created_at' => now()]
+            ['nombre' => 'Todas', 'acceso_panel' => 3, 'estatus_id' => 1, 'created_at' => now()],
+            ['nombre' => 'Inspección Vb', 'acceso_panel' => 1, 'estatus_id' => 1, 'created_at' => now()],
+            ['nombre' => 'Gestoría Ciales', 'acceso_panel' => 2, 'estatus_id' => 1, 'created_at' => now()]
         ]);
     }
 }
