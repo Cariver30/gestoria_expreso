@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Models\DetalleVenta;
 use App\Models\ClienteVehiculo;
 use App\Models\VehiculoMarbete;
+use App\Models\DetalleVentaGestoria;
 use Illuminate\Support\Facades\Auth;
 use App\Models\DetalleVentaInspeccion;
 use Illuminate\Support\Facades\File;
@@ -238,7 +239,6 @@ class ClienteController extends Controller
                 $data = 0;
             } else {
                 foreach ($ordenes as $orden) {
-                    // dd($orden);
                     $detalles = DetalleVentaGestoria::leftJoin('gestoria_sub_servicios', 'detalle_venta_gestorias.subservicio_id', 'gestoria_sub_servicios.id')
                                         ->where('venta_id', $orden->id)
                                         ->select('gestoria_sub_servicios.nombre as nombre', 'gestoria_sub_servicios.costo as costo', 'gestoria_sub_servicios.created_at')
@@ -251,7 +251,7 @@ class ClienteController extends Controller
                 $data = 2;
             }
 
-            // dd($servicios);
+            // dd($data);
             return view('cliente.edit', compact('entidades', 'cliente', 'ordenes', 'data', 'servicios'));
         }
 

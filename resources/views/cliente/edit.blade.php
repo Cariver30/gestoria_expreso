@@ -141,7 +141,7 @@
                                     <th class="align-middle"> Fecha </th>
                                     <th class="align-middle"> Estatus </th>
                                     <th class="align-middle"> Motivo </th>
-                                    <th class="align-middle"> Metodo de Pago </th>
+                                    <th class="align-middle"> Método de Pago </th>
                                     <th class="align-middle"> Fecha de Pago </th>
                                     <th class="align-middle"> Total </th>
                                     <th class="align-middle"> Acción </th>
@@ -169,6 +169,8 @@
                                         <td>
                                             @if ($orden->estatus_id == 4 || $orden->estatus_id == 5 || $orden->estatus_id == 6)
                                                 <a href="{{ route('ver.recibo', ['id' => $orden->id]) }}" type="button" class="btn btn-secondary waves-effect waves-light" style="margin-left: 10px;"> Ver recibo </a>
+                                            @else
+                                                No Disponible
                                             @endif
                                         </td>
                                     </tr>
