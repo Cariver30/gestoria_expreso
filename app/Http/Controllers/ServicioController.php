@@ -225,11 +225,11 @@ class ServicioController extends Controller
             $cliente = \Helper::getCliente($venta->id);
             $vehiculo = \Helper::getVehiculo($venta->id);
         
-            $total_checkout = \Helper::getTotalCheckout($venta->id);
+            $total_checkout = $venta->total;
 
-            if (is_null($total_checkout) || $total_checkout == 0) {
-                $total_checkout = 0;
-            }
+            // if (is_null($total_checkout) || $total_checkout == 0) {
+            //     $total_checkout = 0;
+            // }
             // dd($venta);
 
             return view('modulo.inspeccion.index', compact(

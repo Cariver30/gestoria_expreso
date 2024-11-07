@@ -37,7 +37,7 @@
                         </div>
                         <h5 class="mb-4 pt-4"> Datos del Propietario </h5>
                         <div class="col-md-3 mb-4">
-                            <label for="seguro_social" class="col-form-label"> Seguro Social </label>
+                            <label for="seguro_social" class="col-form-label"> Seguro Social (*)</label>
                             <input type="text" class="form-control form-control-sm" name="seguro_social" id="seguro_social" maxlength="4" @if (isset($cliente)) value="{{ $cliente->seguro_social }}" @endif required>
                             <small>(Últimos 4 dígitos)</small>
                         </div>
@@ -97,19 +97,11 @@
                             @if (count($costosInspeccion) != 0)
                                 <div class="row col-md-12 mb-3">
                                     <label for="costo_inspeccion" class="col-form-label"> Costo de Inspección </label>
-                                    <div class="row">
-                                        <div>
-                                            <input type="checkbox" id="switch1" switch="none" checked />
-                                            <label for="switch1" data-on-label="On" data-off-label="Off"></label>                
-                                        </div>
-                                    </div>
-                                    {{--  <h5> Costos de Inspección </h5>  --}}
                                     @foreach ($costosInspeccion as $costo)
-                                        {{--  <button type="button" class="btn btn-soft-success col-md-3 waves-effect waves-light btnCostoInspeccion" style="margin: 1px;" data-id="{{ $costo->id}}">{{ $costo->nombre}} - ${{ $costo->costo}} </button>  --}}
                                         <div class="col-md-3">
                                             <div class="mb-3">
                                                 <label class="card-radio-label mb-2">
-                                                    <input type="radio" name="valorInspeccion" value="{{ $costo->id}}" class="card-radio-input btnCostoInspeccion" @if (isset($venta) && $venta->costo_inspeccion_id == $costo->id) checked @endif onClick="unCheckRadio(this)">
+                                                    <input type="radio" name="valorInspeccion" value="{{ $costo->id}}" class="card-radio-input btnCostoInspeccion" @if (isset($venta) && $venta->serv_insp == $costo->id) checked @endif>
                                                     <div class="card-radio">
                                                         <div><span>{{ $costo->nombre}} - ${{ $costo->costo}}</span></div>
                                                     </div>

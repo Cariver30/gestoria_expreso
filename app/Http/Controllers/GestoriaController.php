@@ -310,7 +310,7 @@ class GestoriaController extends Controller
                 $cliente->identificacion = $request->identificacion;
                 $cliente->img_licencia = $filename;
                 $cliente->estatus_id = 3;
-                $cliente->tipo_cliente = 2;
+                $cliente->tipo_cliente = 2; //es de gestoría
                 $cliente->save();
 
                 //Se crea la venta

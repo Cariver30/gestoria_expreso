@@ -9,6 +9,7 @@
     use App\Models\SubServicio;
     use App\Models\ClienteVehiculo;
     use App\Models\DetalleVentaGestoria;
+    use App\Models\DetalleVentaInspeccion;
     use Illuminate\Support\Facades\Auth;
 
 
@@ -41,7 +42,10 @@ class Helper {
 
         // return $vehiculo_id;
         $venta = Venta::where('estatus_id', 3)->where('usuario_id', Auth::user()->id)->first();
-
+        if ($venta && $venta->tipo_servicio == 1) {
+            $serv_insp = DetalleVentaInspeccion::where('venta_id', $venta->id)->where('servicio_id', 1)->select('subservicio_id')->pluck('subservicio_id')->first();
+            $venta->serv_insp = $serv_insp;
+        }
         return $venta;
     }
 
@@ -190,6 +194,20 @@ class Helper {
         return $servicios;
     }
 
+    //Se calcula el total para Inspección
+    public static function updateTotalVentaInspeccion($ventaId) {
+        
+        $venta = Venta::where('id', $ventaId)->first();
+        // dd($venta);
+        
+        $total = DetalleVentaInspeccion::where('venta_id', $ventaId)->sum('precio');
+        $posTotal = $total + $venta->costo_servicio_fijo + $venta->derechos_anuales;
+        $venta->total = $posTotal;
+        
+        $venta->save();
+    }
+
+    //Se calcula el total para GESTORÍA
     public static function updateTotalVenta($ventaId) {
         $venta = Venta::where('id', $ventaId)->first();
         if ($venta->tipo_servicio == 1) {

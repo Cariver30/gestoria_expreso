@@ -167,10 +167,12 @@
                                         <td> @if ($orden->fecha_pago == null) Sin información @else {{ Carbon\Carbon::parse($orden->fecha_pago)->format('d-m-Y H:i') }} @endif</td>
                                         <td> ${{ $orden->total }} </td>
                                         <td>
-                                            @if ($orden->estatus_id == 4 || $orden->estatus_id == 5 || $orden->estatus_id == 6)
-                                                <a href="{{ route('ver.recibo', ['id' => $orden->id]) }}" type="button" class="btn btn-secondary waves-effect waves-light" style="margin-left: 10px;"> Ver recibo </a>
-                                            @else
+                                            @if ($orden->estatus_id == 3 && $orden->serv_insp == 3 && Auth::user()->rol_id == 1 || Auth::user()->rol_id == 2)
+                                                <a href="{{ route('ver.recibo', ['id' => $orden->id]) }}" type="button" class="btn btn-secondary waves-effect waves-light" style="margin-left: 10px;"> Ingresar costo de inspección </a>
+                                            @elseif ($orden->estatus_id == 3 || $orden->estatus_id == 6 && $orden->total == 0)
                                                 No Disponible
+                                            @elseif ($orden->estatus_id == 4 || $orden->estatus_id == 5 || $orden->estatus_id == 6)
+                                                <a href="{{ route('ver.recibo', ['id' => $orden->id]) }}" type="button" class="btn btn-secondary waves-effect waves-light" style="margin-left: 10px;"> Ver recibo </a>
                                             @endif
                                         </td>
                                     </tr>

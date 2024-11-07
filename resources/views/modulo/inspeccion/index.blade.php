@@ -16,7 +16,7 @@
                 <div class="card-radio">
                     <small>@if (isset($cliente)) {{ $cliente->nombre }} @endif </small><br>
                     <input type="hidden" name="venta_id" id="venta_id" @if (isset($cliente)) value="{{ $venta->id }}" @endif>
-                    <i class="bx bx-cart font-size-24 text-primary align-middle me-2"></i><span>Total: {{$total_checkout}}</span>
+                    <i class="bx bx-cart font-size-24 text-primary align-middle me-2"></i><span>Total: {{ $total_checkout}}</span>
                 </div>
             </label>
         </div>
@@ -58,7 +58,7 @@
 </div>
 @if (isset($venta) && $venta->estatus_id == 3)
     <div class="row col-sm-12 text-center">
-        @if ($total_checkout != 0)
+        @if ($venta->total != 0)
             <div class="col-sm-4 col-sm-2">
                 <a type="button" href="{{ route('checkout.index')}}" class="btn btn-soft-info col-md-8 waves-effect waves-light btn-lg"> PAGAR </a>
             </div>
@@ -203,17 +203,27 @@
                 var formData = $("#RegistroInspeccion").submit(function (e) {
                     return;
                 });
-                if($('#tablilla').val() == '') {
+                if($('#seguro_social').val() == ''){
                     Swal.fire({
-                        title: '¡Debe ingresar la tablilla!',
+                        title: '¡Debe ingresar el seguro social!',
                         icon: "warning",
                         showConfirmButton: false,
                         timer: 2000
                     });
                     return false;
-                } else if($('#nombre').val() == '' || $('#email').val() == '' || $('#telefono').val() == '' || $('#compania').val() == '' || $('#vehiculo').val() == '' || $('#marca').val() == '' || $('#anio').val() == '' || $('#seguro_social').val() == '' || $('#mes_vencimiento').val() == '' || $('#identificacion').val() == ''){
+                }
+                if($('#nombre').val() == ''){
                     Swal.fire({
-                        title: 'Hay campos vacíos',
+                        title: '¡Debe ingresar el nombre!',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                if($('#email').val() == ''){
+                    Swal.fire({
+                        title: '¡Debe ingresar un email!',
                         icon: "warning",
                         showConfirmButton: false,
                         timer: 2000
@@ -229,9 +239,98 @@
                     });
                     return false;
                 }
+                if($('#telefono').val() == ''){
+                    Swal.fire({
+                        title: '¡Debe ingresar un teléfono!',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                if($('#compania').val() == ''){
+                    Swal.fire({
+                        title: '¡Debe ingresar el nombre de la compañía!',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                if($('#compania').val() == ''){
+                    Swal.fire({
+                        title: '¡Debe ingresar el nombre de la compañía!',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                if($('#identificacion').val() == ''){
+                    Swal.fire({
+                        title: '¡Debe ingresar la identificación!',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                if($('#vehiculo').val() == ''){
+                    Swal.fire({
+                        title: 'El campo vehículo es requerido!',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                if($('#tablilla').val() == '') {
+                    Swal.fire({
+                        title: '¡Debe ingresar la tablilla!',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                if($('#marca').val() == ''){
+                    Swal.fire({
+                        title: 'El campo de marca es requerido',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                if($('#anio').val() == ''){
+                    Swal.fire({
+                        title: 'El campo de año es requerido',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                if($('#mes_vencimiento').val() == ''){
+                    Swal.fire({
+                        title: 'El campo de mes de vencimiento es requerido',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                if(!document.querySelector('input[name="valorInspeccion"]:checked')) {
+                    Swal.fire({
+                        title: '¡Debe seleccionar una opción de costo de inspección!',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+              
 
-                
-                alert($('.btnCostoInspeccion').val());
                 var formData = new FormData(formData[0]);
                 $.ajax({
                     type : 'POST',
@@ -674,7 +773,7 @@
                     showCancelButton: true,
                     confirmButtonText: "Aceptar",
                     cancelButtonText: 'Cancelar!',
-                    showLoaderOnConfirm: true,
+                    showLoaderOnConfirm: false,
                     inputValidator: function (value) {
                         return !value && 'Debe ingresar un motivo'
                     }
