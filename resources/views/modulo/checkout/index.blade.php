@@ -28,6 +28,16 @@
                                 <td> @if ($servicio['costo'] == null)  $0.00 @elseif($servicio['servicio_id'] == 3) {{$servicio['costo'] }} @else ${{$servicio['costo'] }} @endif </td>
                             </tr>
                         @endforeach
+                        @if ($venta->tipo_servicio == 1)
+                            <tr>
+                                <th> Derechos Anuales </th>
+                                <td> ${{ $venta->derechos_anuales }} </td>
+                            </tr>
+                            <tr>
+                                <th> Costo de Servicio </th>
+                                <td> ${{ $venta->costo_servicio_fijo }} </td>
+                            </tr>
+                        @endif
                         <tr>
                             <td colspan="1"><h6 class="m-0 text-end">Sub Total:</h6></td>
                             <td> ${{ $venta->total }} </td>

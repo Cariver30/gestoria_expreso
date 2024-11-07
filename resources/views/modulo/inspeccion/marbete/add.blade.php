@@ -11,7 +11,7 @@
                         <div class="col-md-3">
                             <div class="mb-3">
                                 <label class="card-radio-label mb-2">
-                                    <input type="radio" name="valorMarbete" value="{{ $marbete->id}}" class="card-radio-input btnValorMarbete" @if (isset($venta) && $venta->costo_marbete_id == $marbete->id) checked @endif>
+                                    <input type="radio" name="valorMarbete" value="{{ $marbete->id}}" class="card-radio-input btnValorMarbete" @if (isset($venta) && $venta->serv_marbete == $marbete->id) checked @endif>
                                     <div class="card-radio">
                                         <div><span>{{ $marbete->nombre}} - ${{ $marbete->costo}}</span></div>
                                     </div>
@@ -21,16 +21,6 @@
                     @endforeach
                 </div>
                 <div class="row col-md-12">
-                    @if (Auth::user()->rol_id == 1)
-                        <div class="col-md-2">
-                            <div class="card bg-success text-white">
-                                <div class="card-header bg-transparent border-success">
-                                    <label for="costo_marbete_admin"> Customizado </label>
-                                    <input type="string" class="form-control form-control-sm" name="costo_marbete_admin" id="costo_marbete_admin" @if (isset($venta)) value="{{ $venta->costo_marbete_admin }}" @endif>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
                     <div class="col-md-2">
                         <div class="card bg-success text-white">
                             <div class="card-header bg-transparent border-success">

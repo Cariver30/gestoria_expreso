@@ -45,6 +45,10 @@ class Helper {
         if ($venta && $venta->tipo_servicio == 1) {
             $serv_insp = DetalleVentaInspeccion::where('venta_id', $venta->id)->where('servicio_id', 1)->select('subservicio_id')->pluck('subservicio_id')->first();
             $venta->serv_insp = $serv_insp;
+            $serv_marbete = DetalleVentaInspeccion::where('venta_id', $venta->id)->where('servicio_id', 2)->select('subservicio_id')->pluck('subservicio_id')->first();
+            $venta->serv_marbete = $serv_marbete;
+            $serv_acca = DetalleVentaInspeccion::where('venta_id', $venta->id)->where('servicio_id', 10)->select('subservicio_id')->pluck('subservicio_id')->first();
+            $venta->serv_marbete_acca = $serv_acca;
         }
         return $venta;
     }
@@ -184,9 +188,13 @@ class Helper {
     public static function getServicios($ventaId) {
         $tipoServicio = Venta::where('id', $ventaId)->select('tipo_servicio')->pluck('tipo_servicio')->first(); 
         if ($tipoServicio == 1) {
-            
+            $servicios = DetalleVentaInspeccion::leftJoin('sub_servicios', 'detalle_venta_inspeccions.subservicio_id', 'sub_servicios.id')
+                ->where('venta_id', $ventaId)
+                ->select('sub_servicios.nombre as nombre', 'sub_servicios.costo as costo')
+                ->get();
+             
         } else {
-            $servicios = DetalleVentaGestoria::leftJoin('gestoria_sub_servicios', 'detalle_venta_gestorias.subservicio_id', 'gestoria_sub_servicios.id')
+            $servicios = DetalleVentaGestoria::leftJoin('gestoria_sub_servicios', 'detalle_venta_inspeccions.subservicio_id', 'gestoria_sub_servicios.id')
             ->where('venta_id', $ventaId)
             ->select('gestoria_sub_servicios.nombre as nombre', 'gestoria_sub_servicios.costo as costo')
             ->get();
@@ -198,7 +206,6 @@ class Helper {
     public static function updateTotalVentaInspeccion($ventaId) {
         
         $venta = Venta::where('id', $ventaId)->first();
-        // dd($venta);
         
         $total = DetalleVentaInspeccion::where('venta_id', $ventaId)->sum('precio');
         $posTotal = $total + $venta->costo_servicio_fijo + $venta->derechos_anuales;

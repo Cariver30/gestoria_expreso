@@ -329,27 +329,48 @@ class ClienteController extends Controller
         DB::beginTransaction();
 
         try {
-            $cliente_id = Cliente::where('estatus_id', 3)->where('usuario_id', Auth::user()->id)->select('id')->pluck('id')->first();
-            $vehiculo_id = ClienteVehiculo::where('estatus_id', 3)->where('cliente_id', $cliente_id)->select('id')->pluck('id')->first();
-            $venta = Venta::where('id', $request->venta_id)->first();
-            if ($request->marbete_id != null) {
-                $venta->costo_marbete_id = $request->marbete_id;
-            }
-            if ($request->costo_marbete_admin != null) {
-                $venta->costo_marbete_admin = $request->costo_marbete_admin;
-            }
+            $venta = Venta::where('estatus_id', 3)->where('usuario_id', Auth::user()->id)->first();
+
+            $costo = SubServicio::where('id', $request->marbete_id)->select('costo')->pluck('costo')->first();
+
+            $detalleVentaInspMarbete = DetalleVentaInspeccion::where('venta_id', $venta->id)->where('servicio_id', 2)->first();
+            // dd($detalleVentaInspMarbete);
+            
+            if ($detalleVentaInspMarbete == null) {
+                $detalleVentaInspMarbete = new DetalleVentaInspeccion();
+            } 
+
+            $detalleVentaInspMarbete->subservicio_id = $request->marbete_id;
+            $detalleVentaInspMarbete->servicio_id = 2;
+            $detalleVentaInspMarbete->precio = $costo;
+            $detalleVentaInspMarbete->venta_id = $venta->id;
+            $detalleVentaInspMarbete->save();
+            
             $venta->costo_servicio_fijo = ($request->marbete_five_id == 1) ? 5 : null ;
             $venta->derechos_anuales = $request->derecho_anual;
-            $venta->costo_marbete_acaa_id = $request->marbete_acaa_id;
             $venta->save();
 
-            $total = \Helper::getTotalCheckout($venta->id);
 
-            DB::table('ventas')->where('id', $venta->id)->update(['total' => $total]);
+            //Marbete ACCA
+            $detalleVentaInspMarbeteAcca = DetalleVentaInspeccion::where('venta_id', $venta->id)->where('servicio_id', 10)->first();
+            // dd($detalleVentaInspMarbeteAcca);
+
+            if ($detalleVentaInspMarbeteAcca == null) {
+                $detalleVentaInspMarbeteAcca = new DetalleVentaInspeccion();
+            }
+
+            $costo = SubServicio::where('id', $request->marbete_acaa_id)->select('costo')->pluck('costo')->first();
+            $detalleVentaInspMarbeteAcca->subservicio_id = $request->marbete_acaa_id;
+            $detalleVentaInspMarbeteAcca->servicio_id = 10;
+            $detalleVentaInspMarbeteAcca->venta_id = $venta->id;
+            $detalleVentaInspMarbeteAcca->precio = $costo;
+            $detalleVentaInspMarbeteAcca->save();
+
+            $total = \Helper::updateTotalVentaInspeccion($venta->id);
             
             DB::commit();
 
-            return response()->json(['code' => 201, 'msg' => 'Marbete actualizado']);
+            return response()->json(['code' => 200, 'msg' => 'Transacción con marbete actualizada']);
 
         }catch (\PDOException $e){
             DB::rollBack();

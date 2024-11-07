@@ -15,7 +15,6 @@
                 <input type="radio" name="suma_total" id="suma_total" class="card-radio-input" checked="">
                 <div class="card-radio">
                     <small>@if (isset($cliente)) {{ $cliente->nombre }} @endif </small><br>
-                    <input type="hidden" name="venta_id" id="venta_id" @if (isset($cliente)) value="{{ $venta->id }}" @endif>
                     <i class="bx bx-cart font-size-24 text-primary align-middle me-2"></i><span>Total: {{ $total_checkout}}</span>
                 </div>
             </label>
@@ -427,63 +426,63 @@
                     });
                     return false;
                 }
-                {{--  console.log($(".btnValorMarbete").is(':checked'));  --}}
-                if($(".btnValorMarbete").is(':checked') == false && $('#costo_marbete_admin').val() == ''){
+                if($(".btnValorMarbete").is(':checked') == false){
                     Swal.fire({
-                        title: '¿El administrador ingresará el costo de marbete?',
-                        icon: 'info',
-                        showCancelButton: true,
-                        confirmButtonText: 'Aceptar!',
-                        cancelButtonText: 'Cancelar!',
-                        confirmButtonClass: 'btn btn-success mt-2',
-                        cancelButtonClass: 'btn btn-danger ms-2 mt-2',
-                        buttonsStyling: false,
-                    }).then(function (result) {
-                        if (result.value) {
-                            $.ajax({
-                                type : 'POST',
-                                url :"{{ route('vehiculo.marbete') }}",
-                                data : { 
-                                    _token: "{{ csrf_token() }}",
-                                    marbete_id: $("input[type=radio][name=valorMarbete]:checked").val(),
-                                    costo_marbete_admin: $('#costo_marbete_admin').val(),
-                                    marbete_five_id : $("input[type=radio][name=costoServicio]:checked").val(),
-                                    derecho_anual : $('#derecho_anual').val(),
-                                    marbete_acaa_id: $("input[type=radio][name=marbeteacaa]:checked").val(),
-                                    venta_id: $('#venta_id').val()
-                                },
-                                success: function (data) {
-                                    if (data.code == 201) {
-                                        Swal.fire({
-                                            title: data.msg,
-                                            icon: "success",
-                                            showConfirmButton: false,
-                                            timer: 2000
-                                        });
-                                        $('#select_marbete').modal('hide');
-                                        setTimeout(function(){
-                                            window.location.reload();
-                                        }, 1000);
-                                    } else {
-                                        Swal.fire({
-                                            title: data.msg,
-                                            icon: "warning",
-                                            showConfirmButton: false,
-                                            timer: 2000
-                                        });
-                                    }
-            
-                                },
-                                error: function (data) {
-                                    // console.log(data);
-                                }
-                            });      
-                        } else {
-                            // Read more about handling dismissals
-                            result.dismiss === Swal.DismissReason.cancel
+                        title: '¡Debe seleccionar una opción de marbete!',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                if($(".marbeteacaa").is(':checked') == false){
+                    Swal.fire({
+                        title: '¡Debe seleccionar un marbete acaa!',
+                        icon: "warning",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                    return false;
+                }
+                {{--  if($(".btnValorMarbete").is(':checked') == false){  --}}
+                    $.ajax({
+                        type : 'POST',
+                        url :"{{ route('vehiculo.marbete') }}",
+                        data : { 
+                            _token: "{{ csrf_token() }}",
+                            marbete_id: $("input[type=radio][name=valorMarbete]:checked").val(),
+                            costo_marbete_admin: $('#costo_marbete_admin').val(),
+                            marbete_five_id : $("input[type=radio][name=costoServicio]:checked").val(),
+                            derecho_anual : $('#derecho_anual').val(),
+                            marbete_acaa_id: $("input[type=radio][name=marbeteacaa]:checked").val()
+                        },
+                        success: function (data) {
+                            if (data.code == 200) {
+                                $('#select_marbete').modal('hide');
+                                Swal.fire({
+                                    title: data.msg,
+                                    icon: "success",
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                });
+                                setTimeout(function(){
+                                    window.location.reload();
+                                }, 1000);
+                            } else {
+                                Swal.fire({
+                                    title: data.msg,
+                                    icon: "warning",
+                                    showConfirmButton: false,
+                                    timer: 2000
+                                });
+                            }
+    
+                        },
+                        error: function (data) {
+                            // console.log(data);
                         }
-                    });   
-                } else {
+                    });
+                {{--  } else {
                     $.ajax({
                         type : 'POST',
                         url :"{{ route('vehiculo.marbete') }}",
@@ -522,7 +521,7 @@
                             // console.log(data);
                         }
                     }); 
-                }
+                }  --}}
             });
 
             // Botón que guarda el marbete ACAA seleccionado
