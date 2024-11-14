@@ -30,6 +30,7 @@ class CheckoutController extends Controller
         $entidades = \Helper::entidadUsuario();
         $venta = Venta::where('estatus_id', 3)->where('usuario_id', Auth::user()->id)->first();
         $servicios = \Helper::getServicios($venta->id);
+        // dd($servicios);
 
         return view('modulo.checkout.index', compact('entidades', 'servicios', 'venta'));
     }

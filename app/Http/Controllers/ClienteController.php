@@ -378,78 +378,132 @@ class ClienteController extends Controller
         }
     }
 
-    Public function vehiculoMarbeteAcaa(Request $request) {
+    // Public function vehiculoMarbeteAcaa(Request $request) {
         
-        DB::beginTransaction();
+    //     DB::beginTransaction();
 
-        try {
+    //     try {
             
-            $venta = Venta::where('id', $request->venta_id)->first();
-            $venta->costo_marbete_acaa_id = $request->marbete_acaa_id;
-            $venta->save();
+    //         $venta = Venta::where('id', $request->venta_id)->first();
+    //         $venta->costo_marbete_acaa_id = $request->marbete_acaa_id;
+    //         $venta->save();
 
-            $total = \Helper::getTotalCheckout($venta->id);
+    //         $total = \Helper::getTotalCheckout($venta->id);
 
-            DB::table('ventas')->where('id', $venta->id)->update(['total' => $total]);
+    //         DB::table('ventas')->where('id', $venta->id)->update(['total' => $total]);
             
-            DB::commit();
+    //         DB::commit();
 
-            return response()->json(['code' => 201, 'msg' => 'Marbete actualizado']);
+    //         return response()->json(['code' => 201, 'msg' => 'Marbete actualizado']);
 
-        }catch (\PDOException $e){
-            DB::rollBack();
-            return response()->json(['code' => 201, 'msg' => substr($e->getMessage(), 0, 150)]);
-        }
-    }
+    //     }catch (\PDOException $e){
+    //         DB::rollBack();
+    //         return response()->json(['code' => 201, 'msg' => substr($e->getMessage(), 0, 150)]);
+    //     }
+    // }
 
     Public function vehiculoSeguro(Request $request) {
 
-        // dd($request->all());
-        $venta = Venta::where('id', $request->venta_id)->first();
-        $venta->costo_seguro_id = $request->seguro_id;
-        $venta->save();
+        // Seguros con id=1 y id=2 son preestablecidos, ya que son los seguros que se restan
+        $venta = Venta::where('estatus_id', 3)->where('usuario_id', Auth::user()->id)->first();
 
-        $total = \Helper::getTotalCheckout($venta->id);
+        $costo = SubServicio::where('id', $request->seguro_id)->select('costo')->pluck('costo')->first();
         
-        DB::table('ventas')->where('id', $venta->id)->update(['total' => $total]);
+        //Se registra en el detalle validando si ya existe primero si es asi, lo actualiza.
+        $detalleVentaInspSeguro = DetalleVentaInspeccion::where('venta_id', $venta->id)->where('servicio_id', 3)->first();
+        
+        if ($detalleVentaInspSeguro == null) {
+            $detalleVentaInspSeguro = new DetalleVentaInspeccion();
+        } 
 
-        return response()->json(['code' => 200, 'msg' => 'Seguro actualizado']);
+        $detalleVentaInspSeguro->subservicio_id = $request->seguro_id;
+        $detalleVentaInspSeguro->servicio_id = 3;
+        $detalleVentaInspSeguro->precio = $costo;
+        $detalleVentaInspSeguro->venta_id = $venta->id;
+        $detalleVentaInspSeguro->save();
+        
+        $total = \Helper::updateTotalVentaInspeccion($venta->id);
+            
+        DB::commit();
+
+        return response()->json(['code' => 200, 'msg' => 'Transacción con seguro actualizado']);
     }
 
     public function vehiculoExtraLicencia(Request $request) {
-        $venta = Venta::where('id', $request->venta_id)->first();
-        $venta->extra_licencia_id = $request->licencia_id;
-        $venta->save();
-
-        $total = \Helper::getTotalCheckout($venta->id);
         
-        DB::table('ventas')->where('id', $venta->id)->update(['total' => $total]);
+        $venta = Venta::where('estatus_id', 3)->where('usuario_id', Auth::user()->id)->first();
 
-        return response()->json(['code' => 200, 'msg' => 'Servicio extra actualizado']);
+        $costo = SubServicio::where('id', $request->licencia_id)->select('costo')->pluck('costo')->first();
+        
+        //Se registra en el detalle validando si ya existe primero si es asi, lo actualiza.
+        $detalleVentaInspSeguro = DetalleVentaInspeccion::where('venta_id', $venta->id)->where('servicio_id', 4)->first();
+        
+        if ($detalleVentaInspSeguro == null) {
+            $detalleVentaInspSeguro = new DetalleVentaInspeccion();
+        } 
+
+        $detalleVentaInspSeguro->subservicio_id = $request->licencia_id;
+        $detalleVentaInspSeguro->servicio_id = 4;
+        $detalleVentaInspSeguro->precio = $costo;
+        $detalleVentaInspSeguro->venta_id = $venta->id;
+        $detalleVentaInspSeguro->save();
+        
+        $total = \Helper::updateTotalVentaInspeccion($venta->id);
+            
+        DB::commit();
+
+        return response()->json(['code' => 200, 'msg' => 'Transacción con servicio extra actualizado']);
     }
 
     public function vehiculoExtraNotificacion(Request $request) {
-        $venta = Venta::where('id', $request->venta_id)->first();
-        $venta->extra_notificacion_id = $request->notificacion_id;
-        $venta->save();
-
-        $total = \Helper::getTotalCheckout($venta->id);
         
-        DB::table('ventas')->where('id', $venta->id)->update(['total' => $total]);
+        $venta = Venta::where('estatus_id', 3)->where('usuario_id', Auth::user()->id)->first();
 
-        return response()->json(['code' => 200, 'msg' => 'Servicio extra actualizado']);
+        $costo = SubServicio::where('id', $request->notificacion_id)->select('costo')->pluck('costo')->first();
+        
+        //Se registra en el detalle validando si ya existe primero si es asi, lo actualiza.
+        $detalleVentaInspSeguro = DetalleVentaInspeccion::where('venta_id', $venta->id)->where('servicio_id', 5)->first();
+        
+        if ($detalleVentaInspSeguro == null) {
+            $detalleVentaInspSeguro = new DetalleVentaInspeccion();
+        } 
+
+        $detalleVentaInspSeguro->subservicio_id = $request->notificacion_id;
+        $detalleVentaInspSeguro->servicio_id = 5;
+        $detalleVentaInspSeguro->precio = $costo;
+        $detalleVentaInspSeguro->venta_id = $venta->id;
+        $detalleVentaInspSeguro->save();
+        
+        $total = \Helper::updateTotalVentaInspeccion($venta->id);
+            
+        DB::commit();
+
+        return response()->json(['code' => 200, 'msg' => 'Transacción con servicio extra actualizado']);
     }
 
     public function vehiculoExtraMulta(Request $request) {
-        $venta = Venta::where('id', $request->venta_id)->first();
-        $venta->extra_multa_id = $request->multa_id;
-        $venta->save();
+        // dd($request->all());
+        $venta = Venta::where('estatus_id', 3)->where('usuario_id', Auth::user()->id)->first();
+        $costo = SubServicio::where('id', $request->multa_id)->select('costo')->pluck('costo')->first();
 
-        $total = \Helper::getTotalCheckout($venta->id);
+        //Se registra en el detalle validando si ya existe primero si es asi, lo actualiza.
+        $detalleVentaInspExtraMulta = DetalleVentaInspeccion::where('venta_id', $venta->id)->where('servicio_id', 9)->first();
         
-        DB::table('ventas')->where('id', $venta->id)->update(['total' => $total]);
+        if ($detalleVentaInspExtraMulta == null) {
+            $detalleVentaInspExtraMulta = new DetalleVentaInspeccion();
+        } 
 
-        return response()->json(['code' => 200, 'msg' => 'Servicio extra actualizado']);
+        $detalleVentaInspExtraMulta->subservicio_id = $request->multa_id;
+        $detalleVentaInspExtraMulta->servicio_id = 9;
+        $detalleVentaInspExtraMulta->precio = $costo;
+        $detalleVentaInspExtraMulta->venta_id = $venta->id;
+        $detalleVentaInspExtraMulta->save();
+        
+        $total = \Helper::updateTotalVentaInspeccion($venta->id);
+            
+        DB::commit();
+
+        return response()->json(['code' => 200, 'msg' => 'Transacción con servicio extra actualizado']);
     }
 
     public function getTablillaCliente(Request $request) {

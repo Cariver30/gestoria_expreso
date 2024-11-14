@@ -190,7 +190,7 @@ class Helper {
         if ($tipoServicio == 1) {
             $servicios = DetalleVentaInspeccion::leftJoin('sub_servicios', 'detalle_venta_inspeccions.subservicio_id', 'sub_servicios.id')
                 ->where('venta_id', $ventaId)
-                ->select('sub_servicios.nombre as nombre', 'sub_servicios.costo as costo')
+                ->select('sub_servicios.id', 'sub_servicios.nombre as nombre', 'sub_servicios.costo as costo')
                 ->get();
              
         } else {
@@ -206,8 +206,17 @@ class Helper {
     public static function updateTotalVentaInspeccion($ventaId) {
         
         $venta = Venta::where('id', $ventaId)->first();
+        $total = 0;
         
-        $total = DetalleVentaInspeccion::where('venta_id', $ventaId)->sum('precio');
+        $preTotales = DetalleVentaInspeccion::where('venta_id', $ventaId)->get();
+        // dd($preTotales);
+        foreach ($preTotales as $preTotal) {
+            if ($preTotal->subservicio_id == 1 || $preTotal->subservicio_id == 2) {
+                $total = $total - $preTotal->precio;    
+            } else {
+                $total = $total + $preTotal->precio;
+            }
+        }
         $posTotal = $total + $venta->costo_servicio_fijo + $venta->derechos_anuales;
         $venta->total = $posTotal;
         

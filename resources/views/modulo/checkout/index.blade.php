@@ -25,17 +25,18 @@
                         @foreach ($servicios as $servicio)
                             <tr>
                                 <th> {{ $servicio['nombre'] }} </th>
-                                <td> @if ($servicio['costo'] == null)  $0.00 @elseif($servicio['servicio_id'] == 3) {{$servicio['costo'] }} @else ${{$servicio['costo'] }} @endif </td>
+                                <th> @if($servicio['id'] == 1 || $servicio['id'] == 2) - @endif ${{ $servicio['costo'] }} </th>
+                                {{--  <td> @if ($servicio['costo'] == null)  $0.00 @elseif ($servicio['servicio_id'] == 3) {{$servicio['costo'] }} @else ${{$servicio['costo'] }} @endif </td>  --}}
                             </tr>
                         @endforeach
                         @if ($venta->tipo_servicio == 1)
                             <tr>
                                 <th> Derechos Anuales </th>
-                                <td> ${{ $venta->derechos_anuales }} </td>
+                                <td><strong> ${{ $venta->derechos_anuales }} </strong></td>
                             </tr>
                             <tr>
                                 <th> Costo de Servicio </th>
-                                <td> ${{ $venta->costo_servicio_fijo }} </td>
+                                <td><strong> ${{ $venta->costo_servicio_fijo }} </strong></td>
                             </tr>
                         @endif
                         <tr>

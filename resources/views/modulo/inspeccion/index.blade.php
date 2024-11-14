@@ -635,7 +635,6 @@
                     url :"{{ route('vehiculo.extras.licencia') }}",
                     data : { 
                         _token: "{{ csrf_token() }}",
-                        venta_id: $('#venta_id').val(),
                         licencia_id: $("input[type=radio][name=valorExtraLicencia]:checked").val()
                     },
                     success: function (data) {
@@ -683,7 +682,6 @@
                     url :"{{ route('vehiculo.extras.notificacion') }}",
                     data : { 
                         _token: "{{ csrf_token() }}",
-                        venta_id: $('#venta_id').val(),
                         notificacion_id: $("input[type=radio][name=valorExtraNotificacion]:checked").val()
                     },
                     success: function (data) {
@@ -730,7 +728,6 @@
                     url :"{{ route('vehiculo.extras.multa') }}",
                     data : { 
                         _token: "{{ csrf_token() }}",
-                        venta_id: $('#venta_id').val(),
                         multa_id: $("input[type=radio][name=valorExtraMulta]:checked").val()
                     },
                     success: function (data) {
